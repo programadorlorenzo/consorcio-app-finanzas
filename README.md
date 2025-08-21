@@ -1,1 +1,0 @@
-# consorcio-app-finanzas
