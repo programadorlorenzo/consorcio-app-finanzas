@@ -52,7 +52,7 @@ function RootLayoutNav() {
       router.replace("/login");
     }
     if (user && inLogin) {
-      router.replace("/(tabs)/explore");
+      router.replace("/(tabs)/gastos");
     }
   }, [router, segments, user]);
 
