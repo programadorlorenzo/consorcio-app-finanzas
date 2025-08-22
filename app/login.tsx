@@ -5,6 +5,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { ThemedText } from "@/components/ThemedText";
 import { loginStyles } from "@/styles/login/styles";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
@@ -42,6 +43,8 @@ export default function LoginScreen() {
 
       if (ok) {
         console.log("Login exitoso");
+        // Navigate to the main app screen or perform any post-login actions
+        router.replace("/(tabs)/explore");
       } else {
         Alert.alert(
           "Error de autenticación",
@@ -125,8 +128,8 @@ export default function LoginScreen() {
                   value={username}
                   onChangeText={setUsername}
                   autoCapitalize="none"
-                  autoComplete="email"
-                  keyboardType="email-address"
+                  autoCorrect={false}
+                  autoComplete="username"
                 />
               </View>
             </View>
@@ -194,7 +197,8 @@ export default function LoginScreen() {
             {/* Company footer */}
             <View style={loginStyles.footer}>
               <ThemedText style={loginStyles.footerText}>
-                Finanzas de la Corporación Lorenzo Beta © {new Date().getFullYear()}
+                Finanzas de la Corporación Lorenzo Beta ©{" "}
+                {new Date().getFullYear()}
               </ThemedText>
             </View>
           </Animated.View>
