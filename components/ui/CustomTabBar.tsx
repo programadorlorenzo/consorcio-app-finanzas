@@ -210,7 +210,7 @@ export function CustomTabBar({
               case "profile":
                 return "person.fill";
               case "gastos":
-                return "paperplane.fill";
+                return "teddybear.fill";
               case "settings":
                 return "gear";
               case "notifications":
