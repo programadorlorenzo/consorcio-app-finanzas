@@ -2,6 +2,9 @@ import { MAIN_COLOR } from "@/app/constants";
 import { StyleSheet } from "react-native";
 
 export const loginStyles = StyleSheet.create({
+  logoContainer: {
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -56,7 +59,7 @@ export const loginStyles = StyleSheet.create({
     bottom: 0,
   },
   formContainer: {
-    backgroundColor: "rgba(255, 255, 255, 0.6)", // Transparente con ligera opacidad
+    backgroundColor: "rgba(255, 255, 255, 0.4)", // Transparente con ligera opacidad
     marginHorizontal: 30,
     marginTop: 5, // Reducido para subir el formulario
     borderRadius: 20,

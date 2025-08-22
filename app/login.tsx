@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   TextInput,
@@ -81,6 +82,23 @@ export default function LoginScreen() {
 
         {/* Curva de transición */}
         <LoginWaveCurve color="#fff" />
+
+        <View style={loginStyles.logoContainer}>
+          <Image
+            source={require("@/assets/images/logo_OL_2.png")}
+            style={{
+              width: 100,
+              height: 90,
+              position: "relative",
+              marginBottom: 10,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+            resizeMode="contain"
+          />
+        </View>
 
         {/* Content container */}
         <View style={loginStyles.contentContainer}>
@@ -176,10 +194,7 @@ export default function LoginScreen() {
             {/* Company footer */}
             <View style={loginStyles.footer}>
               <ThemedText style={loginStyles.footerText}>
-                Finanzas de la Corporación Lorenzo © {new Date().getFullYear()}
-              </ThemedText>
-              <ThemedText style={loginStyles.footerVersion}>
-                Versión 1.1.0
+                Finanzas de la Corporación Lorenzo Beta © {new Date().getFullYear()}
               </ThemedText>
             </View>
           </Animated.View>
