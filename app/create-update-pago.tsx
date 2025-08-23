@@ -1,5 +1,6 @@
 import ListArchivosCreatePago from "@/components/pagos/create-update-pagos/ArchivosCreatePago";
 import CustomSelectorCreatePago from "@/components/pagos/create-update-pagos/CustomSelectorCreatePago";
+import CustomSwitch from "@/components/pagos/create-update-pagos/CustomSwitch";
 import ModalOpcionesArchivoCreateUpdatePago from "@/components/pagos/create-update-pagos/ModalOpcionesArchivo";
 import { stylesBaseStylesCreatePago } from "@/styles/pagos/base-create-pago.styles";
 import {
@@ -16,6 +17,7 @@ import {
     pickFromCamera,
     pickFromGallery,
 } from "@/utils/pagos/create-pago-utils";
+import { formatDisplayText } from "@/utils/pagos/custom_selector_create_update_pago.utils";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -42,7 +44,7 @@ export default function CreateUpdatePago() {
     categoria: null,
     subcategoria: null,
     tipo: null,
-    origen: null,
+    origen: OrigenPago.EXTERNO, // Valor por defecto
     moneda: null,
     monto: "",
     fechaVencimiento: null,
@@ -53,7 +55,6 @@ export default function CreateUpdatePago() {
   const [showCategoriaModal, setShowCategoriaModal] = useState(false);
   const [showSubcategoriaModal, setShowSubcategoriaModal] = useState(false);
   const [showTipoModal, setShowTipoModal] = useState(false);
-  const [showOrigenModal, setShowOrigenModal] = useState(false);
   const [showMonedaModal, setShowMonedaModal] = useState(false);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [showFileModal, setShowFileModal] = useState(false);
@@ -226,7 +227,7 @@ export default function CreateUpdatePago() {
             getAvailableSubcategorias(formData).length > 0 && (
               <View style={stylesBaseStylesCreatePago.inputGroup}>
                 <Text style={stylesBaseStylesCreatePago.label}>
-                  Subcategoría
+                  Subcategoría de {formatDisplayText(formData.categoria)}
                 </Text>
                 <CustomSelectorCreatePago
                   label="Seleccionar Subcategoría"
@@ -243,6 +244,21 @@ export default function CreateUpdatePago() {
             )}
 
           <View style={stylesBaseStylesCreatePago.inputGroup}>
+            <CustomSwitch
+              label="Origen"
+              value={formData.origen === OrigenPago.EXTERNO}
+              onValueChange={(value) =>
+                handleInputChange(
+                  "origen",
+                  value ? OrigenPago.EXTERNO : OrigenPago.CUENTA_EMPRESA
+                )
+              }
+              leftLabel="Cuenta Empresa"
+              rightLabel="Externo"
+            />
+          </View>
+
+          <View style={stylesBaseStylesCreatePago.inputGroup}>
             <Text style={stylesBaseStylesCreatePago.label}>Tipo *</Text>
             <CustomSelectorCreatePago
               label="Seleccionar Tipo"
@@ -252,19 +268,6 @@ export default function CreateUpdatePago() {
               onSelect={(value) => handleInputChange("tipo", value)}
               isVisible={showTipoModal}
               onClose={() => setShowTipoModal(!showTipoModal)}
-            />
-          </View>
-
-          <View style={stylesBaseStylesCreatePago.inputGroup}>
-            <Text style={stylesBaseStylesCreatePago.label}>Origen</Text>
-            <CustomSelectorCreatePago
-              label="Seleccionar Origen"
-              value={formData.origen}
-              placeholder="Seleccionar origen"
-              options={Object.values(OrigenPago)}
-              onSelect={(value) => handleInputChange("origen", value)}
-              isVisible={showOrigenModal}
-              onClose={() => setShowOrigenModal(!showOrigenModal)}
             />
           </View>
 

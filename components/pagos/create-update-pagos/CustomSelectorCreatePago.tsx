@@ -1,5 +1,6 @@
 import { MAIN_COLOR } from "@/app/constants";
 import { stylesCustomSelectorCreatePago } from "@/styles/pagos/custom-selector-create-pago.styles";
+import { formatDisplayText } from "@/utils/pagos/custom_selector_create_update_pago.utils";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -27,15 +28,6 @@ const CustomSelectorCreatePago = ({
   keyExtractor,
   labelExtractor,
 }: CustomSelectorCreatePagoProps) => {
-  // Función para convertir guiones bajos en espacios y capitalizar
-  const formatDisplayText = (text: string) => {
-    if (!text) return text;
-    return text
-      .replace(/_/g, " ")
-      .toLowerCase()
-      .replace(/\b\w/g, (l) => l.toUpperCase());
-  };
-
   const getDisplayValue = () => {
     if (!value) return placeholder;
     const displayValue = labelExtractor ? labelExtractor(value) : value;
