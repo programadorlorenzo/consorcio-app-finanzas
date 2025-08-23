@@ -1,6 +1,7 @@
 import MenuCardPagos from "@/components/pagos/MenuCard";
 import { menuCardStyles } from "@/styles/pagos/menu-card.styles";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
@@ -13,6 +14,9 @@ import {
 } from "react-native";
 import { MAIN_COLOR } from "../constants";
 
+// Tipos de estado para colores
+export type PaymentStatusType = 'default' | 'pending' | 'completed' | 'rejected' | 'accent';
+
 const TabPagos = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -20,10 +24,10 @@ const TabPagos = () => {
     {
       id: 1,
       title: "Crear Pago",
-      description: "Registrar un nuevo pago en el sistema",
+      description: "Registrar un nuevo pago",
       icon: "add-circle-outline" as keyof typeof Ionicons.glyphMap,
-      onPress: () => console.log("Crear Pago"),
-      isAccent: true,
+      onPress: () => router.push("/create-update-pago"),
+      statusType: 'accent' as PaymentStatusType,
     },
     {
       id: 2,
@@ -31,6 +35,7 @@ const TabPagos = () => {
       description: "Ver listado completo de pagos",
       icon: "list-outline" as keyof typeof Ionicons.glyphMap,
       onPress: () => console.log("Todos los Pagos"),
+      statusType: 'default' as PaymentStatusType,
     },
     {
       id: 3,
@@ -38,6 +43,7 @@ const TabPagos = () => {
       description: "Pagos en espera de confirmación",
       icon: "time-outline" as keyof typeof Ionicons.glyphMap,
       onPress: () => console.log("Pagos Pendientes"),
+      statusType: 'pending' as PaymentStatusType,
     },
     {
       id: 4,
@@ -45,6 +51,7 @@ const TabPagos = () => {
       description: "Pagos confirmados y finalizados",
       icon: "checkmark-circle-outline" as keyof typeof Ionicons.glyphMap,
       onPress: () => console.log("Pagos Completados"),
+      statusType: 'completed' as PaymentStatusType,
     },
     {
       id: 5,
@@ -52,12 +59,15 @@ const TabPagos = () => {
       description: "Pagos que han sido rechazados",
       icon: "close-circle-outline" as keyof typeof Ionicons.glyphMap,
       onPress: () => console.log("Pagos Rechazados"),
+      statusType: 'rejected' as PaymentStatusType,
     },
   ];
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
       console.log("Buscar pago:", searchQuery);
+      // Aquí podrías agregar navegación para buscar un pago específico
+      // router.push(`/create-update-pago?id=${searchQuery}`);
     }
   };
 
@@ -100,7 +110,7 @@ const TabPagos = () => {
               description={option.description}
               icon={option.icon}
               onPress={option.onPress}
-              isAccent={option.isAccent}
+              statusType={option.statusType}
             />
           ))}
         </View>
