@@ -1,0 +1,60 @@
+export interface PaymentFormData {
+  descripcion: string;
+  categoria: CategoriaPago | null;
+  subcategoria: SubCategoriaPago | null;
+  tipo: TipoPago | null;
+  origen: OrigenPago | null;
+  moneda: MonedaPago | null;
+  monto: string;
+  fechaVencimiento: Date | null;
+  observaciones: string;
+  ubicacionFisica: string;
+  numeroRecibo: string;
+}
+
+export enum CategoriaPago {
+  RENDICION = "RENDICION",
+  COTIZACION = "COTIZACION",
+  JOLG = "JOLG",
+  CORP_LORENZO = "CORP_LORENZO",
+  OSCAR_LORENZO = "OSCAR_LORENZO",
+  CONSTRUCCIONES = "CONSTRUCCIONES",
+  CASA = "CASA",
+  OFICINA = "OFICINA",
+}
+
+export enum SubCategoriaPago {
+  JOLG_LOCALES = "JOLG_LOCALES",
+  JOLG_PRODUCCION = "JOLG_PRODUCCION",
+  JOLG_PLANILLA = "JOLG_PLANILLA",
+  CORP_LORENZO_LOCAL = "CORP_LORENZO_LOCAL",
+  CORP_LORENZO_PRODUCCION = "CORP_LORENZO_PRODUCCION",
+  CORP_LORENZO_PLANILLA = "CORP_LORENZO_PLANILLA",
+  OSCAR_LORENZO_PERSONAL = "OSCAR_LORENZO_PERSONAL",
+  OSCAR_LORENZO_CASA = "OSCAR_LORENZO_CASA",
+  CONSTRUCCIONES_OBRAS = "CONSTRUCCIONES_OBRAS",
+  CONSTRUCCIONES_HERRAMIENTAS = "CONSTRUCCIONES_HERRAMIENTAS",
+  CASA_SERVICIOS = "CASA_SERVICIOS",
+  CASA_MANTENIMIENTO = "CASA_MANTENIMIENTO",
+  OFICINA_SERVICIOS = "OFICINA_SERVICIOS",
+  OFICINA_SUMINISTROS = "OFICINA_SUMINISTROS",
+}
+
+export enum TipoPago {
+  GASTO = "GASTO",
+  INGRESO = "INGRESO",
+  TRANSFERENCIA = "TRANSFERENCIA",
+}
+
+export enum OrigenPago {
+  EFECTIVO = "EFECTIVO",
+  BANCO_CONTINENTAL = "BANCO_CONTINENTAL",
+  BANCO_NACIONAL = "BANCO_NACIONAL",
+  TARJETA_CREDITO = "TARJETA_CREDITO",
+  TARJETA_DEBITO = "TARJETA_DEBITO",
+}
+
+export enum MonedaPago {
+  SOLES = "SOLES",
+  DOLARES = "DOLARES",
+}

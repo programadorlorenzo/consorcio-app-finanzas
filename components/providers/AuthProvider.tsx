@@ -114,19 +114,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     console.log("Checking stored token and user on app start");
     (async () => {
-      const storedToken = await SecureStore.getItemAsync("access_token");
-      const storedUser = await SecureStore.getItemAsync("user");
-      if (storedToken && storedUser) {
-        if (isTokenExpired(storedToken)) {
-          console.log("Stored token is expired, logging out");
-          await signOut();
-        } else {
-          console.log("Stored token is valid, restoring session");
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
+      try {
+        const storedToken = await SecureStore.getItemAsync("access_token");
+        const storedUser = await SecureStore.getItemAsync("user");
+        if (storedToken && storedUser) {
+          if (isTokenExpired(storedToken)) {
+            console.log("Stored token is expired, logging out");
+            await signOut();
+          } else {
+            console.log("Stored token is valid, restoring session");
+            setToken(storedToken);
+            setUser(JSON.parse(storedUser));
+          }
         }
+      } catch (error) {
+        console.error("Error during token check:", error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     })();
   }, []);
 
@@ -158,12 +163,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Logout
   const signOut = async () => {
-    setIsLoading(true);
-    setToken(null);
-    setUser(null);
-    await SecureStore.deleteItemAsync("access_token");
-    await SecureStore.deleteItemAsync("user");
-    setIsLoading(false);
+    try {
+      setToken(null);
+      setUser(null);
+      await SecureStore.deleteItemAsync("access_token");
+      await SecureStore.deleteItemAsync("user");
+    } catch (error) {
+      console.error("Error during sign out:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

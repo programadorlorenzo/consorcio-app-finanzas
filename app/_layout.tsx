@@ -1,9 +1,9 @@
 import { AuthProvider, useAuth } from "@/components/providers/AuthProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
-    DarkTheme,
-    DefaultTheme,
-    ThemeProvider,
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack, useRouter, useSegments } from "expo-router";
@@ -44,17 +44,35 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const router = useRouter();
   const segments = useSegments();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
+    // No hacer navegación si aún está cargando
+    if (isLoading) return;
+
     const inLogin = segments[0] === "login";
-    if (!user && !inLogin) {
-      router.replace("/login");
-    }
-    if (user && inLogin) {
-      router.replace("/(tabs)/pagos");
-    }
-  }, [router, segments, user]);
+
+    // Usar requestAnimationFrame para asegurar que el componente esté montado
+    const handleNavigation = () => {
+      try {
+        if (!user && !inLogin) {
+          router.replace("/login");
+        } else if (user && inLogin) {
+          router.replace("/(tabs)/pagos");
+        }
+      } catch (error) {
+        console.warn("Navigation error:", error);
+      }
+    };
+
+    // Ejecutar en el próximo frame para asegurar que esté montado
+    requestAnimationFrame(handleNavigation);
+  }, [router, segments, user, isLoading]);
+
+  // Mostrar pantalla de carga mientras se verifica el estado de autenticación
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
