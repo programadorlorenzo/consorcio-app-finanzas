@@ -1,15 +1,6 @@
-import {
-    FileItem,
-    formatFileSize,
-    getAvailableSubcategorias,
-    isImage,
-    pickDocument,
-    pickFromCamera,
-    pickFromGallery,
-} from "@/utils/pagos/create-pago-utils";
-import { Ionicons } from "@expo/vector-icons";
-
-import CustomSelectorCreatePago from "@/components/pagos/create-pagos/CustomSelectorCreatePago";
+import ListArchivosCreatePago from "@/components/pagos/create-update-pagos/ArchivosCreatePago";
+import CustomSelectorCreatePago from "@/components/pagos/create-update-pagos/CustomSelectorCreatePago";
+import ModalOpcionesArchivoCreateUpdatePago from "@/components/pagos/create-update-pagos/ModalOpcionesArchivo";
 import { stylesBaseStylesCreatePago } from "@/styles/pagos/base-create-pago.styles";
 import {
     CategoriaPago,
@@ -18,6 +9,14 @@ import {
     PaymentFormData,
     TipoPago,
 } from "@/types/pagos/pagos.types";
+import {
+    FileItem,
+    getAvailableSubcategorias,
+    pickDocument,
+    pickFromCamera,
+    pickFromGallery,
+} from "@/utils/pagos/create-pago-utils";
+import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
@@ -25,9 +24,6 @@ import {
     ActionSheetIOS,
     ActivityIndicator,
     Alert,
-    FlatList,
-    Image,
-    Modal,
     Platform,
     SafeAreaView,
     ScrollView,
@@ -41,7 +37,6 @@ import { MAIN_COLOR } from "./constants";
 export default function CreateUpdatePago() {
   const params = useLocalSearchParams();
   const isEditing = !!params.id;
-
   const [formData, setFormData] = useState<PaymentFormData>({
     descripcion: "",
     categoria: null,
@@ -55,7 +50,6 @@ export default function CreateUpdatePago() {
     ubicacionFisica: "",
     numeroRecibo: "",
   });
-
   const [showCategoriaModal, setShowCategoriaModal] = useState(false);
   const [showSubcategoriaModal, setShowSubcategoriaModal] = useState(false);
   const [showTipoModal, setShowTipoModal] = useState(false);
@@ -194,11 +188,9 @@ export default function CreateUpdatePago() {
   };
 
   // Componente de selector personalizado
-
   return (
     <SafeAreaView style={stylesBaseStylesCreatePago.container}>
       <StatusBar style="dark" />
-
       {/* Header */}
       <View style={stylesBaseStylesCreatePago.header}>
         <TouchableOpacity
@@ -212,7 +204,6 @@ export default function CreateUpdatePago() {
         </Text>
         <View style={stylesBaseStylesCreatePago.placeholder} />
       </View>
-
       <ScrollView
         style={stylesBaseStylesCreatePago.content}
         showsVerticalScrollIndicator={false}
@@ -363,47 +354,7 @@ export default function CreateUpdatePago() {
           </TouchableOpacity>
 
           {files.length > 0 && (
-            <FlatList
-              data={files}
-              style={stylesBaseStylesCreatePago.filesList}
-              renderItem={({ item, index }) => (
-                <View style={stylesBaseStylesCreatePago.fileItem}>
-                  {isImage(item.type) ? (
-                    <Image
-                      source={{ uri: item.uri }}
-                      style={stylesBaseStylesCreatePago.fileImage}
-                    />
-                  ) : (
-                    <View style={stylesBaseStylesCreatePago.fileIcon}>
-                      <Ionicons
-                        name="document-outline"
-                        size={24}
-                        color={MAIN_COLOR}
-                      />
-                    </View>
-                  )}
-                  <View style={stylesBaseStylesCreatePago.fileInfo}>
-                    <Text
-                      style={stylesBaseStylesCreatePago.fileName}
-                      numberOfLines={1}
-                    >
-                      {item.name}
-                    </Text>
-                    <Text style={stylesBaseStylesCreatePago.fileSize}>
-                      {formatFileSize(item.size)}
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    style={stylesBaseStylesCreatePago.removeFileButton}
-                    onPress={() => removeFile(index)}
-                  >
-                    <Ionicons name="close-circle" size={24} color="#EF4444" />
-                  </TouchableOpacity>
-                </View>
-              )}
-              keyExtractor={(item, index) => `${item.uri}_${index}`}
-              scrollEnabled={false}
-            />
+            <ListArchivosCreatePago files={files} removeFile={removeFile} />
           )}
 
           <TouchableOpacity
@@ -426,74 +377,11 @@ export default function CreateUpdatePago() {
       </ScrollView>
 
       {/* Modal para opciones de archivo (Android) */}
-      <Modal
-        visible={showFileModal}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowFileModal(false)}
-      >
-        <TouchableOpacity
-          style={stylesBaseStylesCreatePago.modalOverlay}
-          onPress={() => setShowFileModal(false)}
-        >
-          <View style={stylesBaseStylesCreatePago.modalContent}>
-            <Text style={stylesBaseStylesCreatePago.modalTitle}>
-              Seleccionar Archivo
-            </Text>
-
-            <TouchableOpacity
-              style={stylesBaseStylesCreatePago.modalOption}
-              onPress={() => {
-                setShowFileModal(false);
-                pickFromCamera(setFiles);
-              }}
-            >
-              <Ionicons name="camera" size={24} color={MAIN_COLOR} />
-              <Text style={stylesBaseStylesCreatePago.modalOptionText}>
-                Cámara
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={stylesBaseStylesCreatePago.modalOption}
-              onPress={() => {
-                setShowFileModal(false);
-                pickFromGallery(setFiles);
-              }}
-            >
-              <Ionicons name="image" size={24} color={MAIN_COLOR} />
-              <Text style={stylesBaseStylesCreatePago.modalOptionText}>
-                Galería
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={stylesBaseStylesCreatePago.modalOption}
-              onPress={() => {
-                setShowFileModal(false);
-                pickDocument(setFiles);
-              }}
-            >
-              <Ionicons name="document" size={24} color={MAIN_COLOR} />
-              <Text style={stylesBaseStylesCreatePago.modalOptionText}>
-                Documentos
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                stylesBaseStylesCreatePago.modalOption,
-                stylesBaseStylesCreatePago.cancelOption,
-              ]}
-              onPress={() => setShowFileModal(false)}
-            >
-              <Text style={stylesBaseStylesCreatePago.cancelText}>
-                Cancelar
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      <ModalOpcionesArchivoCreateUpdatePago
+        showFileModal={showFileModal}
+        setShowFileModal={setShowFileModal}
+        setFiles={setFiles}
+      />
     </SafeAreaView>
   );
 }

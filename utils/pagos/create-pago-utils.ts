@@ -1,7 +1,7 @@
 import {
-    CategoriaPago,
-    PaymentFormData,
-    SubCategoriaPago,
+  CategoriaPago,
+  PaymentFormData,
+  SubCategoriaPago,
 } from "@/types/pagos/pagos.types";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
@@ -149,5 +149,4 @@ export const CATEGORIA_SUBCATEGORIA_MAP: Record<
     SubCategoriaPago.OFICINA_SUMINISTROS,
   ],
   [CategoriaPago.RENDICION]: [],
-  [CategoriaPago.COTIZACION]: [],
 };

@@ -27,9 +27,19 @@ const CustomSelectorCreatePago = ({
   keyExtractor,
   labelExtractor,
 }: CustomSelectorCreatePagoProps) => {
+  // Función para convertir guiones bajos en espacios y capitalizar
+  const formatDisplayText = (text: string) => {
+    if (!text) return text;
+    return text
+      .replace(/_/g, " ")
+      .toLowerCase()
+      .replace(/\b\w/g, (l) => l.toUpperCase());
+  };
+
   const getDisplayValue = () => {
     if (!value) return placeholder;
-    return labelExtractor ? labelExtractor(value) : value;
+    const displayValue = labelExtractor ? labelExtractor(value) : value;
+    return formatDisplayText(displayValue);
   };
 
   return (
@@ -39,7 +49,10 @@ const CustomSelectorCreatePago = ({
         onPress={() => !isVisible && onClose()}
       >
         <Text
-          style={[stylesCustomSelectorCreatePago.selectorText, !value && stylesCustomSelectorCreatePago.selectorPlaceholder]}
+          style={[
+            stylesCustomSelectorCreatePago.selectorText,
+            !value && stylesCustomSelectorCreatePago.selectorPlaceholder,
+          ]}
         >
           {getDisplayValue()}
         </Text>
@@ -56,39 +69,27 @@ const CustomSelectorCreatePago = ({
         animationType="slide"
         onRequestClose={onClose}
       >
-        <TouchableOpacity style={stylesCustomSelectorCreatePago.modalOverlay} onPress={onClose}>
+        <TouchableOpacity
+          style={stylesCustomSelectorCreatePago.modalOverlay}
+          onPress={onClose}
+        >
           <View style={stylesCustomSelectorCreatePago.selectorModalContent}>
             <View style={stylesCustomSelectorCreatePago.selectorModalHeader}>
-              <Text style={stylesCustomSelectorCreatePago.selectorModalTitle}>{label}</Text>
+              <Text style={stylesCustomSelectorCreatePago.selectorModalTitle}>
+                {label}
+              </Text>
               <TouchableOpacity onPress={onClose}>
                 <Ionicons name="close" size={24} color={MAIN_COLOR} />
               </TouchableOpacity>
             </View>
 
             <ScrollView style={stylesCustomSelectorCreatePago.selectorOptions}>
-              <TouchableOpacity
-                style={stylesCustomSelectorCreatePago.selectorOption}
-                onPress={() => {
-                  onSelect(null);
-                  onClose();
-                }}
-              >
-                <Text
-                  style={[
-                    stylesCustomSelectorCreatePago.selectorOptionText,
-                    stylesCustomSelectorCreatePago.selectorPlaceholder,
-                  ]}
-                >
-                  {placeholder}
-                </Text>
-                {!value && (
-                  <Ionicons name="checkmark" size={20} color={MAIN_COLOR} />
-                )}
-              </TouchableOpacity>
-
               {options.map((option) => {
                 const key = keyExtractor ? keyExtractor(option) : option;
-                const label = labelExtractor ? labelExtractor(option) : option;
+                const rawLabel = labelExtractor
+                  ? labelExtractor(option)
+                  : option;
+                const formattedLabel = formatDisplayText(rawLabel);
                 const isSelected = value === option;
 
                 return (
@@ -103,10 +104,11 @@ const CustomSelectorCreatePago = ({
                     <Text
                       style={[
                         stylesCustomSelectorCreatePago.selectorOptionText,
-                        isSelected && stylesCustomSelectorCreatePago.selectorOptionSelected,
+                        isSelected &&
+                          stylesCustomSelectorCreatePago.selectorOptionSelected,
                       ]}
                     >
-                      {label}
+                      {formattedLabel}
                     </Text>
                     {isSelected && (
                       <Ionicons name="checkmark" size={20} color={MAIN_COLOR} />

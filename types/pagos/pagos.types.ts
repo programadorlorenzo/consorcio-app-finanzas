@@ -13,12 +13,11 @@ export interface PaymentFormData {
 }
 
 export enum CategoriaPago {
-  RENDICION = "RENDICION",
-  COTIZACION = "COTIZACION",
   JOLG = "JOLG",
   CORP_LORENZO = "CORP_LORENZO",
   OSCAR_LORENZO = "OSCAR_LORENZO",
   CONSTRUCCIONES = "CONSTRUCCIONES",
+  RENDICION = "RENDICION", 
   CASA = "CASA",
   OFICINA = "OFICINA",
 }
