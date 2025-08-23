@@ -41,10 +41,11 @@ export enum SubCategoriaPago {
 }
 
 export enum TipoPago {
-  EFECTIVO = "EFECTIVO",
   TRANSFERENCIA = "TRANSFERENCIA",
+  DEPOSITO = "DEPOSITO",
   YAPE = "YAPE",
   PLIN = "PLIN",
+  EFECTIVO = "EFECTIVO",
 }
 
 export enum OrigenPago {
