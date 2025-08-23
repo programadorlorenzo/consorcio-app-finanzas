@@ -209,7 +209,7 @@ export function CustomTabBar({
                 return "house.fill";
               case "profile":
                 return "person.fill";
-              case "gastos":
+              case "pagos":
                 return "teddybear.fill";
               case "settings":
                 return "gear";
@@ -220,8 +220,8 @@ export function CustomTabBar({
             }
           };
 
-          // Tab central (gastos)
-          if (route.name === "gastos") {
+          // Tab central (pagos)
+          if (route.name === "pagos") {
             return (
               <CentralTab
                 key={route.key}
@@ -235,7 +235,7 @@ export function CustomTabBar({
 
           // Tabs laterales
           const position =
-            index < state.routes.findIndex((r) => r.name === "gastos")
+            index < state.routes.findIndex((r) => r.name === "pagos")
               ? "left"
               : "right";
 

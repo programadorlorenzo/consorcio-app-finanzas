@@ -6,6 +6,6 @@ export default function Index() {
 
   if (isLoading) return null; // O un splash
 
-  if (user) return <Redirect href="/(tabs)/gastos" />;
+  if (user) return <Redirect href="/(tabs)/pagos" />;
   return <Redirect href="/login" />;
 }

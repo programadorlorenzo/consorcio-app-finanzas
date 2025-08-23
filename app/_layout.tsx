@@ -1,9 +1,9 @@
 import { AuthProvider, useAuth } from "@/components/providers/AuthProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack, useRouter, useSegments } from "expo-router";
@@ -52,7 +52,7 @@ function RootLayoutNav() {
       router.replace("/login");
     }
     if (user && inLogin) {
-      router.replace("/(tabs)/gastos");
+      router.replace("/(tabs)/pagos");
     }
   }, [router, segments, user]);
 

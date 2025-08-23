@@ -9,14 +9,14 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
@@ -44,7 +44,7 @@ export default function LoginScreen() {
       if (ok) {
         console.log("Login exitoso");
         // Navigate to the main app screen or perform any post-login actions
-        router.replace("/(tabs)/gastos");
+        router.replace("/(tabs)/pagos");
       } else {
         Alert.alert(
           "Error de autenticación",
