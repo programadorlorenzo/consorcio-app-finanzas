@@ -10,6 +10,7 @@ export interface PaymentFormData {
   observaciones: string;
   ubicacionFisica: string;
   numeroRecibo: string;
+  cuentaBancaria: string;
 }
 
 export enum CategoriaPago {

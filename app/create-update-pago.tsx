@@ -51,6 +51,7 @@ export default function CreateUpdatePago() {
     observaciones: "",
     ubicacionFisica: "",
     numeroRecibo: "",
+    cuentaBancaria: "",
   });
   const [showCategoriaModal, setShowCategoriaModal] = useState(false);
   const [showSubcategoriaModal, setShowSubcategoriaModal] = useState(false);
@@ -259,6 +260,19 @@ export default function CreateUpdatePago() {
           </View>
 
           <View style={stylesBaseStylesCreatePago.inputGroup}>
+            <Text style={stylesBaseStylesCreatePago.label}>
+              Cuenta Bancaria
+            </Text>
+            <TextInput
+              style={stylesBaseStylesCreatePago.input}
+              value={formData.cuentaBancaria}
+              onChangeText={(text) => handleInputChange("cuentaBancaria", text)}
+              placeholder="Número de cuenta"
+              placeholderTextColor="#8A9A97"
+            />
+          </View>
+
+          <View style={stylesBaseStylesCreatePago.inputGroup}>
             <Text style={stylesBaseStylesCreatePago.label}>Tipo *</Text>
             <CustomSelectorCreatePago
               label="Seleccionar Tipo"
@@ -297,29 +311,12 @@ export default function CreateUpdatePago() {
           </View>
 
           <View style={stylesBaseStylesCreatePago.inputGroup}>
-            <Text style={stylesBaseStylesCreatePago.label}>
-              Número de Recibo
-            </Text>
+            <Text style={stylesBaseStylesCreatePago.label}>Comprobante</Text>
             <TextInput
               style={stylesBaseStylesCreatePago.input}
               value={formData.numeroRecibo}
               onChangeText={(text) => handleInputChange("numeroRecibo", text)}
-              placeholder="Número de recibo (opcional)"
-              placeholderTextColor="#8A9A97"
-            />
-          </View>
-
-          <View style={stylesBaseStylesCreatePago.inputGroup}>
-            <Text style={stylesBaseStylesCreatePago.label}>
-              Ubicación Física
-            </Text>
-            <TextInput
-              style={stylesBaseStylesCreatePago.input}
-              value={formData.ubicacionFisica}
-              onChangeText={(text) =>
-                handleInputChange("ubicacionFisica", text)
-              }
-              placeholder="Ubicación del documento físico"
+              placeholder="Comprobante (opcional)"
               placeholderTextColor="#8A9A97"
             />
           </View>
