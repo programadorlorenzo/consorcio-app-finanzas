@@ -235,9 +235,10 @@ export default function CreateUpdatePago() {
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ["images"],
         allowsMultipleSelection: true,
         quality: 0.8,
+        allowsEditing: false,
       });
 
       if (!result.canceled && result.assets) {
@@ -515,11 +516,6 @@ export default function CreateUpdatePago() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.form}>
-          {/* Información básica */}
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Información Básica</Text>
-          </View>
-
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Descripción *</Text>
             <TextInput
