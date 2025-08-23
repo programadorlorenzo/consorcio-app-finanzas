@@ -32,7 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="pagos"
         options={{
-          title: 'Gastos',
+          title: 'Pagos',
         }}
       />
       <Tabs.Screen
