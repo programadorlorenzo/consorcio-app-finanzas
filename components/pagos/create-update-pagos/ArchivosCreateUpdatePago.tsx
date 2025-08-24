@@ -60,7 +60,7 @@ const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
     <>
       <View style={stylesArchivosCreatePago.container}>
         <Text style={stylesArchivosCreatePago.label}>
-          Archivos y Vouchers
+          Voucher / Archivo
         </Text>
 
         {/* Botón para agregar archivos */}
@@ -71,7 +71,7 @@ const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
         >
           <Ionicons name="add-circle-outline" size={24} color={MAIN_COLOR} />
           <Text style={stylesArchivosCreatePago.addButtonText}>
-            Agregar archivo o voucher
+            Agregar voucher u otros archivos
           </Text>
         </TouchableOpacity>
 

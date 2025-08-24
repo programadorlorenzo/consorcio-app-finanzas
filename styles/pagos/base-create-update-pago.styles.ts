@@ -120,10 +120,10 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 28,
+    fontSize: 25,
     color: "#111827",
     backgroundColor: "#FFFFFF",
-    marginBottom: 15,
+    marginBottom: 10,
   },
   bottomContainer: {
     padding: 20,

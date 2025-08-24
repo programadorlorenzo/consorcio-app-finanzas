@@ -29,9 +29,11 @@ export enum Moneda {
 }
 
 export enum TipoPago {
-  EFECTIVO = "EFECTIVO",
   TRANSFERENCIA = "TRANSFERENCIA",
-  TARJETA = "TARJETA",
+  YAPE = "YAPE",
+  PLIN = "PLIN",
+  DEPOSITO = "DEPOSITO",
+  EFECTIVO = "EFECTIVO",
 }
 
 export enum OrigenPago {

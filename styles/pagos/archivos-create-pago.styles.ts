@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 
 export const stylesArchivosCreatePago = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   label: {
     fontSize: 16,
@@ -105,9 +105,10 @@ export const stylesArchivosCreatePago = StyleSheet.create({
   emptyContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 40,
+    paddingVertical: 15,
     backgroundColor: "#F9FAFB",
     borderRadius: 12,
+    marginBottom: 5,
   },
   emptyText: {
     fontSize: 16,

@@ -301,6 +301,13 @@ export default function CreateUpdatePago() {
 
         {/* Campos del formulario */}
         <View style={stylesBaseStylesCreatePago.formContainer}>
+          {/* Archivos */}
+          <ArchivosCreateUpdatePago
+            files={files}
+            onAddFile={showFileOptions}
+            onRemoveFile={removeFile}
+          />
+
           {/* Tipo de Pago */}
           <CustomSelectorCreatePago
             label="Tipo"
@@ -462,13 +469,6 @@ export default function CreateUpdatePago() {
               keyboardType="numeric"
             />
           </View>
-
-          {/* Archivos */}
-          <ArchivosCreateUpdatePago
-            files={files}
-            onAddFile={showFileOptions}
-            onRemoveFile={removeFile}
-          />
         </View>
       </ScrollView>
 
