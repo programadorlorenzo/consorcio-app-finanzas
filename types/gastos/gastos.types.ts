@@ -60,10 +60,7 @@ export interface EtiquetaGasto {
 export interface PagoFile {
   id: number;
   pagoId: number;
-  fileName: string;
-  filePath: string;
-  fileSize: number;
-  mimeType: string;
+  filename: string;
   createdAt: string;
   updatedAt: string;
 }

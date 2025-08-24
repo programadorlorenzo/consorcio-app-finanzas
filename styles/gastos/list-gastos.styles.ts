@@ -921,4 +921,62 @@ export const stylesListGastos = StyleSheet.create({
     fontWeight: "600",
     marginLeft: 4,
   },
+
+  // Estilos específicos para archivos de pagos
+  pagoArchivosContainer: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  pagoArchivosLabel: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#374151",
+    marginBottom: 6,
+  },
+  pagoArchivosScroll: {
+    marginTop: 4,
+  },
+  pagoArchivoItem: {
+    marginRight: 8,
+    alignItems: "center",
+  },
+  pagoImageContainer: {
+    position: "relative",
+    borderRadius: 8,
+    overflow: "hidden",
+    backgroundColor: "#F3F4F6",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+  },
+  pagoArchivoImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+  },
+  pagoImageOverlay: {
+    position: "absolute",
+    top: 4,
+    right: 4,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderRadius: 12,
+    padding: 2,
+  },
+  pagoDocumentContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F9FAFB",
+    borderRadius: 8,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    minWidth: 60,
+    minHeight: 60,
+  },
+  pagoDocumentText: {
+    fontSize: 9,
+    color: "#6B7280",
+    textAlign: "center",
+    marginTop: 4,
+    maxWidth: 50,
+  },
 });

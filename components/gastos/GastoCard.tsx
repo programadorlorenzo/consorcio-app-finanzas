@@ -5,9 +5,7 @@ import {
     Gasto,
     GastoFile,
     Moneda,
-    OrigenPago,
     Pago,
-    TipoPago
 } from "@/types/gastos/gastos.types";
 import {
     downloadFile,
@@ -34,6 +32,7 @@ import {
     View,
 } from "react-native";
 import { stylesListGastos } from "../../styles/gastos/list-gastos.styles";
+import PagoCard from "./PagoCard";
 
 // Función para verificar si un archivo es imagen
 const isImageFile = (filename: string): boolean => {
@@ -361,66 +360,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
             style={stylesListGastos.pagosScroll}
           >
             {gasto.pagos.map((pago: Pago, index: number) => (
-              <View key={pago.id || index} style={stylesListGastos.pagoItem}>
-                <View style={stylesListGastos.pagoHeader}>
-                  <View style={stylesListGastos.pagoTipoOrigenContainer}>
-                    <View style={stylesListGastos.pagoTipoBadge}>
-                      <Ionicons
-                        name={
-                          pago.tipo === TipoPago.TRANSFERENCIA
-                            ? "card-outline"
-                            : pago.tipo === TipoPago.EFECTIVO
-                            ? "cash-outline"
-                            : pago.tipo === TipoPago.YAPE || pago.tipo === TipoPago.PLIN
-                            ? "phone-portrait-outline"
-                            : "wallet-outline"
-                        }
-                        size={12}
-                        color="#3B82F6"
-                      />
-                      <Text style={stylesListGastos.pagoTipoText}>{pago.tipo}</Text>
-                    </View>
-                    <View style={stylesListGastos.pagoOrigenBadge}>
-                      <Ionicons
-                        name={
-                          pago.origen === OrigenPago.CUENTA_EMPRESA
-                            ? "business-outline"
-                            : "person-outline"
-                        }
-                        size={12}
-                        color="#059669"
-                      />
-                      <Text style={stylesListGastos.pagoOrigenText}>
-                        {pago.origen === OrigenPago.CUENTA_EMPRESA ? "Empresa" : "Externo"}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                
-                <View style={stylesListGastos.pagoImporteContainer}>
-                  <Text style={stylesListGastos.pagoImporte}>
-                    {pago.moneda === Moneda.SOLES ? "S/" : "$"} {formatImporte(pago.importe)}
-                  </Text>
-                </View>
-
-                {pago.archivos && pago.archivos.length > 0 && (
-                  <View style={stylesListGastos.pagoArchivosInfo}>
-                    <Ionicons name="document-text" size={12} color="#6B7280" />
-                    <Text style={stylesListGastos.pagoArchivosCount}>
-                      {pago.archivos.length} archivo{pago.archivos.length !== 1 ? "s" : ""}
-                    </Text>
-                  </View>
-                )}
-
-                {pago.numeroOperacion && (
-                  <View style={stylesListGastos.pagoOperacionContainer}>
-                    <Text style={stylesListGastos.pagoOperacionLabel}>Op:</Text>
-                    <Text style={stylesListGastos.pagoOperacionNumero}>
-                      {pago.numeroOperacion}
-                    </Text>
-                  </View>
-                )}
-              </View>
+              <PagoCard key={pago.id || index} pago={pago} index={index} />
             ))}
           </ScrollView>
         </View>
