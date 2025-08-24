@@ -4,9 +4,11 @@ import {
   GastoCreateDto,
   SubCategoriaGasto,
 } from "@/types/gastos/gastos.types";
+import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
-import { Alert } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import { Alert, Platform } from "react-native";
 
 export interface FileItem {
   uri: string;
@@ -211,4 +213,65 @@ export const CATEGORIA_SUBCATEGORIA_MAP: Record<
   [CategoriaGasto.CASA]: [],
   [CategoriaGasto.OFICINA]: [],
   [CategoriaGasto.RENDICION]: [],
+};
+
+// Función auxiliar para obtener el ícono según el tipo de archivo
+export const getFileIcon = (type: string): keyof typeof Ionicons.glyphMap => {
+  if (type.includes("pdf")) return "document-text-outline";
+  if (type.includes("word") || type.includes("doc")) return "document-outline";
+  if (type.includes("excel") || type.includes("sheet")) return "grid-outline";
+  if (type.includes("powerpoint") || type.includes("presentation"))
+    return "easel-outline";
+  if (type.includes("zip") || type.includes("rar")) return "archive-outline";
+  return "document-outline";
+};
+
+// Función para descargar archivos de manera elegante
+export const downloadFile = async (url: string, filename: string) => {
+  try {
+    if (Platform.OS === "web") {
+      // En web, simplemente abrir en nueva pestaña
+      window.open(url, "_blank");
+    } else {
+      // En móvil, usar WebBrowser para abrir el archivo
+      await WebBrowser.openBrowserAsync(url, {
+        showTitle: true,
+        toolbarColor: MAIN_COLOR,
+        controlsColor: "#ffffff",
+        enableBarCollapsing: false,
+      });
+    }
+  } catch (error) {
+    console.error("Error al descargar archivo:", error);
+    Alert.alert(
+      "Error",
+      "No se pudo descargar el archivo. Inténtalo de nuevo."
+    );
+  }
+};
+
+// Función para truncar nombre de archivo elegantemente
+export const truncateFileName = (
+  fileName: string,
+  maxLength: number = 15
+): string => {
+  // Remove everything to the left of the last "/" including the "/" itself
+  if (fileName.includes("/")) {
+    fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+  }
+
+  if (fileName.length <= maxLength) return fileName;
+
+  const extension = fileName.split(".").pop();
+  const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf("."));
+
+  if (extension) {
+    const truncatedName = nameWithoutExt.substring(
+      0,
+      maxLength - extension.length - 4
+    );
+    return `${truncatedName}...${extension}`;
+  }
+
+  return fileName.substring(0, maxLength - 3) + "...";
 };

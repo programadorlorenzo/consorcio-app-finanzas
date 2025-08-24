@@ -2,7 +2,12 @@ import { listarGastos } from "@/api/gastos/gastos-api";
 import { API_URL_BASE } from "@/app/backend";
 import { MAIN_COLOR } from "@/app/constants";
 import { EtiquetaGasto, Gasto, GastoFile } from "@/types/gastos/gastos.types";
-import { getBadgeColor } from "@/utils/gastos/create-gasto-utils";
+import {
+    downloadFile,
+    getBadgeColor,
+    getFileIcon,
+    truncateFileName,
+} from "@/utils/gastos/create-gasto-utils";
 import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_gasto.utils";
 import { getEstadoColor } from "@/utils/gastos/list-gastos-utils";
 import { Ionicons } from "@expo/vector-icons";
@@ -37,6 +42,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
   const estadoColor = getEstadoColor(gasto.estado || "PENDIENTE");
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   const openImageModal = (uri: string) => {
     setSelectedImageUri(uri);
@@ -46,6 +52,32 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
   const closeImageModal = () => {
     setIsImageModalVisible(false);
     setSelectedImageUri(null);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuVisible(!isMenuVisible);
+  };
+
+  const closeMenu = () => {
+    setIsMenuVisible(false);
+  };
+
+  const handlePagar = () => {
+    closeMenu();
+    console.log("Pagar gasto:", gasto.id);
+    // TODO: Implementar lógica de pago
+  };
+
+  const handleEditar = () => {
+    closeMenu();
+    console.log("Editar gasto:", gasto.id);
+    // TODO: Navegar a pantalla de edición
+  };
+
+  const handleVerMas = () => {
+    closeMenu();
+    console.log("Ver más detalles gasto:", gasto.id);
+    if (onPress) onPress();
   };
 
   return (
@@ -75,7 +107,9 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
       <View style={stylesListGastos.estadoBadgeContainer}>
         <View style={stylesListGastos.estadoBadge}>
           <Ionicons name="ellipse" size={8} color={estadoColor} />
-          <Text style={[stylesListGastos.estadoBadgeText, { color: estadoColor }]}>
+          <Text
+            style={[stylesListGastos.estadoBadgeText, { color: estadoColor }]}
+          >
             {gasto.estado}
           </Text>
         </View>
@@ -178,15 +212,31 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <View style={stylesListGastos.documentContainer}>
-                    <Ionicons name="document" size={24} color={MAIN_COLOR} />
+                  <TouchableOpacity
+                    style={stylesListGastos.documentContainer}
+                    onPress={() =>
+                      downloadFile(
+                        `${API_URL_BASE}/${archivo.filename}`,
+                        archivo.filename || "archivo"
+                      )
+                    }
+                    activeOpacity={0.8}
+                  >
+                    {/* Ícono del archivo */}
+                    <Ionicons
+                      name={getFileIcon(archivo.filename || "")}
+                      size={35}
+                      color={MAIN_COLOR}
+                    />
+
+                    {/* Nombre del archivo */}
                     <Text
                       style={stylesListGastos.documentText}
                       numberOfLines={1}
                     >
-                      {(archivo.filename || "").split("/").pop()?.split(".")[0]}
+                      {truncateFileName(archivo.filename || "")}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 )}
               </View>
             ))}
@@ -217,14 +267,62 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         </View>
       </View>
 
-      {/* Botón de acción en inferior derecha */}
-      <TouchableOpacity
-        style={stylesListGastos.actionButton}
-        onPress={onPress}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="arrow-forward" size={16} color="#64748B" />
-      </TouchableOpacity>
+      {/* Menú de tres puntos en lugar del botón de acción */}
+      <View style={stylesListGastos.menuContainer}>
+        <TouchableOpacity
+          style={stylesListGastos.menuButton}
+          onPress={toggleMenu}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="ellipsis-vertical" size={18} color="#64748B" />
+        </TouchableOpacity>
+
+        {/* Menú dropdown */}
+        {isMenuVisible && (
+          <>
+            {/* Overlay para cerrar el menú */}
+            <TouchableOpacity
+              style={stylesListGastos.menuOverlay}
+              onPress={closeMenu}
+              activeOpacity={1}
+            />
+
+            {/* Opciones del menú */}
+            <View style={stylesListGastos.menuDropdown}>
+              <TouchableOpacity
+                style={stylesListGastos.menuOption}
+                onPress={handlePagar}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="card-outline" size={16} color="#10B981" />
+                <Text style={stylesListGastos.menuOptionText}>Pagar</Text>
+              </TouchableOpacity>
+
+              <View style={stylesListGastos.menuSeparator} />
+
+              <TouchableOpacity
+                style={stylesListGastos.menuOption}
+                onPress={handleEditar}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="create-outline" size={16} color="#3B82F6" />
+                <Text style={stylesListGastos.menuOptionText}>Editar</Text>
+              </TouchableOpacity>
+
+              <View style={stylesListGastos.menuSeparator} />
+
+              <TouchableOpacity
+                style={stylesListGastos.menuOption}
+                onPress={handleVerMas}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="eye-outline" size={16} color="#6B7280" />
+                <Text style={stylesListGastos.menuOptionText}>Ver más</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </View>
 
       {/* Modal para vista previa de imagen con zoom */}
       <Modal

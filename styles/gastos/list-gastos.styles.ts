@@ -241,20 +241,33 @@ export const stylesListGastos = StyleSheet.create({
     borderTopLeftRadius: 8,
   },
   documentContainer: {
-    width: 60,
+    width: 75,
     height: 60,
-    backgroundColor: "#F8FBFF",
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#FAFAFA",
+    borderRadius: 8,
+    padding: 4,
     borderWidth: 1,
-    borderColor: "#E8F0FF",
+    borderColor: "#E5E7EB",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: 4,
+    // Sombras para iOS
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    // Sombra para Android
+    elevation: 3,
   },
   documentText: {
     fontSize: 8,
-    color: MAIN_COLOR,
+    color: "#374151",
+    fontWeight: "500",
     textAlign: "center",
-    marginTop: 2,
+    lineHeight: 10,
   },
 
   // Usuario
@@ -559,11 +572,14 @@ export const stylesListGastos = StyleSheet.create({
     marginLeft: 10,
   },
 
-  // Botón de acción
-  actionButton: {
+  // Menú de tres puntos
+  menuContainer: {
     position: "absolute",
-    bottom: 12,
+    top: 12,
     right: 12,
+    zIndex: 1000,
+  },
+  menuButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
@@ -577,6 +593,49 @@ export const stylesListGastos = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+  },
+  menuOverlay: {
+    position: "absolute",
+    top: 0,
+    left: -1000,
+    right: -1000,
+    bottom: -1000,
+    backgroundColor: "transparent",
+    zIndex: 999,
+  },
+  menuDropdown: {
+    position: "absolute",
+    top: 35,
+    right: 0,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    paddingVertical: 4,
+    minWidth: 120,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.05)",
+    zIndex: 1001,
+  },
+  menuOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  menuOptionText: {
+    fontSize: 14,
+    color: "#374151",
+    marginLeft: 8,
+    fontWeight: "500",
+  },
+  menuSeparator: {
+    height: 1,
+    backgroundColor: "#F3F4F6",
+    marginHorizontal: 8,
   },
 
   // Modal de imagen
