@@ -94,7 +94,7 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
                 color="#059669"
               />
               <Text style={stylesListGastos.pagoOrigenText}>
-                {pago.origen === OrigenPago.CUENTA_EMPRESA ? "Empresa" : "Externo"}
+                {pago.origen === OrigenPago.CUENTA_EMPRESA ? "Cuenta Empresa" : "Externo"}
               </Text>
             </View>
           </View>
