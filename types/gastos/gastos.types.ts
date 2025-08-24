@@ -89,7 +89,7 @@ export interface Gasto {
   moneda: Moneda | null;
   // Relaciones
   archivos: GastoFile[];
-  etiquetas: Etiqueta[];
+  etiquetas: EtiquetaGasto[];
   pagos: Pago[];
 }
 

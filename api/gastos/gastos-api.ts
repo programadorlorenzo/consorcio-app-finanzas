@@ -33,6 +33,7 @@ export const listarGastos = async (): Promise<Gasto[]> => {
     console.log("🚀 Obteniendo lista de gastos");
     const response = await apiClient.get<Gasto[]>("/gastos");
     console.log("✅ Lista de gastos obtenida exitosamente:", response.data.length, "gastos");
+    console.log("Gastos:", response.data);
     return response.data;
   } catch (error) {
     console.error("❌ Error fetching gastos:", error);

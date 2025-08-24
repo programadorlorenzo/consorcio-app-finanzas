@@ -1,3 +1,4 @@
+import { MAIN_COLOR } from "@/app/constants";
 import {
   CategoriaGasto,
   GastoCreateDto,
@@ -13,6 +14,43 @@ export interface FileItem {
   type: string;
   size?: number;
 }
+// Función para generar color basado en el nombre de la etiqueta
+export const getBadgeColor = (nombre: string | null): string => {
+  if (!nombre) return MAIN_COLOR;
+
+  const colors = [
+    "#D63031",
+    "#00B894",
+    "#0984E3",
+    "#6C5CE7",
+    "#FD79A8",
+    "#E17055",
+    "#00CEC9",
+    "#A29BFE",
+    "#74B9FF",
+    "#FDCB6E",
+    "#EE5A24",
+    "#5F27CD",
+    "#E84393",
+    "#00D2D3",
+    "#FF7675",
+    "#2D3436",
+    "#636E72",
+    "#00B894",
+    "#0984E3",
+    "#6C5CE7",
+  ];
+
+  // Generar índice basado en el hash del nombre
+  let hash = 0;
+  for (let i = 0; i < nombre.length; i++) {
+    const char = nombre.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+
+  return colors[Math.abs(hash) % colors.length];
+};
 
 export const isImage = (type: string): boolean => {
   if (!type) return false;
@@ -21,8 +59,8 @@ export const isImage = (type: string): boolean => {
   // Verificar si es solo "image" (caso que estás viendo)
   if (type === "image") return true;
   // Verificar extensión como fallback
-  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
-  return imageExtensions.some(ext => type.toLowerCase().includes(ext));
+  const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"];
+  return imageExtensions.some((ext) => type.toLowerCase().includes(ext));
 };
 
 export const formatFileSize = (bytes?: number): string => {
@@ -46,12 +84,16 @@ export const addTemporaryFile = (
 ) => {
   // Priorizar mimeType si está disponible y es válido
   let fileType = file.mimeType || file.type || "unknown";
-  
+
   // Si el tipo es solo "image", usar el mimeType si está disponible
-  if (file.type === "image" && file.mimeType && file.mimeType.startsWith("image/")) {
+  if (
+    file.type === "image" &&
+    file.mimeType &&
+    file.mimeType.startsWith("image/")
+  ) {
     fileType = file.mimeType;
   }
-  
+
   // Si no tiene tipo MIME, intentar determinarlo por extensión
   if (!fileType || fileType === "unknown") {
     const fileName = file.name || file.uri || "";
@@ -66,7 +108,7 @@ export const addTemporaryFile = (
     type: file.type,
     mimeType: file.mimeType,
     finalType: fileType,
-    isImage: isImage(fileType)
+    isImage: isImage(fileType),
   });
 
   const newFile: FileItem = {
@@ -75,7 +117,7 @@ export const addTemporaryFile = (
     type: fileType,
     size: file.size,
   };
-  
+
   setFiles((prev) => [...prev, newFile]);
 };
 

@@ -1,8 +1,7 @@
 import { listarGastos } from "@/api/gastos/gastos-api";
 import { API_URL_BASE } from "@/app/backend";
 import { MAIN_COLOR } from "@/app/constants";
-import { Etiqueta } from "@/types/etiquetas/etiquetas.types";
-import { Gasto, GastoFile } from "@/types/gastos/gastos.types";
+import { EtiquetaGasto, Gasto, GastoFile } from "@/types/gastos/gastos.types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
@@ -163,20 +162,20 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
             showsHorizontalScrollIndicator={false}
             style={stylesListGastos.etiquetasScroll}
           >
-            {gasto.etiquetas.map((etiqueta: Etiqueta, index: number) => (
+            {gasto.etiquetas.map((etiqueta: EtiquetaGasto, index: number) => (
               <View
                 key={index}
                 style={[
                   stylesListGastos.etiquetaBadge,
                   {
                     backgroundColor: getBadgeColor(
-                      etiqueta.nombre || "Sin nombre"
+                      etiqueta?.etiqueta?.nombre || "Sin nombre"
                     ),
                   },
                 ]}
               >
                 <Text style={stylesListGastos.etiquetaBadgeText}>
-                  {etiqueta.nombre || "Sin nombre"}
+                  {etiqueta?.etiqueta?.nombre || "Sin nombre"}
                 </Text>
               </View>
             ))}
