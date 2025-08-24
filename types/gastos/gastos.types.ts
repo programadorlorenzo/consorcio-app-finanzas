@@ -28,6 +28,18 @@ export enum Moneda {
   PESOS_COLOMBIANOS = "PESOS_COLOMBIANOS",
 }
 
+export enum TipoPago {
+  EFECTIVO = "EFECTIVO",
+  TRANSFERENCIA = "TRANSFERENCIA",
+  TARJETA = "TARJETA",
+}
+
+export enum OrigenPago {
+  CUENTA_EMPRESA = "CUENTA_EMPRESA",
+  CUENTA_PERSONAL = "CUENTA_PERSONAL",
+  EFECTIVO = "EFECTIVO",
+}
+
 export interface GastoFile {
   id: number;
   rutaArchivo: string;
@@ -89,4 +101,28 @@ export interface GastoCreateDto {
   // Archivos y etiquetas
   rutasArchivos?: string[];
   etiquetasIds?: number[];
+}
+
+export interface PagoCreateDto {
+  tipo: TipoPago;
+  origen: OrigenPago;
+  gastoId: number;
+  rendicionId: number;
+  usuarioRegistroPagoId: number;
+  fechaRegistro: string;
+  titular_origen: string;
+  cuenta_bancaria_origen: string;
+  cci_origen: string;
+  banco_origen: string;
+  moneda_origen: Moneda;
+  titular_destino: string;
+  cuenta_bancaria_destino: string;
+  cci_destino: string;
+  banco_destino: string;
+  moneda_destino: Moneda;
+  tipo_cambio: number;
+  importe: number;
+  moneda: Moneda;
+  numeroOperacion: string;
+  rutasArchivos: string[];
 }
