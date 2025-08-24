@@ -48,7 +48,7 @@ export default function CreateUpdateGasto() {
     observaciones: "",
     categoria: undefined,
     subcategoria: undefined,
-    moneda: Moneda.SOLES,
+    moneda: undefined,
     rutasArchivos: [],
     etiquetasIds: [],
   });
@@ -145,18 +145,6 @@ export default function CreateUpdateGasto() {
         showsVerticalScrollIndicator={false}
       >
         <View style={stylesBaseStylesCreateGasto.form}>
-          {/* Descripción */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Descripción *</Text>
-            <TextInput
-              style={stylesBaseStylesCreateGasto.input}
-              value={formData.descripcion}
-              onChangeText={(text) => handleInputChange("descripcion", text)}
-              placeholder="Descripción del gasto"
-              placeholderTextColor="#8A9A97"
-            />
-          </View>
-
           {/* Categoría */}
           <View style={stylesBaseStylesCreateGasto.inputGroup}>
             <Text style={stylesBaseStylesCreateGasto.label}>Categoría</Text>
@@ -191,6 +179,31 @@ export default function CreateUpdateGasto() {
                 />
               </View>
             )}
+
+          {/* Descripción */}
+          <View style={stylesBaseStylesCreateGasto.inputGroup}>
+            <Text style={stylesBaseStylesCreateGasto.label}>Descripción *</Text>
+            <TextInput
+              style={stylesBaseStylesCreateGasto.input}
+              value={formData.descripcion}
+              onChangeText={(text) => handleInputChange("descripcion", text)}
+              placeholder="Descripción del gasto"
+              placeholderTextColor="#8A9A97"
+            />
+          </View>
+
+          {/* Etiquetas */}
+          <View style={stylesBaseStylesCreateGasto.inputGroup}>
+            <Text style={stylesBaseStylesCreateGasto.label}>Etiquetas</Text>
+            <EtiquetasSelectorCreateUpdateGasto
+              selectedEtiquetasIds={formData.etiquetasIds || []}
+              onEtiquetasChange={(etiquetasIds) =>
+                handleInputChange("etiquetasIds", etiquetasIds)
+              }
+              isVisible={false}
+              onClose={() => {}}
+            />
+          </View>
 
           {/* Importe */}
           <View style={stylesBaseStylesCreateGasto.inputGroup}>
@@ -243,19 +256,6 @@ export default function CreateUpdateGasto() {
               placeholder="Observaciones adicionales"
               multiline
               placeholderTextColor="#8A9A97"
-            />
-          </View>
-
-          {/* Etiquetas */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Etiquetas</Text>
-            <EtiquetasSelectorCreateUpdateGasto
-              selectedEtiquetasIds={formData.etiquetasIds || []}
-              onEtiquetasChange={(etiquetasIds) =>
-                handleInputChange("etiquetasIds", etiquetasIds)
-              }
-              isVisible={showEtiquetasModal}
-              onClose={() => setShowEtiquetasModal(!showEtiquetasModal)}
             />
           </View>
 

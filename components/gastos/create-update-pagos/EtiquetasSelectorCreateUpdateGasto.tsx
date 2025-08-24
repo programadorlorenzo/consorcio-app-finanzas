@@ -22,6 +22,28 @@ interface EtiquetasSelectorProps {
   onClose: () => void;
 }
 
+// Función para generar color basado en el nombre de la etiqueta
+const getBadgeColor = (nombre: string | null): string => {
+  if (!nombre) return MAIN_COLOR;
+  
+  const colors = [
+    '#D63031', '#00B894', '#0984E3', '#6C5CE7', '#FD79A8',
+    '#E17055', '#00CEC9', '#A29BFE', '#74B9FF', '#FDCB6E',
+    '#EE5A24', '#5F27CD', '#E84393', '#00D2D3', '#FF7675',
+    '#2D3436', '#636E72', '#00B894', '#0984E3', '#6C5CE7'
+  ];
+  
+  // Generar índice basado en el hash del nombre
+  let hash = 0;
+  for (let i = 0; i < nombre.length; i++) {
+    const char = nombre.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  
+  return colors[Math.abs(hash) % colors.length];
+};
+
 export default function EtiquetasSelectorCreateUpdateGasto({
   selectedEtiquetasIds,
   onEtiquetasChange,
@@ -32,12 +54,11 @@ export default function EtiquetasSelectorCreateUpdateGasto({
   const [filteredEtiquetas, setFilteredEtiquetas] = useState<Etiqueta[]>([]);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    if (isVisible) {
-      loadEtiquetas();
-    }
-  }, [isVisible]);
+    loadEtiquetas();
+  }, []);
 
   useEffect(() => {
     // Filtrar etiquetas por búsqueda
@@ -81,92 +102,102 @@ export default function EtiquetasSelectorCreateUpdateGasto({
     onEtiquetasChange(newSelectedIds);
   };
 
-  const getSelectedEtiquetasNames = () => {
-    return etiquetas
-      .filter(etiqueta => selectedEtiquetasIds.includes(etiqueta.id))
-      .map(etiqueta => etiqueta.nombre)
-      .join(', ');
+  const getSelectedEtiquetas = () => {
+    return etiquetas.filter(etiqueta => selectedEtiquetasIds.includes(etiqueta.id));
   };
 
   const handleClose = () => {
     setSearchText('');
-    onClose();
+    setModalVisible(false);
+  };
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const removeBadge = (etiquetaId: number) => {
+    const newSelectedIds = selectedEtiquetasIds.filter(id => id !== etiquetaId);
+    onEtiquetasChange(newSelectedIds);
   };
 
   return (
     <>
-      {/* Trigger Button */}
-      <TouchableOpacity
-        style={stylesEtiquetasSelector.triggerButton}
-        onPress={onClose}
-        activeOpacity={0.7}
-      >
-        <View style={stylesEtiquetasSelector.triggerContent}>
-          <View style={stylesEtiquetasSelector.triggerTextContainer}>
-            <Text style={stylesEtiquetasSelector.triggerLabel}>
-              {selectedEtiquetasIds.length > 0 
-                ? `${selectedEtiquetasIds.length} etiqueta${selectedEtiquetasIds.length > 1 ? 's' : ''} seleccionada${selectedEtiquetasIds.length > 1 ? 's' : ''}`
-                : 'Seleccionar etiquetas'
-              }
-            </Text>
-            {selectedEtiquetasIds.length > 0 && (
-              <Text style={stylesEtiquetasSelector.selectedText} numberOfLines={2}>
-                {getSelectedEtiquetasNames()}
-              </Text>
-            )}
-          </View>
-          <Ionicons 
-            name="chevron-down" 
-            size={20} 
-            color={MAIN_COLOR} 
-          />
-        </View>
-      </TouchableOpacity>
+      {/* Badges Horizontales */}
+      <View style={stylesEtiquetasSelector.badgesContainer}>
+        <ScrollView 
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={stylesEtiquetasSelector.badgesScrollView}
+          contentContainerStyle={stylesEtiquetasSelector.badgesScrollContent}
+        >
+          {/* Botón Más - Primero */}
+          <TouchableOpacity
+            style={stylesEtiquetasSelector.moreButton}
+            onPress={handleOpenModal}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="add" size={20} color={MAIN_COLOR} />
+          </TouchableOpacity>
 
-      {/* Modal */}
+          {/* Badges de etiquetas seleccionadas */}
+          {getSelectedEtiquetas().map((etiqueta) => (
+            <View 
+              key={etiqueta.id} 
+              style={[
+                stylesEtiquetasSelector.badge,
+                { backgroundColor: getBadgeColor(etiqueta.nombre) }
+              ]}
+            >
+              <Text style={stylesEtiquetasSelector.badgeText}>
+                {etiqueta.nombre}
+              </Text>
+              <TouchableOpacity
+                style={stylesEtiquetasSelector.badgeRemoveButton}
+                onPress={() => removeBadge(etiqueta.id)}
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+              >
+                <Ionicons name="close" size={14} color="white" />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* Modal para seleccionar más etiquetas */}
       <Modal
-        visible={isVisible}
+        visible={modalVisible}
         animationType="slide"
         presentationStyle="pageSheet"
         onRequestClose={handleClose}
       >
         <View style={stylesEtiquetasSelector.modalContainer}>
-          {/* Header */}
+          {/* Header del Modal */}
           <View style={stylesEtiquetasSelector.modalHeader}>
-            <TouchableOpacity 
-              onPress={handleClose}
+            <TouchableOpacity
               style={stylesEtiquetasSelector.closeButton}
+              onPress={handleClose}
             >
-              <Ionicons name="close" size={24} color={MAIN_COLOR} />
+              <Ionicons name="close" size={24} color="#333" />
             </TouchableOpacity>
             <Text style={stylesEtiquetasSelector.modalTitle}>
               Seleccionar Etiquetas
             </Text>
-            <View style={stylesEtiquetasSelector.placeholder} />
+            <View style={{ width: 24 }} />
           </View>
 
-          {/* Search Bar */}
+          {/* Campo de búsqueda */}
           <View style={stylesEtiquetasSelector.searchContainer}>
-            <Ionicons name="search" size={20} color="#8A9A97" />
+            <Ionicons name="search" size={20} color="#999" />
             <TextInput
               style={stylesEtiquetasSelector.searchInput}
               placeholder="Buscar etiquetas..."
               value={searchText}
               onChangeText={setSearchText}
-              placeholderTextColor="#8A9A97"
+              autoCapitalize="none"
             />
           </View>
 
-          {/* Selected Count */}
-          {selectedEtiquetasIds.length > 0 && (
-            <View style={stylesEtiquetasSelector.selectedCountContainer}>
-              <Text style={stylesEtiquetasSelector.selectedCountText}>
-                {selectedEtiquetasIds.length} etiqueta{selectedEtiquetasIds.length > 1 ? 's' : ''} seleccionada{selectedEtiquetasIds.length > 1 ? 's' : ''}
-              </Text>
-            </View>
-          )}
-
-          {/* Etiquetas List */}
+          {/* Lista de etiquetas */}
           {loading ? (
             <View style={stylesEtiquetasSelector.loadingContainer}>
               <ActivityIndicator size="large" color={MAIN_COLOR} />
@@ -175,76 +206,58 @@ export default function EtiquetasSelectorCreateUpdateGasto({
               </Text>
             </View>
           ) : (
-            <ScrollView 
+            <ScrollView
               style={stylesEtiquetasSelector.etiquetasList}
               showsVerticalScrollIndicator={false}
             >
-              {filteredEtiquetas.length === 0 ? (
+              {filteredEtiquetas.map((etiqueta) => (
+                <TouchableOpacity
+                  key={etiqueta.id}
+                  style={stylesEtiquetasSelector.etiquetaItem}
+                  onPress={() => toggleEtiqueta(etiqueta.id)}
+                  activeOpacity={0.7}
+                >
+                  <View style={stylesEtiquetasSelector.etiquetaContent}>
+                    <View style={stylesEtiquetasSelector.etiquetaInfo}>
+                      <View 
+                        style={[
+                          stylesEtiquetasSelector.colorIndicator,
+                          { backgroundColor: getBadgeColor(etiqueta.nombre) }
+                        ]} 
+                      />
+                      <View style={stylesEtiquetasSelector.textContainer}>
+                        <Text style={stylesEtiquetasSelector.etiquetaName}>
+                          {etiqueta.nombre}
+                        </Text>
+                        {etiqueta.descripcion && (
+                          <Text style={stylesEtiquetasSelector.etiquetaDescription}>
+                            {etiqueta.descripcion}
+                          </Text>
+                        )}
+                      </View>
+                    </View>
+                    <View style={[
+                      stylesEtiquetasSelector.checkbox,
+                      selectedEtiquetasIds.includes(etiqueta.id) && stylesEtiquetasSelector.checkboxSelected
+                    ]}>
+                      {selectedEtiquetasIds.includes(etiqueta.id) && (
+                        <Ionicons name="checkmark" size={18} color="white" />
+                      )}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+              
+              {filteredEtiquetas.length === 0 && searchText.trim() !== '' && (
                 <View style={stylesEtiquetasSelector.emptyContainer}>
-                  <Ionicons name="pricetags-outline" size={48} color="#8A9A97" />
+                  <Ionicons name="search" size={48} color="#ccc" />
                   <Text style={stylesEtiquetasSelector.emptyText}>
-                    {searchText ? 'No se encontraron etiquetas' : 'No hay etiquetas disponibles'}
+                    No se encontraron etiquetas que coincidan con &quot;{searchText}&quot;
                   </Text>
                 </View>
-              ) : (
-                filteredEtiquetas.map((etiqueta) => {
-                  const isSelected = selectedEtiquetasIds.includes(etiqueta.id);
-                  
-                  return (
-                    <TouchableOpacity
-                      key={etiqueta.id}
-                      style={[
-                        stylesEtiquetasSelector.etiquetaItem,
-                        isSelected && stylesEtiquetasSelector.etiquetaItemSelected
-                      ]}
-                      onPress={() => toggleEtiqueta(etiqueta.id)}
-                      activeOpacity={0.7}
-                    >
-                      <View style={stylesEtiquetasSelector.etiquetaContent}>
-                        <View style={stylesEtiquetasSelector.etiquetaInfo}>
-                          <Text style={[
-                            stylesEtiquetasSelector.etiquetaName,
-                            isSelected && stylesEtiquetasSelector.etiquetaNameSelected
-                          ]}>
-                            {etiqueta.nombre}
-                          </Text>
-                          {etiqueta.descripcion && (
-                            <Text style={[
-                              stylesEtiquetasSelector.etiquetaDescription,
-                              isSelected && stylesEtiquetasSelector.etiquetaDescriptionSelected
-                            ]}>
-                              {etiqueta.descripcion}
-                            </Text>
-                          )}
-                        </View>
-                        <View style={[
-                          stylesEtiquetasSelector.checkbox,
-                          isSelected && stylesEtiquetasSelector.checkboxSelected
-                        ]}>
-                          {isSelected && (
-                            <Ionicons name="checkmark" size={16} color="white" />
-                          )}
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })
               )}
             </ScrollView>
           )}
-
-          {/* Footer */}
-          <View style={stylesEtiquetasSelector.modalFooter}>
-            <TouchableOpacity
-              style={stylesEtiquetasSelector.confirmButton}
-              onPress={handleClose}
-              activeOpacity={0.8}
-            >
-              <Text style={stylesEtiquetasSelector.confirmButtonText}>
-                Confirmar Selección
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </Modal>
     </>

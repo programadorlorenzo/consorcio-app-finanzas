@@ -41,11 +41,8 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
     padding: 20,
   },
   sectionHeader: {
-    marginTop: 20,
-    marginBottom: 15,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E1E8E6",
+    marginTop: 10,
+    marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 18,
@@ -53,7 +50,7 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
     color: MAIN_COLOR,
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   label: {
     fontSize: 16,
@@ -181,41 +178,45 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
     borderRadius: 12,
-    padding: 12,
-    marginBottom: 8,
+    padding: 14,
+    marginBottom: 10,
+    marginHorizontal: 4,
     shadowColor: MAIN_COLOR,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: "#F0F2F5",
   },
   fileImage: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     borderRadius: 8,
-    marginRight: 12,
   },
   fileIcon: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     borderRadius: 8,
     backgroundColor: "#F0F7F5",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
   },
   fileInfo: {
     flex: 1,
+    marginLeft: 12,
   },
   fileName: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
     color: MAIN_COLOR,
-    marginBottom: 2,
+    marginBottom: 4,
+    lineHeight: 20,
   },
   fileSize: {
-    fontSize: 12,
+    fontSize: 13,
     color: "#8A9A97",
+    fontWeight: "500",
   },
   removeFileButton: {
     padding: 4,
@@ -284,5 +285,168 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
     color: "#EF4444",
     textAlign: "center",
     flex: 1,
+  },
+
+  // Nuevos estilos para lista de archivos mejorada
+  filesContainer: {
+    height: 140,
+    marginBottom: 20,
+    borderRadius: 12,
+    backgroundColor: "#F8F9FA",
+    padding: 8,
+  },
+  filesScrollView: {
+    paddingVertical: 4,
+  },
+  filesScrollContent: {
+    paddingHorizontal: 8,
+    alignItems: "flex-start",
+  },
+
+  // Estilos para grid de archivos horizontal
+  fileGridItem: {
+    width: 100,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 10,
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: "#F0F2F5",
+    position: "relative",
+    height: 120,
+  },
+  removeFileButtonGrid: {
+    position: "absolute",
+    top: 6,
+    right: 6,
+    zIndex: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    borderRadius: 9,
+    padding: 1,
+  },
+  filePreviewGrid: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 6,
+  },
+  imagePreviewGrid: {
+    position: "relative",
+    width: "100%",
+    height: "100%", // Ocupar todo el card
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  gridImagePreview: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
+  },
+
+  fileIconGrid: {
+    width: "100%",
+    height: 70,
+    borderRadius: 8,
+    backgroundColor: "#F0F7F5",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  fileInfoGrid: {
+    alignItems: "center",
+    marginTop: 4,
+  },
+  fileNameGrid: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: MAIN_COLOR,
+    textAlign: "center",
+    marginBottom: 2,
+    lineHeight: 12,
+  },
+  fileSizeGrid: {
+    fontSize: 9,
+    color: "white", // Cambiar a blanco para contraste con fondo oscuro
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  filePreviewContainer: {
+    marginRight: 12,
+  },
+  imagePreviewContainer: {
+    position: "relative",
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  imageOverlay: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderRadius: 12,
+    padding: 4,
+    margin: 4,
+  },
+  fileTypeIndicator: {
+    fontSize: 11,
+    color: "#6B7280",
+    fontStyle: "italic",
+    marginTop: 2,
+  },
+
+  // Estilos para modal de imagen
+  imageModalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.95)",
+  },
+  imageModalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end", // Alinear a la derecha
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+  },
+  closeModalButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  imageModalTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "white",
+  },
+  modalHeaderSpacer: {
+    width: 44,
+  },
+  imageZoomContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  imageZoomScrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  fullScreenImage: {
+    width: "100%",
+    height: "100%",
+    maxWidth: 400,
+    maxHeight: 600,
+  },
+  imageModalFooter: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    alignItems: "center",
+  },
+  zoomInstructions: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.7)",
+    textAlign: "center",
   },
 });

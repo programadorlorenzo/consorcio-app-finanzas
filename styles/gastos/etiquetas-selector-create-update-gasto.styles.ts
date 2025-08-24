@@ -137,25 +137,25 @@ export const stylesEtiquetasSelector = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#F0F2F5',
-    borderRadius: 12,
+    borderRadius: 16,
     marginBottom: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   etiquetaItemSelected: {
     borderColor: MAIN_COLOR,
     backgroundColor: '#F8FBFF',
     shadowColor: MAIN_COLOR,
-    shadowOpacity: 0.1,
-    elevation: 2,
+    shadowOpacity: 0.15,
+    elevation: 3,
   },
   etiquetaContent: {
     flexDirection: 'row',
@@ -164,7 +164,8 @@ export const stylesEtiquetasSelector = StyleSheet.create({
   },
   etiquetaInfo: {
     flex: 1,
-    marginRight: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   etiquetaName: {
     fontSize: 16,
@@ -186,18 +187,28 @@ export const stylesEtiquetasSelector = StyleSheet.create({
 
   // Checkbox Styles
   checkbox: {
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
     borderWidth: 2,
-    borderColor: '#D1D5DB',
-    borderRadius: 6,
+    borderColor: '#E5E7EB',
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
   },
   checkboxSelected: {
     backgroundColor: MAIN_COLOR,
     borderColor: MAIN_COLOR,
+    shadowColor: MAIN_COLOR,
+    shadowOpacity: 0.3,
   },
 
   // Footer Styles
@@ -218,5 +229,84 @@ export const stylesEtiquetasSelector = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#fff',
+  },
+
+  // Badge Styles
+  badgesContainer: {
+    paddingVertical: 12,
+  },
+  badgesScrollView: {
+    maxHeight: 80,
+  },
+  badgesScrollContent: {
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginRight: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  badgeText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#fff',
+    marginRight: 6,
+  },
+  badgeRemoveButton: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  moreButton: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F8FBFF',
+    borderRadius: 18,
+    marginRight: 8,
+    borderWidth: 2,
+    borderColor: MAIN_COLOR,
+    borderStyle: 'dashed',
+  },
+  moreButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: MAIN_COLOR,
+    marginLeft: 6,
+  },
+
+  // Color indicator for modal items
+  colorIndicator: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginRight: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  textContainer: {
+    flex: 1,
   },
 });

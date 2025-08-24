@@ -1,6 +1,6 @@
 import {
   CategoriaGasto,
-  GastoFormData,
+  GastoCreateDto,
   SubCategoriaGasto,
 } from "@/types/gastos/gastos.types";
 import * as DocumentPicker from "expo-document-picker";
@@ -15,7 +15,14 @@ export interface FileItem {
 }
 
 export const isImage = (type: string): boolean => {
-  return type.startsWith("image/");
+  if (!type) return false;
+  // Verificar tipo MIME completo
+  if (type.startsWith("image/")) return true;
+  // Verificar si es solo "image" (caso que estás viendo)
+  if (type === "image") return true;
+  // Verificar extensión como fallback
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+  return imageExtensions.some(ext => type.toLowerCase().includes(ext));
 };
 
 export const formatFileSize = (bytes?: number): string => {
@@ -27,7 +34,7 @@ export const formatFileSize = (bytes?: number): string => {
 };
 
 export const getAvailableSubcategorias = (
-  formData: GastoFormData
+  formData: GastoCreateDto
 ): SubCategoriaGasto[] => {
   if (!formData.categoria) return [];
   return CATEGORIA_SUBCATEGORIA_MAP[formData.categoria] || [];
@@ -37,12 +44,38 @@ export const addTemporaryFile = (
   file: any,
   setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>
 ) => {
+  // Priorizar mimeType si está disponible y es válido
+  let fileType = file.mimeType || file.type || "unknown";
+  
+  // Si el tipo es solo "image", usar el mimeType si está disponible
+  if (file.type === "image" && file.mimeType && file.mimeType.startsWith("image/")) {
+    fileType = file.mimeType;
+  }
+  
+  // Si no tiene tipo MIME, intentar determinarlo por extensión
+  if (!fileType || fileType === "unknown") {
+    const fileName = file.name || file.uri || "";
+    if (fileName.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i)) {
+      fileType = "image/jpeg"; // Tipo genérico para imágenes
+    }
+  }
+
+  // Debug para verificar tipos
+  console.log("File debug:", {
+    name: file.name,
+    type: file.type,
+    mimeType: file.mimeType,
+    finalType: fileType,
+    isImage: isImage(fileType)
+  });
+
   const newFile: FileItem = {
     uri: file.uri,
-    name: file.name || `archivo_${Date.now()}`,
-    type: file.type || file.mimeType || "unknown",
+    name: file.name || `imagen_${Date.now()}.jpg`,
+    type: fileType,
     size: file.size,
   };
+  
   setFiles((prev) => [...prev, newFile]);
 };
 
