@@ -3,13 +3,13 @@ import { StyleSheet } from "react-native";
 
 export const stylesCustomSelectorCreatePago = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: 10,
   },
   label: {
     fontSize: 16,
     fontWeight: "600",
     color: MAIN_COLOR,
-    marginBottom: 8,
+    marginBottom: 5,
   },
   required: {
     color: "#EF4444",

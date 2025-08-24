@@ -34,12 +34,12 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
     paddingHorizontal: 20,
   },
   gastoInfoContainer: {
+    marginTop: 10,
     backgroundColor: '#f8f9fa',
     borderWidth: 1,
     borderColor: '#e9ecef',
     borderRadius: 8,
     padding: 16,
-    marginBottom: 16,
   },
   gastoInfoTitle: {
     fontSize: 16,
@@ -84,7 +84,7 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
     paddingVertical: 16,
   },
   fieldContainer: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   fieldLabel: {
     fontSize: 16,
@@ -108,21 +108,22 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
   importeContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: 10,
   },
   monedaSelector: {
-    flex: 0.3,
+    flex: 0.5,
   },
   importeInput: {
-    flex: 0.7,
+    flex: 0.5,
     borderWidth: 1,
     borderColor: "#D1D5DB",
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 16,
+    fontSize: 28,
     color: "#111827",
     backgroundColor: "#FFFFFF",
+    marginBottom: 15,
   },
   bottomContainer: {
     padding: 20,

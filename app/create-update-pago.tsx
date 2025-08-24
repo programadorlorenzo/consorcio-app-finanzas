@@ -96,7 +96,7 @@ export default function CreateUpdatePago() {
             importe: 0,
             moneda: gasto.moneda || Moneda.SOLES,
           }));
-          setImporteText(gasto.importe?.toString() || "");
+          setImporteText("");
         } catch (error) {
           console.error("Error cargando información del gasto:", error);
           Alert.alert("Error", "No se pudo cargar la información del gasto");
@@ -303,7 +303,7 @@ export default function CreateUpdatePago() {
         <View style={stylesBaseStylesCreatePago.formContainer}>
           {/* Tipo de Pago */}
           <CustomSelectorCreatePago
-            label="Tipo de Pago"
+            label="Tipo"
             value={formData.tipo}
             placeholder="Selecciona el tipo de pago"
             options={Object.values(TipoPago)}
@@ -311,20 +311,6 @@ export default function CreateUpdatePago() {
             isVisible={showTipoModal}
             onClose={() => setShowTipoModal(!showTipoModal)}
             required
-          />
-
-          {/* Origen */}
-          <CustomSwitchCreatePago
-            label="Origen del pago"
-            leftLabel="Cuenta Empresa"
-            rightLabel="Externo"
-            value={formData.origen === OrigenPago.CUENTA_EMPRESA}
-            onValueChange={(isLeft) => {
-              setFormData({
-                ...formData,
-                origen: isLeft ? OrigenPago.CUENTA_EMPRESA : OrigenPago.EXTERNO,
-              });
-            }}
           />
 
           {/* Importe */}
@@ -353,6 +339,20 @@ export default function CreateUpdatePago() {
               />
             </View>
           </View>
+
+          {/* Origen */}
+          <CustomSwitchCreatePago
+            label="Origen"
+            leftLabel="Cuenta Empresa"
+            rightLabel="Externo"
+            value={formData.origen === OrigenPago.CUENTA_EMPRESA}
+            onValueChange={(isLeft) => {
+              setFormData({
+                ...formData,
+                origen: isLeft ? OrigenPago.CUENTA_EMPRESA : OrigenPago.EXTERNO,
+              });
+            }}
+          />
 
           {/* Número de Operación */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>

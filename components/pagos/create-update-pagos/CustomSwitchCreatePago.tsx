@@ -45,7 +45,7 @@ const CustomSwitchCreatePago = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 8,
+    marginBottom: 10,
   },
   mainLabel: {
     fontSize: 16,
