@@ -9,7 +9,7 @@ export const stylesArchivosCreatePago = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#374151",
-    marginBottom: 16,
+    marginBottom: 10,
   },
   addButton: {
     flexDirection: "row",

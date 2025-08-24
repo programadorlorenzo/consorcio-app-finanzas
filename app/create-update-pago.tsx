@@ -362,7 +362,7 @@ export default function CreateUpdatePago() {
           />
 
           {/* Número de Operación */}
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
+          {/* <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
               Número de Operación{" "}
               <Text style={stylesBaseStylesCreatePago.required}>*</Text>
@@ -378,7 +378,6 @@ export default function CreateUpdatePago() {
             />
           </View>
 
-          {/* Titular Origen */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
               Titular Origen
@@ -392,7 +391,6 @@ export default function CreateUpdatePago() {
             />
           </View>
 
-          {/* Banco Origen */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
               Banco Origen
@@ -406,7 +404,6 @@ export default function CreateUpdatePago() {
             />
           </View>
 
-          {/* Cuenta Bancaria Origen */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
               Cuenta Bancaria Origen
@@ -423,7 +420,6 @@ export default function CreateUpdatePago() {
             />
           </View>
 
-          {/* Titular Destino */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
               Titular Destino
@@ -439,7 +435,6 @@ export default function CreateUpdatePago() {
             />
           </View>
 
-          {/* Banco Destino */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
               Banco Destino
@@ -453,7 +448,6 @@ export default function CreateUpdatePago() {
             />
           </View>
 
-          {/* Cuenta Bancaria Destino */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
               Cuenta Bancaria Destino
@@ -468,7 +462,7 @@ export default function CreateUpdatePago() {
               placeholderTextColor="#9CA3AF"
               keyboardType="numeric"
             />
-          </View>
+          </View> */}
         </View>
       </ScrollView>
 

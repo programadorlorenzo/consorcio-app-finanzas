@@ -81,7 +81,7 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
     color: '#6c757d',
   },
   formContainer: {
-    paddingVertical: 16,
+    paddingVertical: 10,
   },
   fieldContainer: {
     marginBottom: 0,
