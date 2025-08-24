@@ -58,7 +58,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         />
       </View>
 
-      {/* Header con Categoría/Subcategoría - Breadcrumb */}
+      {/* Header con Categoría/Subcategoría y Estado */}
       <View style={stylesListGastos.cardHeader}>
         <View style={stylesListGastos.breadcrumbContainer}>
           <Text style={stylesListGastos.breadcrumbText}>
@@ -72,6 +72,17 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
               </Text>
             </>
           )}
+        </View>
+        <View style={stylesListGastos.estadoContainerHeader}>
+          <View
+            style={[
+              stylesListGastos.estadoIndicatorSmall,
+              { backgroundColor: estadoColor },
+            ]}
+          />
+          <Text style={[stylesListGastos.estadoTextSmall, { color: estadoColor }]}>
+            {gasto.estado}
+          </Text>
         </View>
       </View>
 
@@ -167,39 +178,21 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
               Creado por {gasto.usuarioRegistroGastoNombre}{" "}
             </Text>
           </View>
-          <View style={stylesListGastos.fechaEstadoRow}>
-            <View style={stylesListGastos.fechaContainer}>
-              <Ionicons name="time" size={16} color="#94A3B8" />
-              <Text style={stylesListGastos.registradoLabel}>
-                Registrado el{" "}
-                {new Date(gasto.fechaRegistro || "").toLocaleDateString(
-                  "es-ES"
-                )}{" "}
-                {new Date(gasto.fechaRegistro || "").toLocaleTimeString(
-                  "es-ES",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                )}{" "}
-              </Text>
-            </View>
-            <View style={stylesListGastos.estadoContainerSmall}>
-              <View
-                style={[
-                  stylesListGastos.estadoIndicatorSmall,
-                  { backgroundColor: estadoColor },
-                ]}
-              />
-              <Text
-                style={[
-                  stylesListGastos.estadoTextSmall,
-                  { color: estadoColor },
-                ]}
-              >
-                {gasto.estado}
-              </Text>
-            </View>
+          <View style={stylesListGastos.fechaContainer}>
+            <Ionicons name="time" size={16} color="#94A3B8" />
+            <Text style={stylesListGastos.registradoLabel}>
+              Registrado el{" "}
+              {new Date(gasto.fechaRegistro || "").toLocaleDateString(
+                "es-ES"
+              )}{" "}
+              {new Date(gasto.fechaRegistro || "").toLocaleTimeString(
+                "es-ES",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}{" "}
+            </Text>
           </View>
         </View>
       </View>

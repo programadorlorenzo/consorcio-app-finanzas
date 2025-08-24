@@ -295,11 +295,15 @@ export const stylesListGastos = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    position: 'relative',
+    paddingRight: 80,
   },
   estadoContainerSmall: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-end',
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
   },
   estadoIndicatorSmall: {
     width: 6,
@@ -516,5 +520,12 @@ export const stylesListGastos = StyleSheet.create({
     fontWeight: '500',
     color: '#64748B',
     letterSpacing: 0.2,
+  },
+
+  // Estado en Header
+  estadoContainerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 12,
   },
 });
