@@ -1,3 +1,5 @@
+import { uploadMultipleFiles } from "@/api/files/files-api";
+import { createGasto } from "@/api/gastos/gastos-api";
 import ListArchivosCreateGasto from "@/components/gastos/create-update-pagos/ArchivosCreateUpdateGasto";
 import CustomSelectorCreateGasto from "@/components/gastos/create-update-pagos/CustomSelectorCreateUpdateGasto";
 import EtiquetasSelectorCreateUpdateGasto from "@/components/gastos/create-update-pagos/EtiquetasSelectorCreateUpdateGasto";
@@ -41,7 +43,6 @@ export default function CreateUpdateGasto() {
   const [formData, setFormData] = useState<GastoCreateDto>({
     // Campos requeridos
     importe: 0, // Se manejará como string en el input
-
     // Campos opcionales con valores iniciales
     estado: EstadoGasto.PENDIENTE,
     descripcion: "",
@@ -103,22 +104,84 @@ export default function CreateUpdateGasto() {
   };
 
   const uploadFiles = async (): Promise<string[]> => {
-    return [];
+    try {
+      if (files.length === 0) {
+        return [];
+      }
+
+      console.log("🚀 Subiendo archivos:", files.length);
+
+      // Preparar archivos para upload
+      const filesToUpload = files.map((fileItem) => ({
+        uri: fileItem.uri,
+        fileName: fileItem.name,
+        type: fileItem.type,
+      }));
+
+      // Subir archivos usando la API
+      const uploadedFilePaths = await uploadMultipleFiles(filesToUpload);
+
+      console.log("✅ Archivos subidos exitosamente:", uploadedFilePaths);
+      return uploadedFilePaths;
+    } catch (error) {
+      console.error("❌ Error subiendo archivos:", error);
+      throw error;
+    }
   };
 
   const handleSubmit = async () => {
-    // Validación básica
-    if (!formData.importe || formData.importe <= 0) {
-      alert("El importe es requerido y debe ser mayor a 0");
-      return;
-    }
+    try {
+      // Validación básica
+      if (!formData.importe || formData.importe <= 0) {
+        alert("El importe es requerido y debe ser mayor a 0");
+        return;
+      }
 
-    if (!formData.descripcion || formData.descripcion.trim() === "") {
-      alert("La descripción es requerida");
-      return;
-    }
+      if (!formData.descripcion || formData.descripcion.trim() === "") {
+        alert("La descripción es requerida");
+        return;
+      }
 
-    console.log("Submitting gasto data:", formData);
+      setLoading(true);
+      console.log("🚀 Iniciando creación de gasto:", formData);
+
+      // 1. Subir archivos primero
+      const uploadedFilePaths = await uploadFiles();
+      console.log("📁 Archivos subidos:", uploadedFilePaths);
+
+      // 2. Crear el gasto con las rutas de los archivos
+      const gastoData: GastoCreateDto = {
+        ...formData,
+        rutasArchivos: uploadedFilePaths, // Agregar las rutas de archivos subidos
+      };
+
+      const createdGasto = await createGasto(gastoData);
+      console.log("✅ Gasto creado exitosamente:", createdGasto);
+
+      // Limpiar formulario y archivos
+      setFormData({
+        categoria: undefined,
+        subcategoria: undefined,
+        descripcion: "",
+        importe: 0,
+        moneda: undefined,
+        observaciones: "",
+        etiquetasIds: [],
+        rutasArchivos: [],
+        estado: EstadoGasto.PENDIENTE,
+      });
+      setFiles([]);
+      setImporteText("");
+
+      alert("Gasto creado exitosamente");
+
+      // TODO: Navegar a la pantalla de gastos o atrás
+    } catch (error) {
+      console.error("❌ Error creando gasto:", error);
+      alert("Error al crear el gasto. Por favor intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
