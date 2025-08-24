@@ -115,8 +115,18 @@ export const stylesListGastos = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#2C3E50",
-    marginBottom: 12,
+    marginBottom: 8,
     lineHeight: 24,
+  },
+
+  // Observaciones
+  observaciones: {
+    fontSize: 14,
+    fontWeight: "400",
+    fontStyle: "italic",
+    color: "#64748B",
+    marginBottom: 12,
+    lineHeight: 20,
   },
 
   // Categorías
@@ -532,7 +542,7 @@ export const stylesListGastos = StyleSheet.create({
   // Estado Badge arriba del título
   estadoBadgeContainer: {
     flexDirection: "row",
-    marginBottom: 8,
+    marginBottom: 15,
   },
   estadoBadge: {
     flexDirection: "row",
@@ -541,16 +551,12 @@ export const stylesListGastos = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 8,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
-    borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.1)",
   },
   estadoBadgeText: {
-    fontSize: 10,
-    fontWeight: "500",
-    color: "#64748B",
-    textTransform: "capitalize",
+    fontSize: 12,
+    fontWeight: "700",
     letterSpacing: 0.2,
-    marginLeft: 3,
+    marginLeft: 10,
   },
 
   // Botón de acción

@@ -103,6 +103,13 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         {gasto.descripcion}
       </Text>
 
+      {/* Observaciones */}
+      {gasto.observaciones && (
+        <Text style={stylesListGastos.observaciones} numberOfLines={3}>
+          {gasto.observaciones}
+        </Text>
+      )}
+
       {/* Importe */}
       <View style={stylesListGastos.importeContainer}>
         <Text style={stylesListGastos.monedaText}>{gasto.moneda}</Text>

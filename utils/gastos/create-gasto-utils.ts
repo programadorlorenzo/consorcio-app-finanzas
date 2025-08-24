@@ -198,30 +198,17 @@ export const CATEGORIA_SUBCATEGORIA_MAP: Record<
   SubCategoriaGasto[]
 > = {
   [CategoriaGasto.JOLG]: [
-    SubCategoriaGasto.JOLG_LOCALES,
-    SubCategoriaGasto.JOLG_PRODUCCION,
-    SubCategoriaGasto.JOLG_PLANILLA,
+    SubCategoriaGasto.LOCALES,
+    SubCategoriaGasto.PRODUCCION,
+    SubCategoriaGasto.MATERIA_PRIMA,
   ],
   [CategoriaGasto.CORP_LORENZO]: [
-    SubCategoriaGasto.CORP_LORENZO_LOCAL,
-    SubCategoriaGasto.CORP_LORENZO_PRODUCCION,
-    SubCategoriaGasto.CORP_LORENZO_PLANILLA,
+    SubCategoriaGasto.LOCALES,
+    SubCategoriaGasto.PRODUCCION,
   ],
-  [CategoriaGasto.OSCAR_LORENZO]: [
-    SubCategoriaGasto.OSCAR_LORENZO_PERSONAL,
-    SubCategoriaGasto.OSCAR_LORENZO_CASA,
-  ],
-  [CategoriaGasto.CONSTRUCCIONES]: [
-    SubCategoriaGasto.CONSTRUCCIONES_OBRAS,
-    SubCategoriaGasto.CONSTRUCCIONES_HERRAMIENTAS,
-  ],
-  [CategoriaGasto.CASA]: [
-    SubCategoriaGasto.CASA_SERVICIOS,
-    SubCategoriaGasto.CASA_MANTENIMIENTO,
-  ],
-  [CategoriaGasto.OFICINA]: [
-    SubCategoriaGasto.OFICINA_SERVICIOS,
-    SubCategoriaGasto.OFICINA_SUMINISTROS,
-  ],
+  [CategoriaGasto.OSCAR_LORENZO]: [],
+  [CategoriaGasto.CONSTRUCCIONES]: [],
+  [CategoriaGasto.CASA]: [],
+  [CategoriaGasto.OFICINA]: [],
   [CategoriaGasto.RENDICION]: [],
 };
