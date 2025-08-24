@@ -9,7 +9,6 @@ export interface Etiqueta {
   descripcion: string | null;
   gastos: EtiquetaGasto[];
 }
-
 // Interface para crear etiquetas basada en el DTO del backend
 export interface EtiquetaCreateDto {
   nombre: string; // Campo requerido

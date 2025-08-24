@@ -48,7 +48,7 @@ export enum Moneda {
 export interface GastoFile {
   id: number;
   rutaArchivo: string;
-  nombreArchivo: string;
+  filename: string;
   tipoArchivo: string;
   gastoId: number;
 }
@@ -89,7 +89,7 @@ export interface Gasto {
   moneda: Moneda | null;
   // Relaciones
   archivos: GastoFile[];
-  etiquetas: EtiquetaGasto[];
+  etiquetas: Etiqueta[];
   pagos: Pago[];
 }
 

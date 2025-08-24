@@ -1,6 +1,8 @@
 import { listarGastos } from "@/api/gastos/gastos-api";
+import { API_URL_BASE } from "@/app/backend";
 import { MAIN_COLOR } from "@/app/constants";
-import { EtiquetaGasto, Gasto, GastoFile } from "@/types/gastos/gastos.types";
+import { Etiqueta } from "@/types/etiquetas/etiquetas.types";
+import { Gasto, GastoFile } from "@/types/gastos/gastos.types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
@@ -161,25 +163,23 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
             showsHorizontalScrollIndicator={false}
             style={stylesListGastos.etiquetasScroll}
           >
-            {gasto.etiquetas.map(
-              (etiquetaGasto: EtiquetaGasto, index: number) => (
-                <View
-                  key={index}
-                  style={[
-                    stylesListGastos.etiquetaBadge,
-                    {
-                      backgroundColor: getBadgeColor(
-                        etiquetaGasto.etiqueta?.nombre || "Sin nombre"
-                      ),
-                    },
-                  ]}
-                >
-                  <Text style={stylesListGastos.etiquetaBadgeText}>
-                    {etiquetaGasto.etiqueta?.nombre || "Sin nombre"}
-                  </Text>
-                </View>
-              )
-            )}
+            {gasto.etiquetas.map((etiqueta: Etiqueta, index: number) => (
+              <View
+                key={index}
+                style={[
+                  stylesListGastos.etiquetaBadge,
+                  {
+                    backgroundColor: getBadgeColor(
+                      etiqueta.nombre || "Sin nombre"
+                    ),
+                  },
+                ]}
+              >
+                <Text style={stylesListGastos.etiquetaBadgeText}>
+                  {etiqueta.nombre || "Sin nombre"}
+                </Text>
+              </View>
+            ))}
           </ScrollView>
         </View>
       )}
@@ -197,11 +197,11 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
           >
             {gasto.archivos.map((archivo: GastoFile, index: number) => (
               <View key={index} style={stylesListGastos.archivoItem}>
-                {isImageFile(archivo.nombreArchivo || "") ? (
+                {isImageFile(archivo.filename || "") ? (
                   <View style={stylesListGastos.imageContainer}>
                     <Image
                       source={{
-                        uri: `http://localhost:3100/${archivo.rutaArchivo}`,
+                        uri: `${API_URL_BASE}/${archivo.filename}`,
                       }}
                       style={stylesListGastos.archivoImage}
                       resizeMode="cover"
@@ -217,12 +217,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
                       style={stylesListGastos.documentText}
                       numberOfLines={1}
                     >
-                      {
-                        (archivo.nombreArchivo || "")
-                          .split("/")
-                          .pop()
-                          ?.split(".")[0]
-                      }
+                      {(archivo.filename || "").split("/").pop()?.split(".")[0]}
                     </Text>
                   </View>
                 )}
