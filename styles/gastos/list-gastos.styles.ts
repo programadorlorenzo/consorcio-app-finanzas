@@ -821,4 +821,104 @@ export const stylesListGastos = StyleSheet.create({
     fontWeight: "600",
     color: "#FFFFFF",
   },
+
+  // Estilos para la visualización de pagos en el card de gasto
+  pagosContainer: {
+    marginTop: 12,
+    marginBottom: 12,
+  },
+  pagosLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#374151",
+    marginBottom: 8,
+  },
+  pagosScroll: {
+    marginTop: 4,
+  },
+  pagoItem: {
+    backgroundColor: "#F9FAFB",
+    borderRadius: 12,
+    padding: 12,
+    marginRight: 12,
+    minWidth: 200,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+  },
+  pagoHeader: {
+    marginBottom: 8,
+  },
+  pagoTipoOrigenContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 6,
+  },
+  pagoTipoBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#EBF8FF",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    flex: 1,
+    marginRight: 6,
+  },
+  pagoTipoText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#3B82F6",
+    marginLeft: 4,
+  },
+  pagoOrigenBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#ECFDF5",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    flex: 1,
+  },
+  pagoOrigenText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#059669",
+    marginLeft: 4,
+  },
+  pagoImporteContainer: {
+    marginBottom: 8,
+  },
+  pagoImporte: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#111827",
+    textAlign: "center",
+  },
+  pagoArchivosInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 6,
+  },
+  pagoArchivosCount: {
+    fontSize: 11,
+    color: "#6B7280",
+    marginLeft: 4,
+  },
+  pagoOperacionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  pagoOperacionLabel: {
+    fontSize: 10,
+    color: "#6B7280",
+    fontWeight: "500",
+  },
+  pagoOperacionNumero: {
+    fontSize: 10,
+    color: "#374151",
+    fontWeight: "600",
+    marginLeft: 4,
+  },
 });

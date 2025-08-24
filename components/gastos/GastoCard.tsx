@@ -4,6 +4,10 @@ import {
     EtiquetaGasto,
     Gasto,
     GastoFile,
+    Moneda,
+    OrigenPago,
+    Pago,
+    TipoPago
 } from "@/types/gastos/gastos.types";
 import {
     downloadFile,
@@ -133,6 +137,19 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
 
     if (gasto.archivos && gasto.archivos.length > 0) {
       mensaje += `📎 *Archivos adjuntos:* ${gasto.archivos.length}\n`;
+    }
+
+    if (gasto.pagos && gasto.pagos.length > 0) {
+      mensaje += `💳 *Pagos registrados:* ${gasto.pagos.length}\n`;
+      gasto.pagos.forEach((pago, index) => {
+        const importePago = pago.importe?.toFixed(2) || "0.00";
+        const monedaPago = pago.moneda === Moneda.SOLES ? "S/" : "$";
+        mensaje += `   ${index + 1}. ${pago.tipo} - ${monedaPago} ${importePago}`;
+        if (pago.numeroOperacion) {
+          mensaje += ` (Op: ${pago.numeroOperacion})`;
+        }
+        mensaje += `\n`;
+      });
     }
 
     try {
@@ -318,6 +335,83 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
                       {truncateFileName(archivo.filename || "")}
                     </Text>
                   </TouchableOpacity>
+                )}
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
+      {/* Pagos */}
+      {gasto.pagos && gasto.pagos.length > 0 && (
+        <View style={stylesListGastos.pagosContainer}>
+          <Text style={stylesListGastos.pagosLabel}>
+            Pagos ({gasto.pagos.length}):
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={stylesListGastos.pagosScroll}
+          >
+            {gasto.pagos.map((pago: Pago, index: number) => (
+              <View key={pago.id || index} style={stylesListGastos.pagoItem}>
+                <View style={stylesListGastos.pagoHeader}>
+                  <View style={stylesListGastos.pagoTipoOrigenContainer}>
+                    <View style={stylesListGastos.pagoTipoBadge}>
+                      <Ionicons
+                        name={
+                          pago.tipo === TipoPago.TRANSFERENCIA
+                            ? "card-outline"
+                            : pago.tipo === TipoPago.EFECTIVO
+                            ? "cash-outline"
+                            : pago.tipo === TipoPago.YAPE || pago.tipo === TipoPago.PLIN
+                            ? "phone-portrait-outline"
+                            : "wallet-outline"
+                        }
+                        size={12}
+                        color="#3B82F6"
+                      />
+                      <Text style={stylesListGastos.pagoTipoText}>{pago.tipo}</Text>
+                    </View>
+                    <View style={stylesListGastos.pagoOrigenBadge}>
+                      <Ionicons
+                        name={
+                          pago.origen === OrigenPago.CUENTA_EMPRESA
+                            ? "business-outline"
+                            : "person-outline"
+                        }
+                        size={12}
+                        color="#059669"
+                      />
+                      <Text style={stylesListGastos.pagoOrigenText}>
+                        {pago.origen === OrigenPago.CUENTA_EMPRESA ? "Empresa" : "Externo"}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                
+                <View style={stylesListGastos.pagoImporteContainer}>
+                  <Text style={stylesListGastos.pagoImporte}>
+                    {pago.moneda === Moneda.SOLES ? "S/" : "$"} {pago.importe?.toFixed(2) || "0.00"}
+                  </Text>
+                </View>
+
+                {pago.archivos && pago.archivos.length > 0 && (
+                  <View style={stylesListGastos.pagoArchivosInfo}>
+                    <Ionicons name="document-text" size={12} color="#6B7280" />
+                    <Text style={stylesListGastos.pagoArchivosCount}>
+                      {pago.archivos.length} archivo{pago.archivos.length !== 1 ? "s" : ""}
+                    </Text>
+                  </View>
+                )}
+
+                {pago.numeroOperacion && (
+                  <View style={stylesListGastos.pagoOperacionContainer}>
+                    <Text style={stylesListGastos.pagoOperacionLabel}>Op:</Text>
+                    <Text style={stylesListGastos.pagoOperacionNumero}>
+                      {pago.numeroOperacion}
+                    </Text>
+                  </View>
                 )}
               </View>
             ))}

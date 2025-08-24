@@ -57,9 +57,42 @@ export interface EtiquetaGasto {
   gasto?: Gasto;
 }
 
+export interface PagoFile {
+  id: number;
+  pagoId: number;
+  fileName: string;
+  filePath: string;
+  fileSize: number;
+  mimeType: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Pago {
   id: number;
-  gastoId: number;
+  tipo: TipoPago | null;
+  origen: OrigenPago | null;
+  gastoId: number | null;
+  rendicionId: number | null;
+  usuarioRegistroPagoId: number | null;
+  fechaRegistro: Date | null;
+  titular_origen: string | null;
+  cuenta_bancaria_origen: string | null;
+  cci_origen: string | null;
+  banco_origen: string | null;
+  moneda_origen: Moneda | null;
+  titular_destino: string | null;
+  cuenta_bancaria_destino: string | null;
+  cci_destino: string | null;
+  banco_destino: string | null;
+  moneda_destino: Moneda | null;
+  tipo_cambio: number | null;
+  importe: number | null;
+  moneda: Moneda | null;
+  numeroOperacion: string | null;
+  archivos: PagoFile[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Interface principal de Gasto basada en la entidad del backend
