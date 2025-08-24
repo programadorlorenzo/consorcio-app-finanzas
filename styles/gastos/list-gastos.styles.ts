@@ -257,4 +257,113 @@ export const stylesListGastos = StyleSheet.create({
     color: '#8A9A97',
     marginLeft: 6,
   },
+
+  // Tree Styles for Category/Subcategory
+  treeContainer: {
+    marginBottom: 10,
+  },
+  treeItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  treeLineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 8,
+    width: 20,
+  },
+  treeDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: MAIN_COLOR,
+  },
+  treeLine: {
+    height: 1,
+    flex: 1,
+    backgroundColor: '#E2E8F0',
+    marginLeft: 4,
+  },
+  categoriaBadgeTree: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderLeftWidth: 3,
+    borderLeftColor: MAIN_COLOR,
+  },
+  categoriaTextTree: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#334155',
+    marginLeft: 6,
+  },
+  treeSubItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 20,
+    marginTop: 4,
+  },
+  treeSubLineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 8,
+    width: 20,
+    height: 20,
+  },
+  treeVerticalLine: {
+    width: 1,
+    height: 12,
+    backgroundColor: '#E2E8F0',
+    position: 'absolute',
+    left: -12,
+    top: -8,
+  },
+  treeCorner: {
+    width: 8,
+    height: 8,
+    borderLeftWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#E2E8F0',
+    position: 'absolute',
+    left: -12,
+    bottom: 4,
+  },
+  treeHorizontalLine: {
+    height: 1,
+    flex: 1,
+    backgroundColor: '#E2E8F0',
+    marginLeft: -4,
+  },
+  subcategoriaBadgeTree: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderLeftWidth: 2,
+    borderLeftColor: '#94A3B8',
+  },
+  subcategoriaTextTree: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#64748B',
+    marginLeft: 4,
+  },
+  
+  // Horizontal Tree Styles
+  treeHorizontalItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  treeConnector: {
+    marginHorizontal: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

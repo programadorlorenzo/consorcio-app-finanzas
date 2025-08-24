@@ -2,6 +2,9 @@ import { listarGastos } from "@/api/gastos/gastos-api";
 import { API_URL_BASE } from "@/app/backend";
 import { MAIN_COLOR } from "@/app/constants";
 import { EtiquetaGasto, Gasto, GastoFile } from "@/types/gastos/gastos.types";
+import { getBadgeColor } from "@/utils/gastos/create-gasto-utils";
+import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_gasto.utils";
+import { getEstadoColor } from "@/utils/gastos/list-gastos-utils";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,57 +18,6 @@ import {
     View,
 } from "react-native";
 import { stylesListGastos } from "../../styles/gastos/list-gastos.styles";
-
-// Función para generar color basado en el nombre de la etiqueta
-const getBadgeColor = (nombre: string | null): string => {
-  if (!nombre) return MAIN_COLOR;
-
-  const colors = [
-    "#D63031",
-    "#00B894",
-    "#0984E3",
-    "#6C5CE7",
-    "#FD79A8",
-    "#E17055",
-    "#00CEC9",
-    "#A29BFE",
-    "#74B9FF",
-    "#FDCB6E",
-    "#EE5A24",
-    "#5F27CD",
-    "#E84393",
-    "#00D2D3",
-    "#FF7675",
-    "#2D3436",
-    "#636E72",
-    "#00B894",
-    "#0984E3",
-    "#6C5CE7",
-  ];
-
-  let hash = 0;
-  for (let i = 0; i < nombre.length; i++) {
-    const char = nombre.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash;
-  }
-
-  return colors[Math.abs(hash) % colors.length];
-};
-
-// Función para obtener el color del estado
-const getEstadoColor = (estado: string): string => {
-  switch (estado) {
-    case "PENDIENTE":
-      return "#F39C12";
-    case "FINALIZADO":
-      return "#27AE60";
-    case "RECHAZADO":
-      return "#E74C3C";
-    default:
-      return "#95A5A6";
-  }
-};
 
 // Función para verificar si un archivo es imagen
 const isImageFile = (filename: string): boolean => {
@@ -133,18 +85,30 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         {gasto.descripcion}
       </Text>
 
-      {/* Categoría y Subcategoría */}
-      <View style={stylesListGastos.categoriaContainer}>
-        <View style={stylesListGastos.categoriaBadge}>
-          <Text style={stylesListGastos.categoriaText}>{gasto.categoria}</Text>
-        </View>
-        {gasto.subcategoria && (
-          <View style={stylesListGastos.subcategoriaBadge}>
-            <Text style={stylesListGastos.subcategoriaText}>
-              {gasto.subcategoria}
+      {/* Categoría y Subcategoría - Diseño Tree Horizontal */}
+      <View style={stylesListGastos.treeContainer}>
+        <View style={stylesListGastos.treeHorizontalItem}>
+          <View style={stylesListGastos.categoriaBadgeTree}>
+            <Ionicons name="folder" size={14} color="#666" />
+            <Text style={stylesListGastos.categoriaTextTree}>
+              {formatDisplayText(gasto.categoria || "")}
             </Text>
           </View>
-        )}
+
+          {gasto.subcategoria && (
+            <>
+              <View style={stylesListGastos.treeConnector}>
+                <Ionicons name="chevron-forward" size={16} color="#CBD5E0" />
+              </View>
+              <View style={stylesListGastos.subcategoriaBadgeTree}>
+                <Ionicons name="folder-open" size={12} color="#888" />
+                <Text style={stylesListGastos.subcategoriaTextTree}>
+                  {formatDisplayText(gasto.subcategoria)}
+                </Text>
+              </View>
+            </>
+          )}
+        </View>
       </View>
 
       {/* Importe */}
