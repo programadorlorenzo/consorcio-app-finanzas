@@ -1,8 +1,14 @@
 import ListArchivosCreateGasto from "@/components/gastos/create-update-pagos/ArchivosCreateUpdateGasto";
 import CustomSelectorCreateGasto from "@/components/gastos/create-update-pagos/CustomSelectorCreateUpdateGasto";
+import EtiquetasSelectorCreateUpdateGasto from "@/components/gastos/create-update-pagos/EtiquetasSelectorCreateUpdateGasto";
 import ModalOpcionesArchivoCreateUpdateGasto from "@/components/gastos/create-update-pagos/ModalOpcionesArchivoCreateUpdateGasto";
 import { stylesBaseStylesCreateGasto } from "@/styles/gastos/base-create-update-gasto.styles";
-import { CategoriaGasto, GastoFormData } from "@/types/gastos/gastos.types";
+import {
+  CategoriaGasto,
+  EstadoGasto,
+  GastoCreateDto,
+  Moneda,
+} from "@/types/gastos/gastos.types";
 import {
   FileItem,
   getAvailableSubcategorias,
@@ -32,29 +38,38 @@ export default function CreateUpdateGasto() {
   const params = useLocalSearchParams();
   const isEditing = !!params.id;
 
-  const [formData, setFormData] = useState<GastoFormData>({
+  const [formData, setFormData] = useState<GastoCreateDto>({
+    // Campos requeridos
+    importe: 0, // Se manejará como string en el input
+
+    // Campos opcionales con valores iniciales
+    estado: EstadoGasto.PENDIENTE,
     descripcion: "",
-    categoria: null,
-    subcategoria: null,
-    monto: "",
-    fechaVencimiento: null,
     observaciones: "",
-    ubicacionFisica: "",
-    numeroRecibo: "",
-    cuentaBancaria: "",
+    categoria: undefined,
+    subcategoria: undefined,
+    moneda: Moneda.SOLES,
+    rutasArchivos: [],
+    etiquetasIds: [],
   });
+
+  // Estado separado para el importe como string para manejar decimales
+  const [importeText, setImporteText] = useState<string>("");
+
   const [showCategoriaModal, setShowCategoriaModal] = useState(false);
   const [showSubcategoriaModal, setShowSubcategoriaModal] = useState(false);
+  const [showMonedaModal, setShowMonedaModal] = useState(false);
+  const [showEtiquetasModal, setShowEtiquetasModal] = useState(false);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [showFileModal, setShowFileModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (field: keyof GastoFormData, value: any) => {
+  const handleInputChange = (field: keyof GastoCreateDto, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
       // Reset subcategoría cuando cambia la categoría
-      ...(field === "categoria" && { subcategoria: null }),
+      ...(field === "categoria" && { subcategoria: undefined }),
     }));
   };
 
@@ -93,13 +108,24 @@ export default function CreateUpdateGasto() {
   };
 
   const handleSubmit = async () => {
-    console.log("Submitting form data:", formData);
+    // Validación básica
+    if (!formData.importe || formData.importe <= 0) {
+      alert("El importe es requerido y debe ser mayor a 0");
+      return;
+    }
+
+    if (!formData.descripcion || formData.descripcion.trim() === "") {
+      alert("La descripción es requerida");
+      return;
+    }
+
+    console.log("Submitting gasto data:", formData);
   };
 
-  // Componente de selector personalizado
   return (
     <SafeAreaView style={stylesBaseStylesCreateGasto.container}>
       <StatusBar style="dark" />
+
       {/* Header */}
       <View style={stylesBaseStylesCreateGasto.header}>
         <TouchableOpacity
@@ -109,17 +135,31 @@ export default function CreateUpdateGasto() {
           <Ionicons name="arrow-back" size={24} color={MAIN_COLOR} />
         </TouchableOpacity>
         <Text style={stylesBaseStylesCreateGasto.headerTitle}>
-          {isEditing ? "Editar Pago" : "Crear Pago"}
+          {isEditing ? "Editar Gasto" : "Crear Gasto"}
         </Text>
         <View style={stylesBaseStylesCreateGasto.placeholder} />
       </View>
+
       <ScrollView
         style={stylesBaseStylesCreateGasto.content}
         showsVerticalScrollIndicator={false}
       >
         <View style={stylesBaseStylesCreateGasto.form}>
+          {/* Descripción */}
           <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Categoría *</Text>
+            <Text style={stylesBaseStylesCreateGasto.label}>Descripción *</Text>
+            <TextInput
+              style={stylesBaseStylesCreateGasto.input}
+              value={formData.descripcion}
+              onChangeText={(text) => handleInputChange("descripcion", text)}
+              placeholder="Descripción del gasto"
+              placeholderTextColor="#8A9A97"
+            />
+          </View>
+
+          {/* Categoría */}
+          <View style={stylesBaseStylesCreateGasto.inputGroup}>
+            <Text style={stylesBaseStylesCreateGasto.label}>Categoría</Text>
             <CustomSelectorCreateGasto
               label="Seleccionar Categoría"
               value={formData.categoria}
@@ -131,6 +171,7 @@ export default function CreateUpdateGasto() {
             />
           </View>
 
+          {/* Subcategoría */}
           {formData.categoria &&
             getAvailableSubcategorias(formData).length > 0 && (
               <View style={stylesBaseStylesCreateGasto.inputGroup}>
@@ -151,57 +192,45 @@ export default function CreateUpdateGasto() {
               </View>
             )}
 
-          {/* <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <CustomSwitch
-              label="Origen"
-              value={formData.origen === OrigenPago.EXTERNO}
-              onValueChange={(value) =>
-                handleInputChange(
-                  "origen",
-                  value ? OrigenPago.EXTERNO : OrigenPago.CUENTA_EMPRESA
-                )
-              }
-              leftLabel="Cuenta Empresa"
-              rightLabel="Externo"
-            />
-          </View> */}
-
+          {/* Importe */}
           <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>
-              Cuenta Bancaria
-            </Text>
+            <Text style={stylesBaseStylesCreateGasto.label}>Importe *</Text>
             <TextInput
               style={stylesBaseStylesCreateGasto.input}
-              value={formData.cuentaBancaria}
-              onChangeText={(text) => handleInputChange("cuentaBancaria", text)}
-              placeholder="Número de cuenta"
-              placeholderTextColor="#8A9A97"
-            />
-          </View>
-
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Monto *</Text>
-            <TextInput
-              style={stylesBaseStylesCreateGasto.input}
-              value={formData.monto}
-              onChangeText={(text) => handleInputChange("monto", text)}
+              value={importeText}
+              onChangeText={(text) => {
+                // Permitir números decimales (reemplazar comas con puntos)
+                const sanitizedText = text.replace(/,/g, ".");
+                // Solo permitir formatos numéricos válidos (dígitos y máximo un punto decimal)
+                if (sanitizedText === "" || /^\d*\.?\d*$/.test(sanitizedText)) {
+                  setImporteText(sanitizedText);
+                  // Actualizar el valor numérico en formData
+                  const numericValue =
+                    sanitizedText === "" ? 0 : parseFloat(sanitizedText) || 0;
+                  handleInputChange("importe", numericValue);
+                }
+              }}
               placeholder="0.00"
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
               placeholderTextColor="#8A9A97"
             />
           </View>
 
+          {/* Moneda */}
           <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Comprobante</Text>
-            <TextInput
-              style={stylesBaseStylesCreateGasto.input}
-              value={formData.numeroRecibo}
-              onChangeText={(text) => handleInputChange("numeroRecibo", text)}
-              placeholder="Comprobante (opcional)"
-              placeholderTextColor="#8A9A97"
+            <Text style={stylesBaseStylesCreateGasto.label}>Moneda</Text>
+            <CustomSelectorCreateGasto
+              label="Seleccionar Moneda"
+              value={formData.moneda}
+              placeholder="Seleccionar moneda"
+              options={Object.values(Moneda)}
+              onSelect={(value) => handleInputChange("moneda", value)}
+              isVisible={showMonedaModal}
+              onClose={() => setShowMonedaModal(!showMonedaModal)}
             />
           </View>
 
+          {/* Observaciones */}
           <View style={stylesBaseStylesCreateGasto.inputGroup}>
             <Text style={stylesBaseStylesCreateGasto.label}>Observaciones</Text>
             <TextInput
@@ -214,6 +243,19 @@ export default function CreateUpdateGasto() {
               placeholder="Observaciones adicionales"
               multiline
               placeholderTextColor="#8A9A97"
+            />
+          </View>
+
+          {/* Etiquetas */}
+          <View style={stylesBaseStylesCreateGasto.inputGroup}>
+            <Text style={stylesBaseStylesCreateGasto.label}>Etiquetas</Text>
+            <EtiquetasSelectorCreateUpdateGasto
+              selectedEtiquetasIds={formData.etiquetasIds || []}
+              onEtiquetasChange={(etiquetasIds) =>
+                handleInputChange("etiquetasIds", etiquetasIds)
+              }
+              isVisible={showEtiquetasModal}
+              onClose={() => setShowEtiquetasModal(!showEtiquetasModal)}
             />
           </View>
 
@@ -238,6 +280,7 @@ export default function CreateUpdateGasto() {
             <ListArchivosCreateGasto files={files} removeFile={removeFile} />
           )}
 
+          {/* Botón Submit */}
           <TouchableOpacity
             style={[
               stylesBaseStylesCreateGasto.submitButton,
@@ -250,7 +293,7 @@ export default function CreateUpdateGasto() {
               <ActivityIndicator color="#fff" />
             ) : (
               <Text style={stylesBaseStylesCreateGasto.buttonText}>
-                {isEditing ? "Actualizar Pago" : "Crear Pago"}
+                {isEditing ? "Actualizar Gasto" : "Crear Gasto"}
               </Text>
             )}
           </TouchableOpacity>

@@ -1,0 +1,222 @@
+import { MAIN_COLOR } from '@/app/constants';
+import { StyleSheet } from 'react-native';
+
+export const stylesEtiquetasSelector = StyleSheet.create({
+  // Trigger Button Styles
+  triggerButton: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#E8F0FF',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    minHeight: 56,
+  },
+  triggerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  triggerTextContainer: {
+    flex: 1,
+    marginRight: 12,
+  },
+  triggerLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#2C3E50',
+    marginBottom: 2,
+  },
+  selectedText: {
+    fontSize: 14,
+    color: '#8A9A97',
+    lineHeight: 18,
+  },
+
+  // Modal Styles
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F7FA',
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F5F7FA',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2C3E50',
+  },
+  placeholder: {
+    width: 40,
+  },
+
+  // Search Styles
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F7FA',
+    borderRadius: 12,
+    marginHorizontal: 20,
+    marginVertical: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#2C3E50',
+    marginLeft: 12,
+  },
+
+  // Selected Count
+  selectedCountContainer: {
+    backgroundColor: '#E8F4FD',
+    marginHorizontal: 20,
+    marginBottom: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: MAIN_COLOR,
+  },
+  selectedCountText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: MAIN_COLOR,
+  },
+
+  // Loading Styles
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#8A9A97',
+    marginTop: 12,
+  },
+
+  // Empty State
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#8A9A97',
+    textAlign: 'center',
+    marginTop: 16,
+    lineHeight: 22,
+  },
+
+  // Etiquetas List
+  etiquetasList: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  etiquetaItem: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#F0F2F5',
+    borderRadius: 12,
+    marginBottom: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  etiquetaItemSelected: {
+    borderColor: MAIN_COLOR,
+    backgroundColor: '#F8FBFF',
+    shadowColor: MAIN_COLOR,
+    shadowOpacity: 0.1,
+    elevation: 2,
+  },
+  etiquetaContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  etiquetaInfo: {
+    flex: 1,
+    marginRight: 12,
+  },
+  etiquetaName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2C3E50',
+    marginBottom: 4,
+  },
+  etiquetaNameSelected: {
+    color: MAIN_COLOR,
+  },
+  etiquetaDescription: {
+    fontSize: 14,
+    color: '#8A9A97',
+    lineHeight: 18,
+  },
+  etiquetaDescriptionSelected: {
+    color: '#6B7280',
+  },
+
+  // Checkbox Styles
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderWidth: 2,
+    borderColor: '#D1D5DB',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+  checkboxSelected: {
+    backgroundColor: MAIN_COLOR,
+    borderColor: MAIN_COLOR,
+  },
+
+  // Footer Styles
+  modalFooter: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F5F7FA',
+  },
+  confirmButton: {
+    backgroundColor: MAIN_COLOR,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  confirmButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+});
