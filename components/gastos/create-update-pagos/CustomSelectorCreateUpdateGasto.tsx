@@ -1,6 +1,6 @@
 import { MAIN_COLOR } from "@/app/constants";
-import { stylesCustomSelectorCreatePago } from "@/styles/pagos/custom-selector-create-pago.styles";
-import { formatDisplayText } from "@/utils/pagos/custom_selector_create_update_pago.utils";
+import { stylesCustomSelectorCreateGasto } from "@/styles/gastos/custom-selector-create-update-gasto.styles";
+import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_gasto.utils";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -17,7 +17,7 @@ interface CustomSelectorCreatePagoProps {
   labelExtractor?: (item: any) => string;
 }
 
-const CustomSelectorCreatePago = ({
+const CustomSelectorCreateGasto = ({
   label,
   value,
   placeholder,
@@ -37,13 +37,13 @@ const CustomSelectorCreatePago = ({
   return (
     <>
       <TouchableOpacity
-        style={stylesCustomSelectorCreatePago.customSelector}
+        style={stylesCustomSelectorCreateGasto.customSelector}
         onPress={() => !isVisible && onClose()}
       >
         <Text
           style={[
-            stylesCustomSelectorCreatePago.selectorText,
-            !value && stylesCustomSelectorCreatePago.selectorPlaceholder,
+            stylesCustomSelectorCreateGasto.selectorText,
+            !value && stylesCustomSelectorCreateGasto.selectorPlaceholder,
           ]}
         >
           {getDisplayValue()}
@@ -62,12 +62,12 @@ const CustomSelectorCreatePago = ({
         onRequestClose={onClose}
       >
         <TouchableOpacity
-          style={stylesCustomSelectorCreatePago.modalOverlay}
+          style={stylesCustomSelectorCreateGasto.modalOverlay}
           onPress={onClose}
         >
-          <View style={stylesCustomSelectorCreatePago.selectorModalContent}>
-            <View style={stylesCustomSelectorCreatePago.selectorModalHeader}>
-              <Text style={stylesCustomSelectorCreatePago.selectorModalTitle}>
+          <View style={stylesCustomSelectorCreateGasto.selectorModalContent}>
+            <View style={stylesCustomSelectorCreateGasto.selectorModalHeader}>
+              <Text style={stylesCustomSelectorCreateGasto.selectorModalTitle}>
                 {label}
               </Text>
               <TouchableOpacity onPress={onClose}>
@@ -75,7 +75,7 @@ const CustomSelectorCreatePago = ({
               </TouchableOpacity>
             </View>
 
-            <ScrollView style={stylesCustomSelectorCreatePago.selectorOptions}>
+            <ScrollView style={stylesCustomSelectorCreateGasto.selectorOptions}>
               {options.map((option) => {
                 const key = keyExtractor ? keyExtractor(option) : option;
                 const rawLabel = labelExtractor
@@ -87,7 +87,7 @@ const CustomSelectorCreatePago = ({
                 return (
                   <TouchableOpacity
                     key={key}
-                    style={stylesCustomSelectorCreatePago.selectorOption}
+                    style={stylesCustomSelectorCreateGasto.selectorOption}
                     onPress={() => {
                       onSelect(option);
                       onClose();
@@ -95,9 +95,9 @@ const CustomSelectorCreatePago = ({
                   >
                     <Text
                       style={[
-                        stylesCustomSelectorCreatePago.selectorOptionText,
+                        stylesCustomSelectorCreateGasto.selectorOptionText,
                         isSelected &&
-                          stylesCustomSelectorCreatePago.selectorOptionSelected,
+                          stylesCustomSelectorCreateGasto.selectorOptionSelected,
                       ]}
                     >
                       {formattedLabel}
@@ -116,4 +116,4 @@ const CustomSelectorCreatePago = ({
   );
 };
 
-export default CustomSelectorCreatePago;
+export default CustomSelectorCreateGasto;

@@ -1,46 +1,53 @@
-import { FileItem, formatFileSize, isImage } from "@/utils/pagos/create-pago-utils";
+import {
+  FileItem,
+  formatFileSize,
+  isImage,
+} from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
 
 import { MAIN_COLOR } from "@/app/constants";
-import { stylesBaseStylesCreatePago } from "@/styles/pagos/base-create-pago.styles";
+import { stylesBaseStylesCreateGasto } from "@/styles/gastos/base-create-update-gasto.styles";
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 
-interface ListArchivosCreatePagoProps {
+interface ListArchivosCreateGastoProps {
   files: FileItem[];
   removeFile: (index: number) => void;
 }
 
-const ListArchivosCreatePago = ({
+const ListArchivosCreateGasto = ({
   files,
   removeFile,
-}: ListArchivosCreatePagoProps) => {
+}: ListArchivosCreateGastoProps) => {
   return (
     <FlatList
       data={files}
-      style={stylesBaseStylesCreatePago.filesList}
+      style={stylesBaseStylesCreateGasto.filesList}
       renderItem={({ item, index }) => (
-        <View style={stylesBaseStylesCreatePago.fileItem}>
+        <View style={stylesBaseStylesCreateGasto.fileItem}>
           {isImage(item.type) ? (
             <Image
               source={{ uri: item.uri }}
-              style={stylesBaseStylesCreatePago.fileImage}
+              style={stylesBaseStylesCreateGasto.fileImage}
             />
           ) : (
-            <View style={stylesBaseStylesCreatePago.fileIcon}>
+            <View style={stylesBaseStylesCreateGasto.fileIcon}>
               <Ionicons name="document-outline" size={24} color={MAIN_COLOR} />
             </View>
           )}
-          <View style={stylesBaseStylesCreatePago.fileInfo}>
-            <Text style={stylesBaseStylesCreatePago.fileName} numberOfLines={1}>
+          <View style={stylesBaseStylesCreateGasto.fileInfo}>
+            <Text
+              style={stylesBaseStylesCreateGasto.fileName}
+              numberOfLines={1}
+            >
               {item.name}
             </Text>
-            <Text style={stylesBaseStylesCreatePago.fileSize}>
+            <Text style={stylesBaseStylesCreateGasto.fileSize}>
               {formatFileSize(item.size)}
             </Text>
           </View>
           <TouchableOpacity
-            style={stylesBaseStylesCreatePago.removeFileButton}
+            style={stylesBaseStylesCreateGasto.removeFileButton}
             onPress={() => removeFile(index)}
           >
             <Ionicons name="close-circle" size={24} color="#EF4444" />
@@ -53,4 +60,4 @@ const ListArchivosCreatePago = ({
   );
 };
 
-export default ListArchivosCreatePago;
+export default ListArchivosCreateGasto;

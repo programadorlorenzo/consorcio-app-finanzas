@@ -44,7 +44,7 @@ export default function LoginScreen() {
       if (ok) {
         console.log("Login exitoso");
         // Navigate to the main app screen or perform any post-login actions
-        router.replace("/(tabs)/pagos");
+        router.replace("/(tabs)/gastos");
       } else {
         Alert.alert(
           "Error de autenticación",

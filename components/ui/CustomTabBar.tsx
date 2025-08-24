@@ -1,16 +1,16 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import React from "react";
 import {
-    Dimensions,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { IconSymbol } from "./IconSymbol";
@@ -209,7 +209,7 @@ export function CustomTabBar({
                 return "house.fill";
               case "profile":
                 return "person.fill";
-              case "pagos":
+              case "gastos":
                 return "teddybear.fill";
               case "settings":
                 return "gear";
@@ -220,8 +220,8 @@ export function CustomTabBar({
             }
           };
 
-          // Tab central (pagos)
-          if (route.name === "pagos") {
+          // Tab central (gastos)
+          if (route.name === "gastos") {
             return (
               <CentralTab
                 key={route.key}
@@ -235,7 +235,7 @@ export function CustomTabBar({
 
           // Tabs laterales
           const position =
-            index < state.routes.findIndex((r) => r.name === "pagos")
+            index < state.routes.findIndex((r) => r.name === "gastos")
               ? "left"
               : "right";
 

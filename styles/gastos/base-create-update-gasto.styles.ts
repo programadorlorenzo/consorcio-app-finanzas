@@ -1,7 +1,7 @@
 import { MAIN_COLOR } from "@/app/constants";
 import { StyleSheet } from "react-native";
 
-export const stylesBaseStylesCreatePago = StyleSheet.create({
+export const stylesBaseStylesCreateGasto = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F8FAF9",

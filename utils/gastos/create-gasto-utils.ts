@@ -1,8 +1,8 @@
 import {
-  CategoriaPago,
-  PaymentFormData,
-  SubCategoriaPago,
-} from "@/types/pagos/pagos.types";
+  CategoriaGasto,
+  GastoFormData,
+  SubCategoriaGasto,
+} from "@/types/gastos/gastos.types";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
@@ -27,8 +27,8 @@ export const formatFileSize = (bytes?: number): string => {
 };
 
 export const getAvailableSubcategorias = (
-  formData: PaymentFormData
-): SubCategoriaPago[] => {
+  formData: GastoFormData
+): SubCategoriaGasto[] => {
   if (!formData.categoria) return [];
   return CATEGORIA_SUBCATEGORIA_MAP[formData.categoria] || [];
 };
@@ -119,34 +119,34 @@ export const pickFromCamera = async (
 
 // Mapeo de categorías y subcategorías
 export const CATEGORIA_SUBCATEGORIA_MAP: Record<
-  CategoriaPago,
-  SubCategoriaPago[]
+  CategoriaGasto,
+  SubCategoriaGasto[]
 > = {
-  [CategoriaPago.JOLG]: [
-    SubCategoriaPago.JOLG_LOCALES,
-    SubCategoriaPago.JOLG_PRODUCCION,
-    SubCategoriaPago.JOLG_PLANILLA,
+  [CategoriaGasto.JOLG]: [
+    SubCategoriaGasto.JOLG_LOCALES,
+    SubCategoriaGasto.JOLG_PRODUCCION,
+    SubCategoriaGasto.JOLG_PLANILLA,
   ],
-  [CategoriaPago.CORP_LORENZO]: [
-    SubCategoriaPago.CORP_LORENZO_LOCAL,
-    SubCategoriaPago.CORP_LORENZO_PRODUCCION,
-    SubCategoriaPago.CORP_LORENZO_PLANILLA,
+  [CategoriaGasto.CORP_LORENZO]: [
+    SubCategoriaGasto.CORP_LORENZO_LOCAL,
+    SubCategoriaGasto.CORP_LORENZO_PRODUCCION,
+    SubCategoriaGasto.CORP_LORENZO_PLANILLA,
   ],
-  [CategoriaPago.OSCAR_LORENZO]: [
-    SubCategoriaPago.OSCAR_LORENZO_PERSONAL,
-    SubCategoriaPago.OSCAR_LORENZO_CASA,
+  [CategoriaGasto.OSCAR_LORENZO]: [
+    SubCategoriaGasto.OSCAR_LORENZO_PERSONAL,
+    SubCategoriaGasto.OSCAR_LORENZO_CASA,
   ],
-  [CategoriaPago.CONSTRUCCIONES]: [
-    SubCategoriaPago.CONSTRUCCIONES_OBRAS,
-    SubCategoriaPago.CONSTRUCCIONES_HERRAMIENTAS,
+  [CategoriaGasto.CONSTRUCCIONES]: [
+    SubCategoriaGasto.CONSTRUCCIONES_OBRAS,
+    SubCategoriaGasto.CONSTRUCCIONES_HERRAMIENTAS,
   ],
-  [CategoriaPago.CASA]: [
-    SubCategoriaPago.CASA_SERVICIOS,
-    SubCategoriaPago.CASA_MANTENIMIENTO,
+  [CategoriaGasto.CASA]: [
+    SubCategoriaGasto.CASA_SERVICIOS,
+    SubCategoriaGasto.CASA_MANTENIMIENTO,
   ],
-  [CategoriaPago.OFICINA]: [
-    SubCategoriaPago.OFICINA_SERVICIOS,
-    SubCategoriaPago.OFICINA_SUMINISTROS,
+  [CategoriaGasto.OFICINA]: [
+    SubCategoriaGasto.OFICINA_SERVICIOS,
+    SubCategoriaGasto.OFICINA_SUMINISTROS,
   ],
-  [CategoriaPago.RENDICION]: [],
+  [CategoriaGasto.RENDICION]: [],
 };

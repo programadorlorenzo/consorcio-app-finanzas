@@ -1,26 +1,24 @@
 import { MAIN_COLOR } from "@/app/constants";
-import { stylesBaseStylesCreatePago } from "@/styles/pagos/base-create-pago.styles";
+import { stylesBaseStylesCreateGasto } from "@/styles/gastos/base-create-update-gasto.styles";
 import {
-    FileItem,
-    pickDocument,
-    pickFromCamera,
-    pickFromGallery,
-} from "@/utils/pagos/create-pago-utils";
+  FileItem,
+  pickDocument,
+  pickFromCamera,
+  pickFromGallery,
+} from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 
-interface ModalOpcionesArchivoCreateUpdatePagoProps {
+interface ModalOpcionesArchivoCreateUpdateGastoProps {
   showFileModal: boolean;
   setShowFileModal: (show: boolean) => void;
   setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>;
 }
 
-const ModalOpcionesArchivoCreateUpdatePago: React.FC<ModalOpcionesArchivoCreateUpdatePagoProps> = ({
-  showFileModal,
-  setShowFileModal,
-  setFiles,
-}) => {
+const ModalOpcionesArchivoCreateUpdateGasto: React.FC<
+  ModalOpcionesArchivoCreateUpdateGastoProps
+> = ({ showFileModal, setShowFileModal, setFiles }) => {
   return (
     <Modal
       visible={showFileModal}
@@ -29,61 +27,61 @@ const ModalOpcionesArchivoCreateUpdatePago: React.FC<ModalOpcionesArchivoCreateU
       onRequestClose={() => setShowFileModal(false)}
     >
       <TouchableOpacity
-        style={stylesBaseStylesCreatePago.modalOverlay}
+        style={stylesBaseStylesCreateGasto.modalOverlay}
         onPress={() => setShowFileModal(false)}
       >
-        <View style={stylesBaseStylesCreatePago.modalContent}>
-          <Text style={stylesBaseStylesCreatePago.modalTitle}>
+        <View style={stylesBaseStylesCreateGasto.modalContent}>
+          <Text style={stylesBaseStylesCreateGasto.modalTitle}>
             Seleccionar Archivo
           </Text>
 
           <TouchableOpacity
-            style={stylesBaseStylesCreatePago.modalOption}
+            style={stylesBaseStylesCreateGasto.modalOption}
             onPress={() => {
               setShowFileModal(false);
               pickFromCamera(setFiles);
             }}
           >
             <Ionicons name="camera" size={24} color={MAIN_COLOR} />
-            <Text style={stylesBaseStylesCreatePago.modalOptionText}>
+            <Text style={stylesBaseStylesCreateGasto.modalOptionText}>
               Cámara
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={stylesBaseStylesCreatePago.modalOption}
+            style={stylesBaseStylesCreateGasto.modalOption}
             onPress={() => {
               setShowFileModal(false);
               pickFromGallery(setFiles);
             }}
           >
             <Ionicons name="image" size={24} color={MAIN_COLOR} />
-            <Text style={stylesBaseStylesCreatePago.modalOptionText}>
+            <Text style={stylesBaseStylesCreateGasto.modalOptionText}>
               Galería
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={stylesBaseStylesCreatePago.modalOption}
+            style={stylesBaseStylesCreateGasto.modalOption}
             onPress={() => {
               setShowFileModal(false);
               pickDocument(setFiles);
             }}
           >
             <Ionicons name="document" size={24} color={MAIN_COLOR} />
-            <Text style={stylesBaseStylesCreatePago.modalOptionText}>
+            <Text style={stylesBaseStylesCreateGasto.modalOptionText}>
               Documentos
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[
-              stylesBaseStylesCreatePago.modalOption,
-              stylesBaseStylesCreatePago.cancelOption,
+              stylesBaseStylesCreateGasto.modalOption,
+              stylesBaseStylesCreateGasto.cancelOption,
             ]}
             onPress={() => setShowFileModal(false)}
           >
-            <Text style={stylesBaseStylesCreatePago.cancelText}>Cancelar</Text>
+            <Text style={stylesBaseStylesCreateGasto.cancelText}>Cancelar</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -91,4 +89,4 @@ const ModalOpcionesArchivoCreateUpdatePago: React.FC<ModalOpcionesArchivoCreateU
   );
 };
 
-export default ModalOpcionesArchivoCreateUpdatePago;
+export default ModalOpcionesArchivoCreateUpdateGasto;

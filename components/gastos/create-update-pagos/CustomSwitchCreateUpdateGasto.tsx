@@ -2,7 +2,7 @@ import { MAIN_COLOR } from "@/app/constants";
 import React from "react";
 import { StyleSheet, Switch, Text, View } from "react-native";
 
-interface CustomSwitchProps {
+interface CustomSwitchCreateUpdateGastoProps {
   label: string;
   value: boolean;
   onValueChange: (value: boolean) => void;
@@ -11,14 +11,14 @@ interface CustomSwitchProps {
   disabled?: boolean;
 }
 
-const CustomSwitchCreateUpdatePago = ({
+const CustomSwitchCreateUpdateGasto = ({
   label,
   value,
   onValueChange,
   leftLabel,
   rightLabel,
   disabled = false,
-}: CustomSwitchProps) => {
+}: CustomSwitchCreateUpdateGastoProps) => {
   return (
     <View style={styles.container}>
       <Text style={styles.mainLabel}>{label}</Text>
@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomSwitchCreateUpdatePago;
+export default CustomSwitchCreateUpdateGasto;

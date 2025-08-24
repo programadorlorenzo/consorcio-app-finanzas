@@ -1,10 +1,7 @@
-export interface PaymentFormData {
+export interface GastoFormData {
   descripcion: string;
-  categoria: CategoriaPago | null;
-  subcategoria: SubCategoriaPago | null;
-  tipo: TipoPago | null;
-  origen: OrigenPago | null;
-  moneda: MonedaPago | null;
+  categoria: CategoriaGasto | null;
+  subcategoria: SubCategoriaGasto | null;
   monto: string;
   fechaVencimiento: Date | null;
   observaciones: string;
@@ -13,7 +10,7 @@ export interface PaymentFormData {
   cuentaBancaria: string;
 }
 
-export enum CategoriaPago {
+export enum CategoriaGasto {
   JOLG = "JOLG",
   CORP_LORENZO = "CORP_LORENZO",
   OSCAR_LORENZO = "OSCAR_LORENZO",
@@ -23,7 +20,7 @@ export enum CategoriaPago {
   OFICINA = "OFICINA",
 }
 
-export enum SubCategoriaPago {
+export enum SubCategoriaGasto {
   JOLG_LOCALES = "JOLG_LOCALES",
   JOLG_PRODUCCION = "JOLG_PRODUCCION",
   JOLG_PLANILLA = "JOLG_PLANILLA",
@@ -38,22 +35,4 @@ export enum SubCategoriaPago {
   CASA_MANTENIMIENTO = "CASA_MANTENIMIENTO",
   OFICINA_SERVICIOS = "OFICINA_SERVICIOS",
   OFICINA_SUMINISTROS = "OFICINA_SUMINISTROS",
-}
-
-export enum TipoPago {
-  TRANSFERENCIA = "TRANSFERENCIA",
-  DEPOSITO = "DEPOSITO",
-  YAPE = "YAPE",
-  PLIN = "PLIN",
-  EFECTIVO = "EFECTIVO",
-}
-
-export enum OrigenPago {
-  CUENTA_EMPRESA = "CUENTA_EMPRESA",
-  EXTERNO = "EXTERNO",
-}
-
-export enum MonedaPago {
-  SOLES = "SOLES",
-  DOLARES = "DOLARES",
 }

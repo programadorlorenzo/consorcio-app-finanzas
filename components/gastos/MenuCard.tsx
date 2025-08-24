@@ -1,6 +1,6 @@
-import { PaymentStatusType } from "@/app/(tabs)/pagos";
+import { GastoStatusType } from "@/app/(tabs)/gastos";
 import { MAIN_COLOR } from "@/app/constants";
-import { menuCardStyles } from "@/styles/pagos/menu-card.styles";
+import { stylesMenuCardGastos } from "@/styles/gastos/menu-card.styles-create-update-gasto";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -14,7 +14,7 @@ const STATUS_COLORS = {
   rejected: '#EF4444', // Rojo para rechazado
 };
 
-const MenuCardPagos = ({
+const MenuCardGastos = ({
   title,
   description,
   icon,
@@ -25,7 +25,7 @@ const MenuCardPagos = ({
   description: string;
   icon: keyof typeof Ionicons.glyphMap;
   onPress: () => void;
-  statusType?: PaymentStatusType;
+  statusType?: GastoStatusType;
 }) => {
   const isAccent = statusType === 'accent';
   const backgroundColor = isAccent ? '#fff' : STATUS_COLORS[statusType];
@@ -36,17 +36,17 @@ const MenuCardPagos = ({
       activeOpacity={0.8}
       onPress={onPress}
       style={[
-        menuCardStyles.card, 
-        isAccent && menuCardStyles.accentCard,
+        stylesMenuCardGastos.card, 
+        isAccent && stylesMenuCardGastos.accentCard,
         !isAccent && { backgroundColor }
       ]}
     >
-      <View style={menuCardStyles.cardPattern}>
-        <View style={menuCardStyles.cardContent}>
+      <View style={stylesMenuCardGastos.cardPattern}>
+        <View style={stylesMenuCardGastos.cardContent}>
           <View
             style={[
-              menuCardStyles.iconContainer,
-              isAccent && menuCardStyles.accentIconContainer,
+              stylesMenuCardGastos.iconContainer,
+              isAccent && stylesMenuCardGastos.accentIconContainer,
               !isAccent && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }
             ]}
           >
@@ -56,11 +56,11 @@ const MenuCardPagos = ({
               color={iconColor}
             />
           </View>
-          <View style={menuCardStyles.textContainer}>
+          <View style={stylesMenuCardGastos.textContainer}>
             <Text
               style={[
-                menuCardStyles.cardTitle,
-                isAccent && menuCardStyles.accentCardTitle,
+                stylesMenuCardGastos.cardTitle,
+                isAccent && stylesMenuCardGastos.accentCardTitle,
                 !isAccent && { color: textColor }
               ]}
             >
@@ -68,8 +68,8 @@ const MenuCardPagos = ({
             </Text>
             <Text
               style={[
-                menuCardStyles.cardDescription,
-                isAccent && menuCardStyles.accentCardDescription,
+                stylesMenuCardGastos.cardDescription,
+                isAccent && stylesMenuCardGastos.accentCardDescription,
                 !isAccent && { color: textColor, opacity: 0.8 }
               ]}
             >
@@ -77,7 +77,7 @@ const MenuCardPagos = ({
             </Text>
           </View>
           <View style={[
-            menuCardStyles.chevronContainer,
+            stylesMenuCardGastos.chevronContainer,
             !isAccent && { backgroundColor: 'rgba(255, 255, 255, 0.15)' }
           ]}>
             <Ionicons
@@ -92,4 +92,4 @@ const MenuCardPagos = ({
   );
 };
 
-export default MenuCardPagos;
+export default MenuCardGastos;

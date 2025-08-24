@@ -58,7 +58,7 @@ function RootLayoutNav() {
         if (!user && !inLogin) {
           router.replace("/login");
         } else if (user && inLogin) {
-          router.replace("/(tabs)/pagos");
+          router.replace("/(tabs)/gastos");
         }
       } catch (error) {
         console.warn("Navigation error:", error);
