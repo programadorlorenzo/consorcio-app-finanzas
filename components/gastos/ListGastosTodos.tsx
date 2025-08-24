@@ -73,14 +73,11 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
 
       {/* Estado Badge arriba del título */}
       <View style={stylesListGastos.estadoBadgeContainer}>
-        <View
-          style={[
-            stylesListGastos.estadoBadge,
-            { backgroundColor: estadoColor },
-          ]}
-        >
-          <Ionicons name="radio-button-on" size={12} color="white" />
-          <Text style={stylesListGastos.estadoBadgeText}>{gasto.estado}</Text>
+        <View style={stylesListGastos.estadoBadge}>
+          <Ionicons name="ellipse" size={8} color={estadoColor} />
+          <Text style={[stylesListGastos.estadoBadgeText, { color: estadoColor }]}>
+            {gasto.estado}
+          </Text>
         </View>
       </View>
 
@@ -217,9 +214,9 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
       <TouchableOpacity
         style={stylesListGastos.actionButton}
         onPress={onPress}
-        activeOpacity={0.8}
+        activeOpacity={0.7}
       >
-        <Ionicons name="chevron-forward" size={20} color="white" />
+        <Ionicons name="arrow-forward" size={16} color="#64748B" />
       </TouchableOpacity>
 
       {/* Modal para vista previa de imagen con zoom */}
