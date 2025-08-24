@@ -6,7 +6,6 @@ import ArchivosCreateUpdatePago from "@/components/pagos/create-update-pagos/Arc
 import CustomSelectorCreatePago from "@/components/pagos/create-update-pagos/CustomSelectorCreatePago";
 import CustomSwitchCreatePago from "@/components/pagos/create-update-pagos/CustomSwitchCreatePago";
 import ModalOpcionesArchivoCreateUpdatePago from "@/components/pagos/create-update-pagos/ModalOpcionesArchivoCreateUpdatePago";
-import SelectorModal from "@/components/pagos/create-update-pagos/SelectorModal";
 import { stylesBaseStylesCreatePago } from "@/styles/pagos/base-create-update-pago.styles";
 import {
     Gasto,
@@ -45,7 +44,7 @@ export default function CreateUpdatePago() {
   const gastoId = params.gastoId ? Number(params.gastoId) : undefined;
 
   const [formData, setFormData] = useState<PagoCreateDto>({
-    tipo: TipoPago.EFECTIVO,
+    tipo: undefined,
     origen: OrigenPago.EXTERNO, // Por defecto externo
     gastoId: gastoId || 0,
     rendicionId: 0,
@@ -91,11 +90,11 @@ export default function CreateUpdatePago() {
         try {
           const gasto = await obtenerGasto(gastoId);
           setGastoInfo(gasto);
-          setFormData(prev => ({
+          setFormData((prev) => ({
             ...prev,
             gastoId: gastoId,
-            importe: gasto.importe || 0,
-            moneda: gasto.moneda || Moneda.SOLES
+            importe: 0,
+            moneda: gasto.moneda || Moneda.SOLES,
           }));
           setImporteText(gasto.importe?.toString() || "");
         } catch (error) {
@@ -161,11 +160,11 @@ export default function CreateUpdatePago() {
       Alert.alert("Error", "El pago debe estar asociado a un gasto");
       return false;
     }
-    if (formData.importe <= 0) {
+    if (formData.importe && formData.importe <= 0) {
       Alert.alert("Error", "El importe debe ser mayor a 0");
       return false;
     }
-    if (!formData.numeroOperacion.trim()) {
+    if (formData.numeroOperacion && !formData.numeroOperacion.trim()) {
       Alert.alert("Error", "El número de operación es requerido");
       return false;
     }
@@ -181,14 +180,14 @@ export default function CreateUpdatePago() {
       let uploadedFilePaths: string[] = [];
       if (files.length > 0) {
         console.log("📤 Subiendo archivos...");
-        
+
         // Convertir FileItem[] a FileToUpload[]
-        const filesToUpload = files.map(file => ({
+        const filesToUpload = files.map((file) => ({
           uri: file.uri,
           fileName: file.name,
-          type: file.type
+          type: file.type,
         }));
-        
+
         uploadedFilePaths = await uploadMultipleFiles(filesToUpload);
         console.log("📁 Archivos subidos:", uploadedFilePaths);
       }
@@ -213,7 +212,7 @@ export default function CreateUpdatePago() {
 
       // Limpiar formulario y archivos
       setFormData({
-        tipo: TipoPago.EFECTIVO,
+        tipo: undefined,
         origen: OrigenPago.CUENTA_EMPRESA,
         gastoId: gastoId || 0,
         rendicionId: 0,
@@ -241,7 +240,10 @@ export default function CreateUpdatePago() {
       router.back();
     } catch (error) {
       console.error("❌ Error registrando pago:", error);
-      Alert.alert("Error", "Error al registrar el pago. Por favor intenta nuevamente.");
+      Alert.alert(
+        "Error",
+        "Error al registrar el pago. Por favor intenta nuevamente."
+      );
     } finally {
       setLoading(false);
     }
@@ -278,7 +280,8 @@ export default function CreateUpdatePago() {
             <View style={stylesBaseStylesCreatePago.gastoInfoDetails}>
               <Text style={stylesBaseStylesCreatePago.gastoInfoCategory}>
                 {formatDisplayText(gastoInfo.categoria || "")}
-                {gastoInfo.subcategoria && ` > ${formatDisplayText(gastoInfo.subcategoria)}`}
+                {gastoInfo.subcategoria &&
+                  ` > ${formatDisplayText(gastoInfo.subcategoria)}`}
               </Text>
               <Text style={stylesBaseStylesCreatePago.gastoInfoAmount}>
                 {gastoInfo.moneda} {gastoInfo.importe}
@@ -298,13 +301,15 @@ export default function CreateUpdatePago() {
 
         {/* Campos del formulario */}
         <View style={stylesBaseStylesCreatePago.formContainer}>
-          
           {/* Tipo de Pago */}
           <CustomSelectorCreatePago
             label="Tipo de Pago"
             value={formData.tipo}
-            onPress={() => setShowTipoModal(true)}
             placeholder="Selecciona el tipo de pago"
+            options={Object.values(TipoPago)}
+            onSelect={(value) => handleInputChange("tipo", value)}
+            isVisible={showTipoModal}
+            onClose={() => setShowTipoModal(!showTipoModal)}
             required
           />
 
@@ -331,8 +336,11 @@ export default function CreateUpdatePago() {
               <CustomSelectorCreatePago
                 label=""
                 value={formData.moneda}
-                onPress={() => setShowMonedaModal(true)}
                 placeholder="Moneda"
+                options={Object.values(Moneda)}
+                onSelect={(value) => handleInputChange("moneda", value)}
+                isVisible={showMonedaModal}
+                onClose={() => setShowMonedaModal(!showMonedaModal)}
                 containerStyle={stylesBaseStylesCreatePago.monedaSelector}
               />
               <TextInput
@@ -349,12 +357,15 @@ export default function CreateUpdatePago() {
           {/* Número de Operación */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Número de Operación <Text style={stylesBaseStylesCreatePago.required}>*</Text>
+              Número de Operación{" "}
+              <Text style={stylesBaseStylesCreatePago.required}>*</Text>
             </Text>
             <TextInput
               style={stylesBaseStylesCreatePago.textInput}
               value={formData.numeroOperacion}
-              onChangeText={(text) => handleInputChange("numeroOperacion", text)}
+              onChangeText={(text) =>
+                handleInputChange("numeroOperacion", text)
+              }
               placeholder="Ingrese el número de operación"
               placeholderTextColor="#9CA3AF"
             />
@@ -362,7 +373,9 @@ export default function CreateUpdatePago() {
 
           {/* Titular Origen */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>Titular Origen</Text>
+            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+              Titular Origen
+            </Text>
             <TextInput
               style={stylesBaseStylesCreatePago.textInput}
               value={formData.titular_origen}
@@ -374,7 +387,9 @@ export default function CreateUpdatePago() {
 
           {/* Banco Origen */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>Banco Origen</Text>
+            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+              Banco Origen
+            </Text>
             <TextInput
               style={stylesBaseStylesCreatePago.textInput}
               value={formData.banco_origen}
@@ -386,11 +401,15 @@ export default function CreateUpdatePago() {
 
           {/* Cuenta Bancaria Origen */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>Cuenta Bancaria Origen</Text>
+            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+              Cuenta Bancaria Origen
+            </Text>
             <TextInput
               style={stylesBaseStylesCreatePago.textInput}
               value={formData.cuenta_bancaria_origen}
-              onChangeText={(text) => handleInputChange("cuenta_bancaria_origen", text)}
+              onChangeText={(text) =>
+                handleInputChange("cuenta_bancaria_origen", text)
+              }
               placeholder="Número de cuenta bancaria de origen"
               placeholderTextColor="#9CA3AF"
               keyboardType="numeric"
@@ -399,11 +418,15 @@ export default function CreateUpdatePago() {
 
           {/* Titular Destino */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>Titular Destino</Text>
+            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+              Titular Destino
+            </Text>
             <TextInput
               style={stylesBaseStylesCreatePago.textInput}
               value={formData.titular_destino}
-              onChangeText={(text) => handleInputChange("titular_destino", text)}
+              onChangeText={(text) =>
+                handleInputChange("titular_destino", text)
+              }
               placeholder="Nombre del titular de destino"
               placeholderTextColor="#9CA3AF"
             />
@@ -411,7 +434,9 @@ export default function CreateUpdatePago() {
 
           {/* Banco Destino */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>Banco Destino</Text>
+            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+              Banco Destino
+            </Text>
             <TextInput
               style={stylesBaseStylesCreatePago.textInput}
               value={formData.banco_destino}
@@ -423,11 +448,15 @@ export default function CreateUpdatePago() {
 
           {/* Cuenta Bancaria Destino */}
           <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>Cuenta Bancaria Destino</Text>
+            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+              Cuenta Bancaria Destino
+            </Text>
             <TextInput
               style={stylesBaseStylesCreatePago.textInput}
               value={formData.cuenta_bancaria_destino}
-              onChangeText={(text) => handleInputChange("cuenta_bancaria_destino", text)}
+              onChangeText={(text) =>
+                handleInputChange("cuenta_bancaria_destino", text)
+              }
               placeholder="Número de cuenta bancaria de destino"
               placeholderTextColor="#9CA3AF"
               keyboardType="numeric"
@@ -462,33 +491,6 @@ export default function CreateUpdatePago() {
           )}
         </TouchableOpacity>
       </View>
-
-      {/* Modales */}
-      <SelectorModal
-        visible={showTipoModal}
-        onClose={() => setShowTipoModal(false)}
-        title="Seleccionar Tipo de Pago"
-        options={Object.values(TipoPago)}
-        selectedValue={formData.tipo}
-        onSelect={(value: string) => {
-          handleInputChange("tipo", value);
-          setShowTipoModal(false);
-        }}
-        formatDisplayText={formatDisplayText}
-      />
-
-      <SelectorModal
-        visible={showMonedaModal}
-        onClose={() => setShowMonedaModal(false)}
-        title="Seleccionar Moneda"
-        options={Object.values(Moneda)}
-        selectedValue={formData.moneda}
-        onSelect={(value: string) => {
-          handleInputChange("moneda", value);
-          setShowMonedaModal(false);
-        }}
-        formatDisplayText={formatDisplayText}
-      />
 
       <ModalOpcionesArchivoCreateUpdatePago
         visible={showFileModal}

@@ -103,25 +103,25 @@ export interface GastoCreateDto {
 }
 
 export interface PagoCreateDto {
-  tipo: TipoPago;
-  origen: OrigenPago;
-  gastoId: number;
-  rendicionId: number;
-  usuarioRegistroPagoId: number;
-  fechaRegistro: string;
-  titular_origen: string;
-  cuenta_bancaria_origen: string;
-  cci_origen: string;
-  banco_origen: string;
-  moneda_origen: Moneda;
-  titular_destino: string;
-  cuenta_bancaria_destino: string;
-  cci_destino: string;
-  banco_destino: string;
-  moneda_destino: Moneda;
-  tipo_cambio: number;
-  importe: number;
-  moneda: Moneda;
-  numeroOperacion: string;
-  rutasArchivos: string[];
+  tipo?: TipoPago;
+  origen?: OrigenPago;
+  gastoId?: number;
+  rendicionId?: number;
+  usuarioRegistroPagoId?: number;
+  fechaRegistro?: string;
+  titular_origen?: string;
+  cuenta_bancaria_origen?: string;
+  cci_origen?: string;
+  banco_origen?: string;
+  moneda_origen?: Moneda;
+  titular_destino?: string;
+  cuenta_bancaria_destino?: string;
+  cci_destino?: string;
+  banco_destino?: string;
+  moneda_destino?: Moneda;
+  tipo_cambio?: number;
+  importe?: number;
+  moneda?: Moneda;
+  numeroOperacion?: string;
+  rutasArchivos?: string[];
 }

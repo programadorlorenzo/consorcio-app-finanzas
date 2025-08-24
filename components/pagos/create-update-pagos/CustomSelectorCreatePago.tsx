@@ -1,142 +1,131 @@
+import { MAIN_COLOR } from "@/app/constants";
 import { stylesCustomSelectorCreatePago } from "@/styles/pagos/custom-selector-create-pago.styles";
+import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_gasto.utils";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import {
-    Modal,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
-} from "react-native";
+import { Modal, ScrollView, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 
 interface CustomSelectorCreatePagoProps {
   label: string;
-  value?: string;
-  onPress: () => void;
+  value: any;
   placeholder: string;
-  required?: boolean;
+  options: any[];
+  onSelect: (value: any) => void;
+  isVisible: boolean;
+  onClose: () => void;
+  keyExtractor?: (item: any) => string;
+  labelExtractor?: (item: any) => string;
   containerStyle?: ViewStyle;
+  required?: boolean;
 }
 
-const CustomSelectorCreatePago: React.FC<CustomSelectorCreatePagoProps> & {
-  Modal: React.FC<ModalProps>;
-} = ({
+const CustomSelectorCreatePago = ({
   label,
   value,
-  onPress,
   placeholder,
-  required = false,
-  containerStyle,
-}) => {
-  return (
-    <View style={[stylesCustomSelectorCreatePago.container, containerStyle]}>
-      {label && (
-        <Text style={stylesCustomSelectorCreatePago.label}>
-          {label}
-          {required && <Text style={stylesCustomSelectorCreatePago.required}> *</Text>}
-        </Text>
-      )}
-      <TouchableOpacity
-        style={stylesCustomSelectorCreatePago.selector}
-        onPress={onPress}
-        activeOpacity={0.7}
-      >
-        <Text
-          style={[
-            stylesCustomSelectorCreatePago.selectorText,
-            !value && stylesCustomSelectorCreatePago.placeholder,
-          ]}
-        >
-          {value || placeholder}
-        </Text>
-        <Ionicons
-          name="chevron-down"
-          size={20}
-          color="#6B7280"
-          style={stylesCustomSelectorCreatePago.icon}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-interface ModalProps {
-  visible: boolean;
-  onClose: () => void;
-  title: string;
-  options: string[];
-  selectedValue?: string;
-  onSelect: (value: string) => void;
-  formatDisplayText: (text: string) => string;
-}
-
-const CustomSelectorModal: React.FC<ModalProps> = ({
-  visible,
-  onClose,
-  title,
   options,
-  selectedValue,
   onSelect,
-  formatDisplayText,
-}) => {
-  return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="slide"
-      onRequestClose={onClose}
-    >
-      <View style={stylesCustomSelectorCreatePago.modalOverlay}>
-        <View style={stylesCustomSelectorCreatePago.modalContainer}>
-          <View style={stylesCustomSelectorCreatePago.modalHeader}>
-            <Text style={stylesCustomSelectorCreatePago.modalTitle}>{title}</Text>
-            <TouchableOpacity
-              onPress={onClose}
-              style={stylesCustomSelectorCreatePago.modalCloseButton}
-            >
-              <Ionicons name="close" size={24} color="#374151" />
-            </TouchableOpacity>
-          </View>
+  isVisible,
+  onClose,
+  keyExtractor,
+  labelExtractor,
+  containerStyle,
+  required = false,
+}: CustomSelectorCreatePagoProps) => {
+  const getDisplayValue = () => {
+    if (!value) return placeholder;
+    const displayValue = labelExtractor ? labelExtractor(value) : value;
+    return formatDisplayText(displayValue);
+  };
 
-          <ScrollView style={stylesCustomSelectorCreatePago.modalContent}>
-            {options.map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={[
-                  stylesCustomSelectorCreatePago.modalOption,
-                  selectedValue === option &&
-                    stylesCustomSelectorCreatePago.modalOptionSelected,
-                ]}
-                onPress={() => onSelect(option)}
-                activeOpacity={0.7}
-              >
-                <Text
-                  style={[
-                    stylesCustomSelectorCreatePago.modalOptionText,
-                    selectedValue === option &&
-                      stylesCustomSelectorCreatePago.modalOptionTextSelected,
-                  ]}
-                >
-                  {formatDisplayText(option)}
-                </Text>
-                {selectedValue === option && (
-                  <Ionicons
-                    name="checkmark"
-                    size={20}
-                    color="#10B981"
-                    style={stylesCustomSelectorCreatePago.modalOptionIcon}
-                  />
-                )}
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+  return (
+    <>
+      <View style={[stylesCustomSelectorCreatePago.container, containerStyle]}>
+        {label && (
+          <Text style={stylesCustomSelectorCreatePago.label}>
+            {label}
+            {required && <Text style={stylesCustomSelectorCreatePago.required}> *</Text>}
+          </Text>
+        )}
+        <TouchableOpacity
+          style={stylesCustomSelectorCreatePago.customSelector}
+          onPress={() => !isVisible && onClose()}
+        >
+          <Text
+            style={[
+              stylesCustomSelectorCreatePago.selectorText,
+              !value && stylesCustomSelectorCreatePago.selectorPlaceholder,
+            ]}
+          >
+            {getDisplayValue()}
+          </Text>
+          <Ionicons
+            name="chevron-down"
+            size={20}
+            color={!value ? "#8A9A97" : MAIN_COLOR}
+          />
+        </TouchableOpacity>
       </View>
-    </Modal>
+
+      <Modal
+        visible={isVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={onClose}
+      >
+        <TouchableOpacity
+          style={stylesCustomSelectorCreatePago.modalOverlay}
+          onPress={onClose}
+        >
+          <View style={stylesCustomSelectorCreatePago.selectorModalContent}>
+            <View style={stylesCustomSelectorCreatePago.selectorModalHeader}>
+              <Text style={stylesCustomSelectorCreatePago.selectorModalTitle}>
+                {label}
+              </Text>
+              <TouchableOpacity onPress={onClose}>
+                <Ionicons name="close" size={24} color={MAIN_COLOR} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={stylesCustomSelectorCreatePago.selectorOptions}>
+              {options.map((option) => {
+                const key = keyExtractor ? keyExtractor(option) : option;
+                const rawLabel = labelExtractor
+                  ? labelExtractor(option)
+                  : option;
+                const formattedLabel = formatDisplayText(rawLabel);
+                const isSelected = value === option;
+
+                return (
+                  <TouchableOpacity
+                    key={key}
+                    style={stylesCustomSelectorCreatePago.selectorOption}
+                    onPress={() => {
+                      onSelect(option);
+                      onClose();
+                    }}
+                  >
+                    <Text
+                      style={[
+                        stylesCustomSelectorCreatePago.selectorOptionText,
+                        isSelected &&
+                          stylesCustomSelectorCreatePago.selectorOptionSelected,
+                      ]}
+                    >
+                      {formattedLabel}
+                    </Text>
+                    {isSelected && (
+                      <Ionicons name="checkmark" size={20} color={MAIN_COLOR} />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </>
   );
 };
-
-CustomSelectorCreatePago.Modal = CustomSelectorModal;
 
 export default CustomSelectorCreatePago;
