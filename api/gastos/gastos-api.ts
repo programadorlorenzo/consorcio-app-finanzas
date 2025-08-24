@@ -27,3 +27,29 @@ export const createGasto = async (payload: GastoCreateDto): Promise<Gasto> => {
     throw error;
   }
 };
+
+export const listarGastos = async (): Promise<Gasto[]> => {
+  try {
+    console.log("🚀 Obteniendo lista de gastos");
+    const response = await apiClient.get<Gasto[]>("/gastos");
+    console.log("✅ Lista de gastos obtenida exitosamente:", response.data.length, "gastos");
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching gastos:", error);
+
+    if (isAxiosError(error)) {
+      if (error.response) {
+        console.error(`Status: ${error.response.status}`, error.response.data);
+        if (error.response.status === 401) {
+          console.error(
+            "❌ Error de autenticación. Token inválido o expirado."
+          );
+        }
+      } else if (error.request) {
+        console.error("❌ No se recibió respuesta del servidor");
+      }
+    }
+
+    throw error;
+  }
+};

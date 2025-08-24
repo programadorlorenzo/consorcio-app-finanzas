@@ -1,0 +1,260 @@
+import { MAIN_COLOR } from '@/app/constants';
+import { StyleSheet } from 'react-native';
+
+export const stylesListGastos = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F8FAF9',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F8FAF9',
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#8A9A97',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  listContainer: {
+    padding: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 80,
+  },
+  emptyText: {
+    marginTop: 16,
+    fontSize: 18,
+    color: '#8A9A97',
+    textAlign: 'center',
+  },
+
+  // Card Styles
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    marginBottom: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+
+  // Wave Patterns
+  waveContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 120,
+    height: 120,
+    overflow: 'hidden',
+  },
+  wave1: {
+    position: 'absolute',
+    top: -60,
+    right: -60,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    opacity: 0.3,
+  },
+  wave2: {
+    position: 'absolute',
+    top: -40,
+    right: -40,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    opacity: 0.2,
+  },
+
+  // Header
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    zIndex: 1,
+  },
+  estadoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  estadoIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 8,
+  },
+  estadoText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  fechaText: {
+    fontSize: 12,
+    color: '#8A9A97',
+  },
+
+  // Descripción
+  descripcion: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#2C3E50',
+    marginBottom: 12,
+    lineHeight: 24,
+  },
+
+  // Categorías
+  categoriaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    flexWrap: 'wrap',
+  },
+  categoriaBadge: {
+    backgroundColor: MAIN_COLOR,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginRight: 8,
+    marginBottom: 4,
+  },
+  categoriaText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  subcategoriaBadge: {
+    backgroundColor: '#E8F4FD',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginBottom: 4,
+  },
+  subcategoriaText: {
+    color: MAIN_COLOR,
+    fontSize: 12,
+    fontWeight: '500',
+  },
+
+  // Importe
+  importeContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 16,
+  },
+  monedaText: {
+    fontSize: 14,
+    color: '#8A9A97',
+    marginRight: 8,
+  },
+  importeText: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: MAIN_COLOR,
+  },
+
+  // Etiquetas
+  etiquetasContainer: {
+    marginBottom: 16,
+  },
+  etiquetasLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#2C3E50',
+    marginBottom: 8,
+  },
+  etiquetasScroll: {
+    flexDirection: 'row',
+  },
+  etiquetaBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  etiquetaBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+
+  // Archivos
+  archivosContainer: {
+    marginBottom: 16,
+  },
+  archivosLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#2C3E50',
+    marginBottom: 8,
+  },
+  archivosScroll: {
+    flexDirection: 'row',
+  },
+  archivoItem: {
+    marginRight: 12,
+  },
+  imageContainer: {
+    position: 'relative',
+    width: 60,
+    height: 60,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  archivoImage: {
+    width: '100%',
+    height: '100%',
+  },
+  imageOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderTopLeftRadius: 8,
+  },
+  documentContainer: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#F8FBFF',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E8F0FF',
+  },
+  documentText: {
+    fontSize: 8,
+    color: MAIN_COLOR,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+
+  // Usuario
+  usuarioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  usuarioText: {
+    fontSize: 12,
+    color: '#8A9A97',
+    marginLeft: 6,
+  },
+});

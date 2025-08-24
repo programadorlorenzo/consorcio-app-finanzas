@@ -1,3 +1,5 @@
+import { Etiqueta } from "../etiquetas/etiquetas.types";
+
 export enum CategoriaGasto {
   RENDICION = "RENDICION",
   JOLG = "JOLG",
@@ -55,6 +57,8 @@ export interface EtiquetaGasto {
   id: number;
   etiquetaId: number;
   gastoId: number;
+  etiqueta?: Etiqueta;
+  gasto?: Gasto;
 }
 
 export interface Pago {

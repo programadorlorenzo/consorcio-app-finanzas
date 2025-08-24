@@ -1,8 +1,4 @@
-export interface EtiquetaGasto {
-  id: number;
-  etiquetaId: number;
-  gastoId: number;
-}
+import { EtiquetaGasto } from "../gastos/gastos.types";
 
 export interface Etiqueta {
   id: number;

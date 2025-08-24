@@ -39,7 +39,7 @@ const TabGastos = () => {
       title: "Todos los Gastos",
       description: "Ver listado completo de gastos",
       icon: "list-outline" as keyof typeof Ionicons.glyphMap,
-      onPress: () => console.log("Todos los Gastos"),
+      onPress: () => router.push("/list-gastos"),
       statusType: "default" as GastoStatusType,
     },
     {
