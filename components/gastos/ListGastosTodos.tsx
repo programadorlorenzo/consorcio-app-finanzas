@@ -11,8 +11,11 @@ import {
     ActivityIndicator,
     Alert,
     Image,
+    Modal,
     RefreshControl,
+    SafeAreaView,
     ScrollView,
+    StatusBar,
     Text,
     TouchableOpacity,
     View,
@@ -32,15 +35,25 @@ interface GastoCardProps {
 
 const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
   const estadoColor = getEstadoColor(gasto.estado || "PENDIENTE");
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+  const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+
+  const openImageModal = (uri: string) => {
+    setSelectedImageUri(uri);
+    setIsImageModalVisible(true);
+  };
+
+  const closeImageModal = () => {
+    setIsImageModalVisible(false);
+    setSelectedImageUri(null);
+  };
 
   return (
-    <TouchableOpacity
+    <View
       style={[
         stylesListGastos.card,
         { backgroundColor: `${estadoColor}11` }, // Color muy sutil (11 = ~6% opacity)
       ]}
-      onPress={onPress}
-      activeOpacity={0.7}
     >
       {/* Wave Pattern */}
       <View style={stylesListGastos.waveContainer}>
@@ -58,7 +71,20 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         />
       </View>
 
-      {/* Header con Categoría/Subcategoría y Estado */}
+      {/* Estado Badge arriba del título */}
+      <View style={stylesListGastos.estadoBadgeContainer}>
+        <View
+          style={[
+            stylesListGastos.estadoBadge,
+            { backgroundColor: estadoColor },
+          ]}
+        >
+          <Ionicons name="radio-button-on" size={12} color="white" />
+          <Text style={stylesListGastos.estadoBadgeText}>{gasto.estado}</Text>
+        </View>
+      </View>
+
+      {/* Header con Categoría/Subcategoría */}
       <View style={stylesListGastos.cardHeader}>
         <View style={stylesListGastos.breadcrumbContainer}>
           <Text style={stylesListGastos.breadcrumbText}>
@@ -72,17 +98,6 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
               </Text>
             </>
           )}
-        </View>
-        <View style={stylesListGastos.estadoContainerHeader}>
-          <View
-            style={[
-              stylesListGastos.estadoIndicatorSmall,
-              { backgroundColor: estadoColor },
-            ]}
-          />
-          <Text style={[stylesListGastos.estadoTextSmall, { color: estadoColor }]}>
-            {gasto.estado}
-          </Text>
         </View>
       </View>
 
@@ -140,7 +155,13 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
             {gasto.archivos.map((archivo: GastoFile, index: number) => (
               <View key={index} style={stylesListGastos.archivoItem}>
                 {isImageFile(archivo.filename || "") ? (
-                  <View style={stylesListGastos.imageContainer}>
+                  <TouchableOpacity
+                    style={stylesListGastos.imageContainer}
+                    onPress={() =>
+                      openImageModal(`${API_URL_BASE}/${archivo.filename}`)
+                    }
+                    activeOpacity={0.8}
+                  >
                     <Image
                       source={{
                         uri: `${API_URL_BASE}/${archivo.filename}`,
@@ -149,9 +170,9 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
                       resizeMode="cover"
                     />
                     <View style={stylesListGastos.imageOverlay}>
-                      <Ionicons name="image" size={16} color="white" />
+                      <Ionicons name="expand" size={16} color="white" />
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 ) : (
                   <View style={stylesListGastos.documentContainer}>
                     <Ionicons name="document" size={24} color={MAIN_COLOR} />
@@ -182,21 +203,73 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
             <Ionicons name="time" size={16} color="#94A3B8" />
             <Text style={stylesListGastos.registradoLabel}>
               Registrado el{" "}
-              {new Date(gasto.fechaRegistro || "").toLocaleDateString(
-                "es-ES"
-              )}{" "}
-              {new Date(gasto.fechaRegistro || "").toLocaleTimeString(
-                "es-ES",
-                {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }
-              )}{" "}
+              {new Date(gasto.fechaRegistro || "").toLocaleDateString("es-ES")}{" "}
+              {new Date(gasto.fechaRegistro || "").toLocaleTimeString("es-ES", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}{" "}
             </Text>
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+
+      {/* Botón de acción en inferior derecha */}
+      <TouchableOpacity
+        style={stylesListGastos.actionButton}
+        onPress={onPress}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="chevron-forward" size={20} color="white" />
+      </TouchableOpacity>
+
+      {/* Modal para vista previa de imagen con zoom */}
+      <Modal
+        visible={isImageModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={closeImageModal}
+      >
+        <SafeAreaView style={stylesListGastos.imageModalContainer}>
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor="rgba(0,0,0,0.9)"
+          />
+
+          {/* Header del modal */}
+          <View style={stylesListGastos.imageModalHeader}>
+            <TouchableOpacity
+              style={stylesListGastos.closeModalButton}
+              onPress={closeImageModal}
+            >
+              <Ionicons name="close" size={28} color="white" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Imagen con zoom */}
+          <ScrollView
+            style={stylesListGastos.imageZoomScrollView}
+            contentContainerStyle={stylesListGastos.imageZoomContainer}
+            maximumZoomScale={4}
+            minimumZoomScale={1}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            bounces={true}
+            bouncesZoom={true}
+            pinchGestureEnabled={true}
+            scrollEnabled={true}
+            centerContent={true}
+          >
+            {selectedImageUri && (
+              <Image
+                source={{ uri: selectedImageUri }}
+                style={stylesListGastos.fullScreenImage}
+                resizeMode="contain"
+              />
+            )}
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
+    </View>
   );
 };
 
