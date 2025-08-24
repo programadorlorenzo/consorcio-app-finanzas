@@ -1,0 +1,171 @@
+import { MAIN_COLOR } from "@/app/constants";
+import { StyleSheet } from "react-native";
+
+export const stylesArchivosCreatePago = StyleSheet.create({
+  container: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#374151",
+    marginBottom: 16,
+  },
+  addButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderWidth: 2,
+    borderColor: MAIN_COLOR,
+    borderStyle: "dashed",
+    borderRadius: 12,
+    backgroundColor: `${MAIN_COLOR}05`,
+    marginBottom: 16,
+  },
+  addButtonText: {
+    fontSize: 16,
+    color: MAIN_COLOR,
+    fontWeight: "600",
+    marginLeft: 8,
+  },
+  filesContainer: {
+    marginBottom: 16,
+  },
+  fileItem: {
+    width: 120,
+    marginRight: 12,
+    alignItems: "center",
+  },
+  filePreview: {
+    width: 100,
+    height: 100,
+    borderRadius: 12,
+    backgroundColor: "#F3F4F6",
+    marginBottom: 8,
+    position: "relative",
+    overflow: "hidden",
+  },
+  fileImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 12,
+  },
+  fileIconContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  removeButton: {
+    position: "absolute",
+    top: -6,
+    right: -6,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 15,
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  fileName: {
+    fontSize: 12,
+    color: "#374151",
+    textAlign: "center",
+    marginBottom: 4,
+  },
+  fileInfo: {
+    alignItems: "center",
+  },
+  fileSize: {
+    fontSize: 10,
+    color: "#9CA3AF",
+    textAlign: "center",
+    marginTop: 2,
+  },
+  voucherBadge: {
+    backgroundColor: "#10B981",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  voucherBadgeText: {
+    fontSize: 10,
+    color: "#FFFFFF",
+    fontWeight: "600",
+  },
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 40,
+    backgroundColor: "#F9FAFB",
+    borderRadius: 12,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#6B7280",
+    fontWeight: "600",
+    marginTop: 12,
+    marginBottom: 4,
+  },
+  emptySubText: {
+    fontSize: 14,
+    color: "#9CA3AF",
+    textAlign: "center",
+  },
+  // Estilos para modal de imagen
+  imageModalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.95)",
+  },
+  imageModalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+  },
+  imageModalCloseButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  imageZoomContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  imageZoomScrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  fullScreenImage: {
+    width: "100%",
+    height: "100%",
+    maxWidth: 400,
+    maxHeight: 600,
+  },
+  imageModalFooter: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    alignItems: "center",
+  },
+  zoomInstructions: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.7)",
+    textAlign: "center",
+  },
+});

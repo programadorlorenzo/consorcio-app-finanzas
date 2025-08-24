@@ -36,8 +36,7 @@ export enum TipoPago {
 
 export enum OrigenPago {
   CUENTA_EMPRESA = "CUENTA_EMPRESA",
-  CUENTA_PERSONAL = "CUENTA_PERSONAL",
-  EFECTIVO = "EFECTIVO",
+  EXTERNO = "EXTERNO",
 }
 
 export interface GastoFile {

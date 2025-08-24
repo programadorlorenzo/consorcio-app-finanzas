@@ -15,6 +15,7 @@ import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_
 import { getEstadoColor } from "@/utils/gastos/list-gastos-utils";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
     Alert,
@@ -29,7 +30,6 @@ import {
     View,
 } from "react-native";
 import { stylesListGastos } from "../../styles/gastos/list-gastos.styles";
-import ModalRegistrarPago from "./ModalRegistrarPago";
 
 // Función para verificar si un archivo es imagen
 const isImageFile = (filename: string): boolean => {
@@ -47,7 +47,6 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [isPagoModalVisible, setIsPagoModalVisible] = useState(false);
 
   const openImageModal = (uri: string) => {
     setSelectedImageUri(uri);
@@ -69,7 +68,10 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
 
   const handlePagar = () => {
     closeMenu();
-    setIsPagoModalVisible(true);
+    router.push({
+      pathname: "/create-update-pago",
+      params: { gastoId: gasto.id }
+    });
   };
 
   const handleEditar = () => {
@@ -461,13 +463,6 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
           </ScrollView>
         </SafeAreaView>
       </Modal>
-
-      {/* Modal para registrar pago */}
-      <ModalRegistrarPago 
-        visible={isPagoModalVisible}
-        onClose={() => setIsPagoModalVisible(false)}
-        gasto={gasto}
-      />
     </View>
   );
 };

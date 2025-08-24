@@ -1,8 +1,8 @@
 import { MAIN_COLOR } from "@/app/constants";
 import {
-  CategoriaGasto,
-  GastoCreateDto,
-  SubCategoriaGasto,
+    CategoriaGasto,
+    GastoCreateDto,
+    SubCategoriaGasto,
 } from "@/types/gastos/gastos.types";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
@@ -82,21 +82,13 @@ export const getAvailableSubcategorias = (
 
 export const addTemporaryFile = (
   file: any,
-  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>
+  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>,
+  prefix?: string
 ) => {
-  // Priorizar mimeType si está disponible y es válido
-  let fileType = file.mimeType || file.type || "unknown";
+  // Para compatibilidad con diferentes tipos de picker
+  let fileType = file.type || file.mimeType || "unknown";
 
-  // Si el tipo es solo "image", usar el mimeType si está disponible
-  if (
-    file.type === "image" &&
-    file.mimeType &&
-    file.mimeType.startsWith("image/")
-  ) {
-    fileType = file.mimeType;
-  }
-
-  // Si no tiene tipo MIME, intentar determinarlo por extensión
+  // Para archivos de DocumentPicker sin tipo
   if (!fileType || fileType === "unknown") {
     const fileName = file.name || file.uri || "";
     if (fileName.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i)) {
@@ -113,9 +105,17 @@ export const addTemporaryFile = (
     isImage: isImage(fileType),
   });
 
+  // Generar nombre del archivo con prefijo si se proporciona
+  let fileName = file.name || `imagen_${Date.now()}.jpg`;
+  if (prefix && !fileName.toLowerCase().includes(prefix.toLowerCase())) {
+    const extension = fileName.split('.').pop();
+    const baseName = fileName.replace(`.${extension}`, '');
+    fileName = `${prefix}${baseName}.${extension}`;
+  }
+
   const newFile: FileItem = {
     uri: file.uri,
-    name: file.name || `imagen_${Date.now()}.jpg`,
+    name: fileName,
     type: fileType,
     size: file.size,
   };
@@ -124,7 +124,8 @@ export const addTemporaryFile = (
 };
 
 export const pickFromGallery = async (
-  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>
+  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>,
+  prefix?: string
 ) => {
   try {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -141,7 +142,7 @@ export const pickFromGallery = async (
     });
 
     if (!result.canceled && result.assets) {
-      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles));
+      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles, prefix));
     }
   } catch (error) {
     console.error("Error accessing gallery:", error);
@@ -150,7 +151,8 @@ export const pickFromGallery = async (
 };
 
 export const pickDocument = async (
-  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>
+  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>,
+  prefix?: string
 ) => {
   try {
     const result = await DocumentPicker.getDocumentAsync({
@@ -160,7 +162,7 @@ export const pickDocument = async (
     });
 
     if (!result.canceled && result.assets) {
-      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles));
+      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles, prefix));
     }
   } catch (error) {
     console.error("Error picking document:", error);
@@ -169,7 +171,8 @@ export const pickDocument = async (
 };
 
 export const pickFromCamera = async (
-  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>
+  setFiles: React.Dispatch<React.SetStateAction<FileItem[]>>,
+  prefix?: string
 ) => {
   try {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
@@ -186,7 +189,7 @@ export const pickFromCamera = async (
     });
 
     if (!result.canceled && result.assets) {
-      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles));
+      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles, prefix));
     }
   } catch (error) {
     console.error("Error accessing camera:", error);
