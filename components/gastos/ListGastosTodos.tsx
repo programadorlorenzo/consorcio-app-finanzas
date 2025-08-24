@@ -11,11 +11,13 @@ import {
 import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_gasto.utils";
 import { getEstadoColor } from "@/utils/gastos/list-gastos-utils";
 import { Ionicons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
     Alert,
     Image,
+    Linking,
     Modal,
     RefreshControl,
     SafeAreaView,
@@ -78,6 +80,81 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
     closeMenu();
     console.log("Ver más detalles gasto:", gasto.id);
     if (onPress) onPress();
+  };
+
+  const handleCopiarWhatsApp = async () => {
+    closeMenu();
+
+    // Crear el mensaje formateado para WhatsApp
+    const fecha = new Date(gasto.fechaRegistro || "").toLocaleDateString(
+      "es-ES"
+    );
+    const hora = new Date(gasto.fechaRegistro || "").toLocaleTimeString(
+      "es-ES",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+
+    const categoria = gasto.subcategoria
+      ? `${formatDisplayText(gasto.categoria || "")} > ${formatDisplayText(
+          gasto.subcategoria
+        )}`
+      : formatDisplayText(gasto.categoria || "");
+
+    const etiquetas =
+      gasto.etiquetas && gasto.etiquetas.length > 0
+        ? gasto.etiquetas
+            .map((e) => e?.etiqueta?.nombre)
+            .filter(Boolean)
+            .join(", ")
+        : "";
+
+    let mensaje = `💰 *GASTO REGISTRADO*\n\n`;
+    mensaje += `📋 *Descripción:* ${gasto.descripcion}\n`;
+    mensaje += `📂 *Categoría:* ${categoria}\n`;
+    mensaje += `💵 *Importe:* ${gasto.moneda} ${gasto.importe}\n`;
+    mensaje += `📅 *Fecha:* ${fecha} ${hora}\n`;
+    mensaje += `👤 *Creado por:* ${gasto.usuarioRegistroGastoNombre}\n`;
+    mensaje += `🏷️ *Estado:* ${gasto.estado}\n`;
+
+    if (etiquetas) {
+      mensaje += `🏷️ *Etiquetas:* ${etiquetas}\n`;
+    }
+
+    if (gasto.observaciones) {
+      mensaje += `📝 *Observaciones:* ${gasto.observaciones}\n`;
+    }
+
+    if (gasto.archivos && gasto.archivos.length > 0) {
+      mensaje += `📎 *Archivos adjuntos:* ${gasto.archivos.length}\n`;
+    }
+
+    try {
+      // Copiar al portapapeles usando expo-clipboard
+      await Clipboard.setStringAsync(mensaje);
+
+      // Intentar abrir WhatsApp
+      const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(mensaje)}`;
+
+      const supported = await Linking.canOpenURL(whatsappUrl);
+      if (supported) {
+        await Linking.openURL(whatsappUrl);
+      } else {
+        // Si no tiene WhatsApp instalado, mostrar mensaje copiado
+        Alert.alert(
+          "Mensaje copiado",
+          "El mensaje ha sido copiado al portapapeles. WhatsApp no está instalado en este dispositivo.",
+          [{ text: "OK" }]
+        );
+      }
+    } catch (error) {
+      console.error("Error al copiar o abrir WhatsApp:", error);
+      Alert.alert("Error", "No se pudo copiar el mensaje al portapapeles.", [
+        { text: "OK" },
+      ]);
+    }
   };
 
   return (
@@ -318,6 +395,17 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
               >
                 <Ionicons name="eye-outline" size={16} color="#6B7280" />
                 <Text style={stylesListGastos.menuOptionText}>Ver más</Text>
+              </TouchableOpacity>
+
+              <View style={stylesListGastos.menuSeparator} />
+
+              <TouchableOpacity
+                style={stylesListGastos.menuOption}
+                onPress={handleCopiarWhatsApp}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="logo-whatsapp" size={16} color="#25D366" />
+                <Text style={stylesListGastos.menuOptionText}>Whatsapp</Text>
               </TouchableOpacity>
             </View>
           </>
