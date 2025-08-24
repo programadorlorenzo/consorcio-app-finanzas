@@ -106,7 +106,8 @@ export const stylesListGastos = StyleSheet.create({
   },
   fechaText: {
     fontSize: 12,
-    color: '#8A9A97',
+    color: '#64748B',
+    fontWeight: '500',
   },
 
   // Descripción
@@ -250,12 +251,67 @@ export const stylesListGastos = StyleSheet.create({
   usuarioContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
   },
   usuarioText: {
     fontSize: 12,
     color: '#8A9A97',
     marginLeft: 6,
+  },
+  usuarioEstadoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginTop: 8,
+  },
+  usuarioFechaContainer: {
+    flex: 1,
+    marginRight: 12,
+  },
+  fechaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  creadorLabel: {
+    fontSize: 14,
+    color: '#8A9A97',
+    fontWeight: '500',
+    fontStyle: 'italic',
+    marginLeft: 4,
+  },
+  registradoLabel: {
+    fontSize: 13,
+    color: '#94A3B8',
+    fontWeight: '500',
+    fontStyle: 'italic',
+    marginLeft: 4,
+  },
+
+  // Footer reorganizado
+  footerContainer: {
+    marginTop: 5,
+  },
+  fechaEstadoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  estadoContainerSmall: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+  },
+  estadoIndicatorSmall: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 5,
+  },
+  estadoTextSmall: {
+    fontSize: 10,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
 
   // Tree Styles for Category/Subcategory
@@ -365,5 +421,100 @@ export const stylesListGastos = StyleSheet.create({
     marginHorizontal: 8,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  // Modern Category/Subcategory Design
+  categorySection: {
+    marginVertical: 12,
+  },
+  categoryMainContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  categoryBadgeNew: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.2)',
+    shadowColor: '#3B82F6',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  categoryIconContainer: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  categoryTextNew: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1E40AF',
+    letterSpacing: 0.3,
+  },
+  subcategoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  categoryDivider: {
+    width: 20,
+    height: 1,
+    backgroundColor: '#E5E7EB',
+    marginHorizontal: 8,
+    position: 'relative',
+  },
+  subcategoryBadgeNew: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(248, 250, 252, 0.9)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(148, 163, 184, 0.3)',
+  },
+  subcategoryTextNew: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#64748B',
+    marginLeft: 6,
+    letterSpacing: 0.2,
+  },
+
+  // Breadcrumb Styles
+  breadcrumbContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    flexWrap: 'wrap',
+  },
+  breadcrumbText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1E40AF',
+    letterSpacing: 0.3,
+  },
+  breadcrumbSeparator: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#94A3B8',
+    marginHorizontal: 4,
+  },
+  breadcrumbSubText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#64748B',
+    letterSpacing: 0.2,
   },
 });

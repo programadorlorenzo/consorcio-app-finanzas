@@ -58,58 +58,27 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         />
       </View>
 
-      {/* Header con estado */}
+      {/* Header con Categoría/Subcategoría - Breadcrumb */}
       <View style={stylesListGastos.cardHeader}>
-        <View style={stylesListGastos.estadoContainer}>
-          <View
-            style={[
-              stylesListGastos.estadoIndicator,
-              { backgroundColor: estadoColor },
-            ]}
-          />
-          <Text style={[stylesListGastos.estadoText, { color: estadoColor }]}>
-            {gasto.estado}
+        <View style={stylesListGastos.breadcrumbContainer}>
+          <Text style={stylesListGastos.breadcrumbText}>
+            {formatDisplayText(gasto.categoria || "")}
           </Text>
+          {gasto.subcategoria && (
+            <>
+              <Text style={stylesListGastos.breadcrumbSeparator}>{" > "}</Text>
+              <Text style={stylesListGastos.breadcrumbSubText}>
+                {formatDisplayText(gasto.subcategoria)}
+              </Text>
+            </>
+          )}
         </View>
-        <Text style={stylesListGastos.fechaText}>
-          {new Date(gasto.fechaRegistro || "").toLocaleDateString("es-ES")}{" "}
-          {new Date(gasto.fechaRegistro || "").toLocaleTimeString("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </Text>
       </View>
 
       {/* Descripción */}
       <Text style={stylesListGastos.descripcion} numberOfLines={2}>
         {gasto.descripcion}
       </Text>
-
-      {/* Categoría y Subcategoría - Diseño Tree Horizontal */}
-      <View style={stylesListGastos.treeContainer}>
-        <View style={stylesListGastos.treeHorizontalItem}>
-          <View style={stylesListGastos.categoriaBadgeTree}>
-            <Ionicons name="folder" size={14} color="#666" />
-            <Text style={stylesListGastos.categoriaTextTree}>
-              {formatDisplayText(gasto.categoria || "")}
-            </Text>
-          </View>
-
-          {gasto.subcategoria && (
-            <>
-              <View style={stylesListGastos.treeConnector}>
-                <Ionicons name="chevron-forward" size={16} color="#CBD5E0" />
-              </View>
-              <View style={stylesListGastos.subcategoriaBadgeTree}>
-                <Ionicons name="folder-open" size={12} color="#888" />
-                <Text style={stylesListGastos.subcategoriaTextTree}>
-                  {formatDisplayText(gasto.subcategoria)}
-                </Text>
-              </View>
-            </>
-          )}
-        </View>
-      </View>
 
       {/* Importe */}
       <View style={stylesListGastos.importeContainer}>
@@ -120,7 +89,6 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
       {/* Etiquetas */}
       {gasto.etiquetas && gasto.etiquetas.length > 0 && (
         <View style={stylesListGastos.etiquetasContainer}>
-          <Text style={stylesListGastos.etiquetasLabel}>Etiquetas:</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -190,12 +158,50 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         </View>
       )}
 
-      {/* Usuario */}
-      <View style={stylesListGastos.usuarioContainer}>
-        <Ionicons name="person-circle" size={16} color="#8A9A97" />
-        <Text style={stylesListGastos.usuarioText}>
-          {gasto.usuarioRegistroGastoNombre}
-        </Text>
+      {/* Usuario, Fecha y Estado */}
+      <View style={stylesListGastos.footerContainer}>
+        <View style={stylesListGastos.usuarioFechaContainer}>
+          <View style={stylesListGastos.usuarioContainer}>
+            <Ionicons name="person-circle" size={18} color="#8A9A97" />
+            <Text style={stylesListGastos.creadorLabel}>
+              Creado por {gasto.usuarioRegistroGastoNombre}{" "}
+            </Text>
+          </View>
+          <View style={stylesListGastos.fechaEstadoRow}>
+            <View style={stylesListGastos.fechaContainer}>
+              <Ionicons name="time" size={16} color="#94A3B8" />
+              <Text style={stylesListGastos.registradoLabel}>
+                Registrado el{" "}
+                {new Date(gasto.fechaRegistro || "").toLocaleDateString(
+                  "es-ES"
+                )}{" "}
+                {new Date(gasto.fechaRegistro || "").toLocaleTimeString(
+                  "es-ES",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                )}{" "}
+              </Text>
+            </View>
+            <View style={stylesListGastos.estadoContainerSmall}>
+              <View
+                style={[
+                  stylesListGastos.estadoIndicatorSmall,
+                  { backgroundColor: estadoColor },
+                ]}
+              />
+              <Text
+                style={[
+                  stylesListGastos.estadoTextSmall,
+                  { color: estadoColor },
+                ]}
+              >
+                {gasto.estado}
+              </Text>
+            </View>
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );

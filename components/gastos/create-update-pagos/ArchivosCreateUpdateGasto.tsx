@@ -59,7 +59,7 @@ const ListArchivosCreateGasto = ({
     const extension = fileName.split(".").pop();
     const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf("."));
     const truncatedName = nameWithoutExt.substring(0, maxLength - 4);
-    return `${truncatedName}...${extension}`;
+    return `${truncatedName}... .${extension}`;
   };
 
   const closeImageModal = () => {
