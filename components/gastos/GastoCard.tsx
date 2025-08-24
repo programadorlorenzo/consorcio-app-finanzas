@@ -58,6 +58,24 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
     return isNaN(num) ? "0.00" : num.toFixed(2);
   };
 
+  // Función para calcular el total de pagos
+  const calcularTotalPagos = (): number => {
+    if (!gasto.pagos || gasto.pagos.length === 0) return 0;
+    return gasto.pagos.reduce((total, pago) => {
+      const importePago = typeof pago.importe === "string" ? parseFloat(pago.importe) : (pago.importe || 0);
+      return total + (isNaN(importePago) ? 0 : importePago);
+    }, 0);
+  };
+
+  // Función para calcular el saldo
+  const calcularSaldo = (): number => {
+    const importeGasto = typeof gasto.importe === "string" ? parseFloat(gasto.importe) : (gasto.importe || 0);
+    const totalPagos = calcularTotalPagos();
+    return (isNaN(importeGasto) ? 0 : importeGasto) - totalPagos;
+  };
+
+  const saldo = calcularSaldo();
+
   const openImageModal = (uri: string) => {
     setSelectedImageUri(uri);
     setIsImageModalVisible(true);
@@ -252,6 +270,19 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
       <View style={stylesListGastos.importeContainer}>
         <Text style={stylesListGastos.monedaText}>{gasto.moneda}</Text>
         <Text style={stylesListGastos.importeText}>{gasto.importe}</Text>
+      </View>
+
+      {/* Saldo */}
+      <View style={stylesListGastos.saldoContainer}>
+        <Text style={stylesListGastos.saldoLabel}>Saldo pendiente:</Text>
+        <Text style={[
+          stylesListGastos.saldoText,
+          {
+            color: saldo > 0 ? '#dc3545' : saldo < 0 ? '#28a745' : '#6c757d'
+          }
+        ]}>
+          {gasto.moneda} {formatImporte(saldo)}
+        </Text>
       </View>
 
       {/* Etiquetas */}

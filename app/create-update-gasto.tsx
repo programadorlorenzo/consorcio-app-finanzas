@@ -26,6 +26,7 @@ import React, { useState } from "react";
 import {
   ActionSheetIOS,
   ActivityIndicator,
+  Alert,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -173,9 +174,53 @@ export default function CreateUpdateGasto() {
       setFiles([]);
       setImporteText("");
 
-      alert("Gasto creado exitosamente");
-
-      // TODO: Navegar a la pantalla de gastos o atrás
+      // Mostrar alert con opciones
+      if (Platform.OS === "ios") {
+        ActionSheetIOS.showActionSheetWithOptions(
+          {
+            title: "¡Gasto registrado exitosamente!",
+            message: "¿Qué deseas hacer ahora?",
+            options: ["Cancelar", "Registrar Pago", "Finalizar"],
+            cancelButtonIndex: 0,
+          },
+          (buttonIndex: number) => {
+            switch (buttonIndex) {
+              case 1:
+                // Registrar pago
+                router.push({
+                  pathname: "/create-update-pago",
+                  params: { gastoId: createdGasto.id }
+                });
+                break;
+              case 2:
+                // Finalizar - ir a lista de gastos
+                router.push("/list-gastos");
+                break;
+            }
+          }
+        );
+      } else {
+        // Para Android, usar Alert nativo con botones
+        Alert.alert(
+          "¡Gasto registrado exitosamente!",
+          "¿Qué deseas hacer ahora?",
+          [
+            {
+              text: "Finalizar",
+              onPress: () => router.push("/list-gastos"),
+              style: "cancel"
+            },
+            {
+              text: "Registrar Pago",
+              onPress: () => router.push({
+                pathname: "/create-update-pago",
+                params: { gastoId: createdGasto.id }
+              })
+            }
+          ],
+          { cancelable: false }
+        );
+      }
     } catch (error) {
       console.error("❌ Error creando gasto:", error);
       alert("Error al crear el gasto. Por favor intenta nuevamente.");

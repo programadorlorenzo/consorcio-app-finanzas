@@ -179,6 +179,24 @@ export const stylesListGastos = StyleSheet.create({
     color: MAIN_COLOR,
   },
 
+  // Saldo
+  saldoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+    paddingHorizontal: 2,
+  },
+  saldoLabel: {
+    fontSize: 13,
+    color: "#6c757d",
+    fontWeight: "500",
+  },
+  saldoText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
   // Etiquetas
   etiquetasContainer: {
     marginBottom: 16,
