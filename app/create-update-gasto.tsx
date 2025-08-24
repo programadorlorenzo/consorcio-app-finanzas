@@ -186,9 +186,12 @@ export default function CreateUpdateGasto() {
             <TextInput
               style={stylesBaseStylesCreateGasto.input}
               value={formData.descripcion}
-              onChangeText={(text) => handleInputChange("descripcion", text)}
+              onChangeText={(text) =>
+                handleInputChange("descripcion", text.toUpperCase())
+              }
               placeholder="Descripción del gasto"
               placeholderTextColor="#8A9A97"
+              autoCapitalize="characters"
             />
           </View>
 
@@ -205,43 +208,64 @@ export default function CreateUpdateGasto() {
             />
           </View>
 
-          {/* Importe */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Importe *</Text>
-            <TextInput
-              style={stylesBaseStylesCreateGasto.input}
-              value={importeText}
-              onChangeText={(text) => {
-                // Permitir números decimales (reemplazar comas con puntos)
-                const sanitizedText = text.replace(/,/g, ".");
-                // Solo permitir formatos numéricos válidos (dígitos y máximo un punto decimal)
-                if (sanitizedText === "" || /^\d*\.?\d*$/.test(sanitizedText)) {
-                  setImporteText(sanitizedText);
-                  // Actualizar el valor numérico en formData
-                  const numericValue =
-                    sanitizedText === "" ? 0 : parseFloat(sanitizedText) || 0;
-                  handleInputChange("importe", numericValue);
-                }
-              }}
-              placeholder="0.00"
-              keyboardType="decimal-pad"
-              placeholderTextColor="#8A9A97"
-            />
+          {/* Importe y Moneda en la misma línea */}
+          <View style={stylesBaseStylesCreateGasto.rowContainer}>
+            {/* Moneda */}
+            <View style={stylesBaseStylesCreateGasto.rowItem}>
+              <Text style={stylesBaseStylesCreateGasto.label}>Moneda</Text>
+              <CustomSelectorCreateGasto
+                label="Seleccionar Moneda"
+                value={formData.moneda}
+                placeholder="Moneda"
+                options={Object.values(Moneda)}
+                onSelect={(value) => handleInputChange("moneda", value)}
+                isVisible={showMonedaModal}
+                onClose={() => setShowMonedaModal(!showMonedaModal)}
+              />
+            </View>
+
+            {/* Importe */}
+            <View style={stylesBaseStylesCreateGasto.rowItem}>
+              <Text style={stylesBaseStylesCreateGasto.label}>Importe *</Text>
+              <TextInput
+                style={stylesBaseStylesCreateGasto.input}
+                value={importeText}
+                onChangeText={(text) => {
+                  // Permitir números decimales (reemplazar comas con puntos)
+                  const sanitizedText = text.replace(/,/g, ".");
+                  // Solo permitir formatos numéricos válidos (dígitos y máximo un punto decimal)
+                  if (
+                    sanitizedText === "" ||
+                    /^\d*\.?\d*$/.test(sanitizedText)
+                  ) {
+                    setImporteText(sanitizedText);
+                    // Actualizar el valor numérico en formData
+                    const numericValue =
+                      sanitizedText === "" ? 0 : parseFloat(sanitizedText) || 0;
+                    handleInputChange("importe", numericValue);
+                  }
+                }}
+                placeholder="0.00"
+                keyboardType="decimal-pad"
+                placeholderTextColor="#8A9A97"
+              />
+            </View>
           </View>
 
-          {/* Moneda */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Moneda</Text>
-            <CustomSelectorCreateGasto
-              label="Seleccionar Moneda"
-              value={formData.moneda}
-              placeholder="Seleccionar moneda"
-              options={Object.values(Moneda)}
-              onSelect={(value) => handleInputChange("moneda", value)}
-              isVisible={showMonedaModal}
-              onClose={() => setShowMonedaModal(!showMonedaModal)}
-            />
-          </View>
+
+          <TouchableOpacity
+            style={stylesBaseStylesCreateGasto.addFileButton}
+            onPress={showFileOptions}
+          >
+            <Ionicons name="add-circle-outline" size={24} color={MAIN_COLOR} />
+            <Text style={stylesBaseStylesCreateGasto.addFileText}>
+              Agregar Archivo
+            </Text>
+          </TouchableOpacity>
+
+          {files.length > 0 && (
+            <ListArchivosCreateGasto files={files} removeFile={removeFile} />
+          )}
 
           {/* Observaciones */}
           <View style={stylesBaseStylesCreateGasto.inputGroup}>
@@ -258,27 +282,6 @@ export default function CreateUpdateGasto() {
               placeholderTextColor="#8A9A97"
             />
           </View>
-
-          {/* Archivos */}
-          <View style={stylesBaseStylesCreateGasto.sectionHeader}>
-            <Text style={stylesBaseStylesCreateGasto.sectionTitle}>
-              Archivos Adjuntos
-            </Text>
-          </View>
-
-          <TouchableOpacity
-            style={stylesBaseStylesCreateGasto.addFileButton}
-            onPress={showFileOptions}
-          >
-            <Ionicons name="add-circle-outline" size={24} color={MAIN_COLOR} />
-            <Text style={stylesBaseStylesCreateGasto.addFileText}>
-              Agregar Archivo
-            </Text>
-          </TouchableOpacity>
-
-          {files.length > 0 && (
-            <ListArchivosCreateGasto files={files} removeFile={removeFile} />
-          )}
 
           {/* Botón Submit */}
           <TouchableOpacity

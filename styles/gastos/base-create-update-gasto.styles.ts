@@ -162,6 +162,7 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
     borderRadius: 12,
     padding: 20,
     marginBottom: 15,
+    marginTop: 20,
   },
   addFileText: {
     fontSize: 16,
@@ -448,5 +449,14 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
     fontSize: 14,
     color: "rgba(255, 255, 255, 0.7)",
     textAlign: "center",
+  },
+  // Estilo para elementos en una fila
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+  },
+  rowItem: {
+    flex: 1,
   },
 });
