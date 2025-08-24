@@ -638,7 +638,7 @@ export const stylesListGastos = StyleSheet.create({
     marginHorizontal: 8,
   },
 
-    // Modal de imagen
+  // Modal de imagen
   imageModalContainer: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.9)",
@@ -863,6 +863,7 @@ export const stylesListGastos = StyleSheet.create({
     borderRadius: 6,
     flex: 1,
     marginRight: 6,
+    justifyContent: "center",
   },
   pagoTipoText: {
     fontSize: 10,
@@ -873,6 +874,7 @@ export const stylesListGastos = StyleSheet.create({
   pagoOrigenBadge: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#ECFDF5",
     paddingHorizontal: 8,
     paddingVertical: 4,
