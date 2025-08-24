@@ -52,6 +52,13 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
+  // Helper function para formatear importe de forma segura
+  const formatImporte = (importe: number | string | null | undefined): string => {
+    if (importe === null || importe === undefined) return "0.00";
+    const num = typeof importe === "string" ? parseFloat(importe) : importe;
+    return isNaN(num) ? "0.00" : num.toFixed(2);
+  };
+
   const openImageModal = (uri: string) => {
     setSelectedImageUri(uri);
     setIsImageModalVisible(true);
@@ -142,7 +149,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
     if (gasto.pagos && gasto.pagos.length > 0) {
       mensaje += `💳 *Pagos registrados:* ${gasto.pagos.length}\n`;
       gasto.pagos.forEach((pago, index) => {
-        const importePago = pago.importe?.toFixed(2) || "0.00";
+        const importePago = formatImporte(pago.importe);
         const monedaPago = pago.moneda === Moneda.SOLES ? "S/" : "$";
         mensaje += `   ${index + 1}. ${pago.tipo} - ${monedaPago} ${importePago}`;
         if (pago.numeroOperacion) {
@@ -392,7 +399,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
                 
                 <View style={stylesListGastos.pagoImporteContainer}>
                   <Text style={stylesListGastos.pagoImporte}>
-                    {pago.moneda === Moneda.SOLES ? "S/" : "$"} {pago.importe?.toFixed(2) || "0.00"}
+                    {pago.moneda === Moneda.SOLES ? "S/" : "$"} {formatImporte(pago.importe)}
                   </Text>
                 </View>
 
