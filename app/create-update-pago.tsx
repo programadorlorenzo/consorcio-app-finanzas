@@ -213,7 +213,7 @@ export default function CreateUpdatePago() {
       // Limpiar formulario y archivos
       setFormData({
         tipo: undefined,
-        origen: OrigenPago.CUENTA_EMPRESA,
+        origen: OrigenPago.EXTERNO,
         gastoId: gastoId || 0,
         rendicionId: 0,
         usuarioRegistroPagoId: 0,
@@ -352,11 +352,11 @@ export default function CreateUpdatePago() {
             label="Origen"
             leftLabel="Cuenta Empresa"
             rightLabel="Externo"
-            value={formData.origen === OrigenPago.CUENTA_EMPRESA}
+            value={formData.origen === OrigenPago.EXTERNO}
             onValueChange={(isLeft) => {
               setFormData({
                 ...formData,
-                origen: isLeft ? OrigenPago.CUENTA_EMPRESA : OrigenPago.EXTERNO,
+                origen: isLeft ? OrigenPago.EXTERNO : OrigenPago.CUENTA_EMPRESA,
               });
             }}
           />
