@@ -36,7 +36,9 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
 
   // Helper function para formatear importe de forma segura
-  const formatImporte = (importe: number | string | null | undefined): string => {
+  const formatImporte = (
+    importe: number | string | null | undefined
+  ): string => {
     if (importe === null || importe === undefined) return "0.00";
     const num = typeof importe === "string" ? parseFloat(importe) : importe;
     return isNaN(num) ? "0.00" : num.toFixed(2);
@@ -45,9 +47,7 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
   // Función para verificar si es un archivo de imagen
   const isImageFile = (filename: string): boolean => {
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"];
-    return imageExtensions.some((ext) =>
-      filename.toLowerCase().endsWith(ext)
-    );
+    return imageExtensions.some((ext) => filename.toLowerCase().endsWith(ext));
   };
 
   // Función para abrir modal de imagen
@@ -84,25 +84,19 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
               <Text style={stylesListGastos.pagoTipoText}>{pago.tipo}</Text>
             </View>
             <View style={stylesListGastos.pagoOrigenBadge}>
-              <Ionicons
-                name={
-                  pago.origen === OrigenPago.CUENTA_EMPRESA
-                    ? "business-outline"
-                    : "person-outline"
-                }
-                size={12}
-                color="#059669"
-              />
               <Text style={stylesListGastos.pagoOrigenText}>
-                {pago.origen === OrigenPago.CUENTA_EMPRESA ? "Cuenta Empresa" : "Externo"}
+                {pago.origen === OrigenPago.CUENTA_EMPRESA
+                  ? "Cuenta Empresa"
+                  : "Externo"}
               </Text>
             </View>
           </View>
         </View>
-        
+
         <View style={stylesListGastos.pagoImporteContainer}>
           <Text style={stylesListGastos.pagoImporte}>
-            {pago.moneda === Moneda.SOLES ? "S/" : "$"} {formatImporte(pago.importe)}
+            {pago.moneda === Moneda.SOLES ? "S/" : "$"}{" "}
+            {formatImporte(pago.importe)}
           </Text>
         </View>
 
@@ -118,7 +112,10 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
               style={stylesListGastos.pagoArchivosScroll}
             >
               {pago.archivos.map((archivo: PagoFile, archivoIndex: number) => (
-                <View key={archivoIndex} style={stylesListGastos.pagoArchivoItem}>
+                <View
+                  key={archivoIndex}
+                  style={stylesListGastos.pagoArchivoItem}
+                >
                   {isImageFile(archivo.filename || "") ? (
                     <TouchableOpacity
                       style={stylesListGastos.pagoImageContainer}
