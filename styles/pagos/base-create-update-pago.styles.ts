@@ -81,10 +81,10 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
     color: '#6c757d',
   },
   formContainer: {
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   fieldContainer: {
-    marginBottom: 0,
+    marginBottom: 10,
   },
   fieldLabel: {
     fontSize: 16,
@@ -155,5 +155,168 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+  },
+
+  // Estilos para el selector de bancos
+  bancoSelectorContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: 12,
+    marginTop: 8,
+  },
+  bancoOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderWidth: 2,
+    backgroundColor: "#FFFFFF",
+    width: "48%",
+    minHeight: 56,
+  },
+  bancoOptionSelected: {
+    backgroundColor: "#F8FAFC",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 2,
+  },
+  bancoRadio: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    marginRight: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bancoRadioSelected: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  bancoBadge: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 6,
+    flex: 1,
+    alignItems: "center",
+  },
+  bancoText: {
+    fontSize: 13,
+    fontWeight: "600",
+  },
+
+  // Estilos para chips de banco (diseño compacto)
+  bancoChipsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 8,
+  },
+  bancoChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    backgroundColor: "#FFFFFF",
+    minHeight: 40,
+  },
+  bancoChipSelected: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 2,
+  },
+  bancoChipIcon: {
+    marginRight: 6,
+  },
+  bancoChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+
+  // Estilos para banco selector horizontal con scroll
+  bancoScrollView: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  bancoScrollContent: {
+    paddingHorizontal: 0,
+    gap: 0,
+  },
+  bancoChipHorizontal: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    backgroundColor: "#FFFFFF",
+    minHeight: 32,
+    marginRight: 8,
+  },
+  bancoChipTextHorizontal: {
+    fontSize: 11,
+    fontWeight: "600",
+    marginHorizontal: 4,
+  },
+  bancoCheckIcon: {
+    marginLeft: 2,
+  },
+
+  // Estilos para secciones expandibles
+  expandableSection: {
+    marginTop: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    backgroundColor: "#FFFFFF",
+  },
+  expandableHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  expandableHeaderContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  expandableIcon: {
+    marginRight: 12,
+  },
+  expandableTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#374151",
+  },
+  expandableSubtitle: {
+    fontSize: 13,
+    color: "#6B7280",
+    marginTop: 2,
+  },
+  expandableContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    borderTopWidth: 1,
+    borderTopColor: "#F3F4F6",
+  },
+  expandableContentHeader: {
+    marginBottom: 16,
+    paddingTop: 16,
   },
 });

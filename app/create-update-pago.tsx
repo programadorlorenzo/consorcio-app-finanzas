@@ -3,8 +3,10 @@ import { obtenerGasto } from "@/api/gastos/gastos-api";
 import { createPago, updatePago } from "@/api/pagos/pagos-api";
 import { MAIN_COLOR } from "@/app/constants";
 import ArchivosCreateUpdatePago from "@/components/pagos/create-update-pagos/ArchivosCreateUpdatePago";
+import BancoSelector from "@/components/pagos/create-update-pagos/BancoSelector";
 import CustomSelectorCreatePago from "@/components/pagos/create-update-pagos/CustomSelectorCreatePago";
 import CustomSwitchCreatePago from "@/components/pagos/create-update-pagos/CustomSwitchCreatePago";
+import ExpandableSection from "@/components/pagos/create-update-pagos/ExpandableSection";
 import ModalOpcionesArchivoCreateUpdatePago from "@/components/pagos/create-update-pagos/ModalOpcionesArchivoCreateUpdatePago";
 import { stylesBaseStylesCreatePago } from "@/styles/pagos/base-create-update-pago.styles";
 import {
@@ -362,10 +364,9 @@ export default function CreateUpdatePago() {
           />
 
           {/* Número de Operación */}
-          {/* <View style={stylesBaseStylesCreatePago.fieldContainer}>
+          <View style={stylesBaseStylesCreatePago.fieldContainer}>
             <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Número de Operación{" "}
-              <Text style={stylesBaseStylesCreatePago.required}>*</Text>
+              Número de Operación
             </Text>
             <TextInput
               style={stylesBaseStylesCreatePago.textInput}
@@ -378,91 +379,113 @@ export default function CreateUpdatePago() {
             />
           </View>
 
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Titular Origen
-            </Text>
-            <TextInput
-              style={stylesBaseStylesCreatePago.textInput}
-              value={formData.titular_origen}
-              onChangeText={(text) => handleInputChange("titular_origen", text)}
-              placeholder="Nombre del titular de origen"
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
-
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Banco Origen
-            </Text>
-            <TextInput
-              style={stylesBaseStylesCreatePago.textInput}
+          {/* Información de Origen */}
+          <ExpandableSection
+            title="Información de origen"
+            icon="arrow-up-circle-outline"
+          >
+            <BancoSelector
               value={formData.banco_origen}
-              onChangeText={(text) => handleInputChange("banco_origen", text)}
-              placeholder="Nombre del banco de origen"
-              placeholderTextColor="#9CA3AF"
+              onSelect={(banco) => handleInputChange("banco_origen", banco)}
             />
-          </View>
 
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Cuenta Bancaria Origen
-            </Text>
-            <TextInput
-              style={stylesBaseStylesCreatePago.textInput}
-              value={formData.cuenta_bancaria_origen}
-              onChangeText={(text) =>
-                handleInputChange("cuenta_bancaria_origen", text)
-              }
-              placeholder="Número de cuenta bancaria de origen"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-            />
-          </View>
+            <View style={stylesBaseStylesCreatePago.fieldContainer}>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>Titular</Text>
+              <TextInput
+                style={stylesBaseStylesCreatePago.textInput}
+                value={formData.titular_origen}
+                onChangeText={(text) =>
+                  handleInputChange("titular_origen", text)
+                }
+                placeholder="Nombre / Razon social del títular"
+                placeholderTextColor="#9CA3AF"
+              />
+            </View>
 
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Titular Destino
-            </Text>
-            <TextInput
-              style={stylesBaseStylesCreatePago.textInput}
-              value={formData.titular_destino}
-              onChangeText={(text) =>
-                handleInputChange("titular_destino", text)
-              }
-              placeholder="Nombre del titular de destino"
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
+            <View style={stylesBaseStylesCreatePago.fieldContainer}>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                Cuenta / Celular
+              </Text>
+              <TextInput
+                style={stylesBaseStylesCreatePago.textInput}
+                value={formData.cuenta_bancaria_origen}
+                onChangeText={(text) =>
+                  handleInputChange("cuenta_bancaria_origen", text)
+                }
+                placeholder="Cuenta bancaria o celular"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="numeric"
+              />
+            </View>
 
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Banco Destino
-            </Text>
-            <TextInput
-              style={stylesBaseStylesCreatePago.textInput}
+            <View style={stylesBaseStylesCreatePago.fieldContainer}>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                CCI (opcional)
+              </Text>
+              <TextInput
+                style={stylesBaseStylesCreatePago.textInput}
+                value={formData.cci_origen}
+                onChangeText={(text) => handleInputChange("cci_origen", text)}
+                placeholder="Si corresponde escribir el CCI"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="numeric"
+              />
+            </View>
+          </ExpandableSection>
+
+          {/* Información de Destino */}
+          <ExpandableSection
+            title="Información de destino"
+            icon="arrow-down-circle-outline"
+          >
+            <BancoSelector
               value={formData.banco_destino}
-              onChangeText={(text) => handleInputChange("banco_destino", text)}
-              placeholder="Nombre del banco de destino"
-              placeholderTextColor="#9CA3AF"
+              onSelect={(banco) => handleInputChange("banco_destino", banco)}
             />
-          </View>
 
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Cuenta Bancaria Destino
-            </Text>
-            <TextInput
-              style={stylesBaseStylesCreatePago.textInput}
-              value={formData.cuenta_bancaria_destino}
-              onChangeText={(text) =>
-                handleInputChange("cuenta_bancaria_destino", text)
-              }
-              placeholder="Número de cuenta bancaria de destino"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-            />
-          </View> */}
+            <View style={stylesBaseStylesCreatePago.fieldContainer}>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>Titular</Text>
+              <TextInput
+                style={stylesBaseStylesCreatePago.textInput}
+                value={formData.titular_destino}
+                onChangeText={(text) =>
+                  handleInputChange("titular_destino", text)
+                }
+                placeholder="Nombre / Razon social del títular de destino"
+                placeholderTextColor="#9CA3AF"
+              />
+            </View>
+
+            <View style={stylesBaseStylesCreatePago.fieldContainer}>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                Cuenta / Celular
+              </Text>
+              <TextInput
+                style={stylesBaseStylesCreatePago.textInput}
+                value={formData.cuenta_bancaria_destino}
+                onChangeText={(text) =>
+                  handleInputChange("cuenta_bancaria_destino", text)
+                }
+                placeholder="Número de cuenta bancaria de destino"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={stylesBaseStylesCreatePago.fieldContainer}>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                CCI (opcional)
+              </Text>
+              <TextInput
+                style={stylesBaseStylesCreatePago.textInput}
+                value={formData.cci_destino}
+                onChangeText={(text) => handleInputChange("cci_destino", text)}
+                placeholder="Si corresponde escribir el CCI"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="numeric"
+              />
+            </View>
+          </ExpandableSection>
         </View>
       </ScrollView>
 
