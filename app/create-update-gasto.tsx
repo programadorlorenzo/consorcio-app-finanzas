@@ -59,7 +59,6 @@ export default function CreateUpdateGasto() {
   const [showCategoriaModal, setShowCategoriaModal] = useState(false);
   const [showSubcategoriaModal, setShowSubcategoriaModal] = useState(false);
   const [showMonedaModal, setShowMonedaModal] = useState(false);
-  const [showEtiquetasModal, setShowEtiquetasModal] = useState(false);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [showFileModal, setShowFileModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -251,7 +250,6 @@ export default function CreateUpdateGasto() {
               />
             </View>
           </View>
-
 
           <TouchableOpacity
             style={stylesBaseStylesCreateGasto.addFileButton}
