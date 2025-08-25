@@ -4,8 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
   Alert,
-  SafeAreaView,
-  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -40,276 +39,223 @@ export default function ProfileScreen() {
     );
   };
 
-  const ProfileOption = ({
-    icon,
-    title,
-    onPress,
-    showArrow = true,
-    isDestructive = false,
-  }: {
-    icon: string;
-    title: string;
-    onPress: () => void;
-    showArrow?: boolean;
-    isDestructive?: boolean;
-  }) => (
-    <TouchableOpacity style={styles.optionItem} onPress={onPress}>
-      <View style={styles.optionLeft}>
-        <Ionicons
-          name={icon as any}
-          size={24}
-          color={isDestructive ? "#EF4444" : MAIN_COLOR}
-        />
-        <Text
-          style={[styles.optionText, isDestructive && styles.destructiveText]}
-        >
-          {title}
-        </Text>
-      </View>
-      {showArrow && (
-        <Ionicons
-          name="chevron-forward"
-          size={20}
-          color={isDestructive ? "#EF4444" : "#8A9A97"}
-        />
-      )}
-    </TouchableOpacity>
-  );
-
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Header del perfil */}
-        <View style={styles.header}>
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={MAIN_COLOR} />
+
+      {/* Background con degradado */}
+      <View style={styles.gradientBackground} />
+
+      {/* Contenido principal */}
+      <View style={styles.content}>
+        {/* Avatar y información del usuario */}
+        <View style={styles.profileContainer}>
           <View style={styles.avatarContainer}>
-            <Ionicons name="person-circle" size={80} color={MAIN_COLOR} />
-          </View>
-          <Text style={styles.userName}>{user?.nombre || "Usuario"}</Text>
-          <Text style={styles.userEmail}>
-            {user?.email || "email@ejemplo.com"}
-          </Text>
-        </View>
-
-        {/* Información de la cuenta */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Información de la Cuenta</Text>
-
-          <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Usuario:</Text>
-            <Text style={styles.infoValue}>{user?.username || "N/A"}</Text>
+            <Ionicons name="person-circle" size={120} color="white" />
           </View>
 
-          <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Estado:</Text>
-            <Text
+          {user?.username && (
+            <View style={styles.usernameContainer}>
+              <Text style={styles.username}>@{user.username}</Text>
+            </View>
+          )}
+
+          <View style={styles.statusContainer}>
+            <View
               style={[
-                styles.infoValue,
-                user?.activo ? styles.activeStatus : styles.inactiveStatus,
+                styles.statusDot,
+                user?.activo ? styles.activeDot : styles.inactiveDot,
               ]}
-            >
-              {user?.activo ? "Activo" : "Inactivo"}
+            />
+            <Text style={styles.statusText}>
+              {user?.activo ? "Cuenta Activa" : "Cuenta Inactiva"}
             </Text>
           </View>
+        </View>
+
+        {/* Información adicional */}
+        <View style={styles.infoCard}>
+          <Text style={styles.infoTitle}>Información de la Cuenta</Text>
 
           {user?.lastPasswordChange && (
-            <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Último cambio de contraseña:</Text>
-              <Text style={styles.infoValue}>
+            <View style={styles.infoRow}>
+              <Ionicons
+                name="time-outline"
+                size={20}
+                color="rgba(255, 255, 255, 0.8)"
+              />
+              <Text style={styles.infoText}>
+                Último cambio:{" "}
                 {new Date(user.lastPasswordChange).toLocaleDateString()}
               </Text>
             </View>
           )}
         </View>
 
-        {/* Opciones del perfil */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Configuración</Text>
+        {/* Botón de cerrar sesión */}
+        <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
+          <Ionicons name="log-out-outline" size={24} color="#EF4444" />
+          <Text style={styles.logoutText}>Cerrar Sesión</Text>
+        </TouchableOpacity>
 
-          <ProfileOption
-            icon="settings-outline"
-            title="Configuración General"
-            onPress={() =>
-              Alert.alert(
-                "Próximamente",
-                "Esta función estará disponible pronto"
-              )
-            }
-          />
-
-          <ProfileOption
-            icon="lock-closed-outline"
-            title="Cambiar Contraseña"
-            onPress={() =>
-              Alert.alert(
-                "Próximamente",
-                "Esta función estará disponible pronto"
-              )
-            }
-          />
-
-          <ProfileOption
-            icon="notifications-outline"
-            title="Notificaciones"
-            onPress={() =>
-              Alert.alert(
-                "Próximamente",
-                "Esta función estará disponible pronto"
-              )
-            }
-          />
-
-          <ProfileOption
-            icon="help-circle-outline"
-            title="Ayuda y Soporte"
-            onPress={() =>
-              Alert.alert(
-                "Próximamente",
-                "Esta función estará disponible pronto"
-              )
-            }
-          />
-        </View>
-
-        {/* Sección de cierre de sesión */}
-        <View style={styles.section}>
-          <ProfileOption
-            icon="log-out-outline"
-            title="Cerrar Sesión"
-            onPress={handleSignOut}
-            showArrow={false}
-            isDestructive={true}
-          />
-        </View>
-
-        {/* Información de la app */}
+        {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Consorcio App Finanzas</Text>
-          <Text style={styles.footerText}>Versión 1.0.0</Text>
+          <Text style={styles.footerText}>Consorcio App Finanzas v1.0.0</Text>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAF9",
+    backgroundColor: MAIN_COLOR,
+  },
+  gradientBackground: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: MAIN_COLOR,
+    opacity: 0.9,
   },
   content: {
     flex: 1,
-  },
-  header: {
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
-    paddingVertical: 30,
     paddingHorizontal: 20,
-    marginBottom: 20,
-    shadowColor: MAIN_COLOR,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
+    paddingTop: 80,
+    zIndex: 10,
+  },
+  profileContainer: {
+    alignItems: "center",
+    marginBottom: 40,
   },
   avatarContainer: {
-    marginBottom: 15,
+    marginBottom: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 70,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 12,
   },
   userName: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: MAIN_COLOR,
-    marginBottom: 5,
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "center",
+    marginBottom: 8,
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   userEmail: {
     fontSize: 16,
-    color: "#8A9A97",
-    marginBottom: 5,
+    color: "rgba(255, 255, 255, 0.8)",
+    textAlign: "center",
+    marginBottom: 10,
+    textShadowColor: "rgba(0, 0, 0, 0.2)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
-  userRole: {
+  usernameContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+  },
+  username: {
     fontSize: 14,
-    color: MAIN_COLOR,
-    backgroundColor: "#F0F7F5",
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+    color: "rgba(255, 255, 255, 0.9)",
     fontWeight: "600",
   },
-  section: {
-    backgroundColor: "#fff",
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderRadius: 12,
-    shadowColor: MAIN_COLOR,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: MAIN_COLOR,
-    padding: 20,
-    paddingBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E1E8E6",
-  },
-  infoItem: {
+  statusContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F7F5",
+    gap: 8,
   },
-  infoLabel: {
-    fontSize: 16,
-    color: "#8A9A97",
+  statusDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  activeDot: {
+    backgroundColor: "#10B981",
+    shadowColor: "#10B981",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+  },
+  inactiveDot: {
+    backgroundColor: "#EF4444",
+    shadowColor: "#EF4444",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+  },
+  statusText: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.8)",
     fontWeight: "500",
   },
-  infoValue: {
-    fontSize: 16,
-    color: MAIN_COLOR,
-    fontWeight: "600",
+  infoCard: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 30,
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
   },
-  activeStatus: {
-    color: "#10B981",
+  infoTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
+    marginBottom: 15,
+    textAlign: "center",
   },
-  inactiveStatus: {
-    color: "#EF4444",
-  },
-  optionItem: {
+  infoRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F7F5",
+    gap: 10,
+    marginBottom: 10,
   },
-  optionLeft: {
-    flexDirection: "row",
-    alignItems: "center",
+  infoText: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.8)",
     flex: 1,
   },
-  optionText: {
-    fontSize: 16,
-    color: MAIN_COLOR,
-    fontWeight: "500",
-    marginLeft: 15,
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    paddingHorizontal: 25,
+    paddingVertical: 15,
+    borderRadius: 25,
+    gap: 10,
+    borderWidth: 1,
+    borderColor: "rgba(239, 68, 68, 0.3)",
+    marginBottom: 40,
   },
-  destructiveText: {
+  logoutText: {
+    fontSize: 16,
     color: "#EF4444",
+    fontWeight: "600",
   },
   footer: {
     alignItems: "center",
-    padding: 20,
-    marginTop: 20,
   },
   footerText: {
-    fontSize: 14,
-    color: "#8A9A97",
-    marginBottom: 5,
+    fontSize: 12,
+    color: "rgba(255, 255, 255, 0.6)",
+    textAlign: "center",
   },
 });
