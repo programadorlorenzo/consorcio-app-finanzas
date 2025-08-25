@@ -505,12 +505,7 @@ export const stylesGastoDetalle = StyleSheet.create({
   proveedorHeader: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F8FAF9",
-    borderRadius: 12,
     paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderWidth: 1,
-    borderColor: "#E1E8E6",
   },
   proveedorText: {
     fontSize: 14,
