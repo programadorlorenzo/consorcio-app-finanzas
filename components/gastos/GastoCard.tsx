@@ -50,6 +50,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isPagosExpanded, setIsPagosExpanded] = useState(false); // Estado para expandir pagos
 
   // Helper function para formatear importe de forma segura
   const formatImporte = (importe: number | string | null | undefined): string => {
@@ -406,18 +407,33 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
       {/* Pagos */}
       {gasto.pagos && gasto.pagos.length > 0 && (
         <View style={stylesListGastos.pagosContainer}>
-          <Text style={stylesListGastos.pagosLabel}>
-            Pagos ({gasto.pagos.length}):
-          </Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={stylesListGastos.pagosScroll}
+          <TouchableOpacity
+            style={stylesListGastos.pagosHeader}
+            onPress={() => setIsPagosExpanded(!isPagosExpanded)}
+            activeOpacity={0.7}
           >
-            {gasto.pagos.map((pago: Pago, index: number) => (
-              <PagoCard key={pago.id || index} pago={pago} index={index} />
-            ))}
-          </ScrollView>
+            <Ionicons name="card" size={16} color={estadoColor} />
+            <Text style={[stylesListGastos.pagosLabel, { color: estadoColor }]}>
+              Pagos ({gasto.pagos.length})
+            </Text>
+            <Ionicons
+              name={isPagosExpanded ? "chevron-up" : "chevron-down"}
+              size={16}
+              color={estadoColor}
+            />
+          </TouchableOpacity>
+          
+          {isPagosExpanded && (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={stylesListGastos.pagosScroll}
+            >
+              {gasto.pagos.map((pago: Pago, index: number) => (
+                <PagoCard key={pago.id || index} pago={pago} index={index} />
+              ))}
+            </ScrollView>
+          )}
         </View>
       )}
 

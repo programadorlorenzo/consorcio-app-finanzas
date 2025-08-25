@@ -57,7 +57,7 @@ export default function GastoDetalle() {
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true); // Pagos desplegados por defecto en detalle
 
   // Animación para las waves
   const animatedValue = React.useMemo(() => new Animated.Value(0), []);

@@ -876,11 +876,19 @@ export const stylesListGastos = StyleSheet.create({
     marginTop: 12,
     marginBottom: 12,
   },
+  pagosHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+  },
   pagosLabel: {
     fontSize: 14,
     fontWeight: "600",
     color: "#374151",
-    marginBottom: 8,
+    flex: 1,
+    marginLeft: 8,
   },
   pagosScroll: {
     marginTop: 4,
