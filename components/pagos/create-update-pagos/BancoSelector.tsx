@@ -11,6 +11,7 @@ export enum BancoOption {
   YAPE = "YAPE",
   PLIN = "PLIN",
   EFECTIVO = "EFECTIVO",
+  OTRO = "OTRO",
 }
 
 const BANCO_COLORS = {
@@ -21,6 +22,7 @@ const BANCO_COLORS = {
   [BancoOption.YAPE]: "#722F87",
   [BancoOption.PLIN]: "#652D90",
   [BancoOption.EFECTIVO]: "#16A34A",
+  [BancoOption.OTRO]: "#ff0ab1ff",
 };
 
 const BANCO_ICONS: { [key in BancoOption]: keyof typeof Ionicons.glyphMap } = {
@@ -31,6 +33,7 @@ const BANCO_ICONS: { [key in BancoOption]: keyof typeof Ionicons.glyphMap } = {
   [BancoOption.YAPE]: "phone-portrait-outline",
   [BancoOption.PLIN]: "phone-portrait-outline",
   [BancoOption.EFECTIVO]: "cash-outline",
+  [BancoOption.OTRO]: "card",
 };
 
 interface BancoSelectorProps {

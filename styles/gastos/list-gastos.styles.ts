@@ -1187,4 +1187,50 @@ export const stylesListGastos = StyleSheet.create({
     marginTop: 4,
     maxWidth: 50,
   },
+
+  // Estilos para información del proveedor
+  proveedorContainer: {
+    backgroundColor: "#F8FAF9",
+    borderRadius: 12,
+    padding: 12,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: "#E1E8E6",
+  },
+  proveedorHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  proveedorHeaderText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: MAIN_COLOR,
+    marginLeft: 6,
+  },
+  proveedorItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  proveedorText: {
+    fontSize: 12,
+    color: "#374151",
+    marginLeft: 6,
+    flex: 1,
+  },
+
+  // Estilos compactos para proveedor
+  proveedorCompacto: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 4,
+    paddingVertical: 2,
+  },
+  proveedorTextoCompacto: {
+    fontSize: 12,
+    color: "#6B7280",
+    marginLeft: 6,
+    fontStyle: "italic",
+  },
 });

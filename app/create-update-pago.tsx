@@ -10,18 +10,18 @@ import ExpandableSection from "@/components/pagos/create-update-pagos/Expandable
 import ModalOpcionesArchivoCreateUpdatePago from "@/components/pagos/create-update-pagos/ModalOpcionesArchivoCreateUpdatePago";
 import { stylesBaseStylesCreatePago } from "@/styles/pagos/base-create-update-pago.styles";
 import {
-    EtiquetaGasto,
-    Gasto,
-    Moneda,
-    OrigenPago,
-    PagoCreateDto,
-    TipoPago,
+  EtiquetaGasto,
+  Gasto,
+  Moneda,
+  OrigenPago,
+  PagoCreateDto,
+  TipoPago,
 } from "@/types/gastos/gastos.types";
 import {
-    FileItem,
-    pickDocument,
-    pickFromCamera,
-    pickFromGallery,
+  FileItem,
+  pickDocument,
+  pickFromCamera,
+  pickFromGallery,
 } from "@/utils/gastos/create-gasto-utils";
 import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_gasto.utils";
 import { Ionicons } from "@expo/vector-icons";
@@ -29,16 +29,16 @@ import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import {
-    ActionSheetIOS,
-    ActivityIndicator,
-    Alert,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActionSheetIOS,
+  ActivityIndicator,
+  Alert,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function CreateUpdatePago() {
@@ -330,6 +330,15 @@ export default function CreateUpdatePago() {
                 {getMonedaSymbol(gastoInfo.moneda)} {gastoInfo.importe}
               </Text>
             </View>
+
+            {/* Información del Proveedor */}
+            {gastoInfo.proveedor && (
+              <View style={stylesBaseStylesCreatePago.proveedorInfoCompacto}>
+                <Text style={stylesBaseStylesCreatePago.proveedorInfoTextoCompacto}>
+                  🏢 {gastoInfo.proveedor}
+                </Text>
+              </View>
+            )}
             
             {/* Saldo del gasto */}
             <View style={stylesBaseStylesCreatePago.gastoSaldoContainer}>

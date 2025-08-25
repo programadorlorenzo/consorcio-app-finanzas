@@ -360,4 +360,49 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
     marginBottom: 16,
     paddingTop: 16,
   },
+
+  // Estilos para información del proveedor en pagos
+  proveedorInfoContainer: {
+    backgroundColor: "#F8FAF9",
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: "#E1E8E6",
+  },
+  proveedorInfoTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#374151",
+    marginBottom: 12,
+  },
+  proveedorInfoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+    paddingVertical: 4,
+  },
+  proveedorInfoLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#6B7280",
+    width: 80,
+  },
+  proveedorInfoValue: {
+    fontSize: 14,
+    color: "#374151",
+    flex: 1,
+    marginLeft: 8,
+  },
+
+  // Estilos compactos para información del proveedor
+  proveedorInfoCompacto: {
+    marginTop: 8,
+    paddingVertical: 4,
+  },
+  proveedorInfoTextoCompacto: {
+    fontSize: 14,
+    color: "#6B7280",
+    fontStyle: "italic",
+  },
 });

@@ -303,6 +303,14 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         </Text>
       )}
 
+      {/* Información del Proveedor */}
+      {gasto.proveedor && (
+        <View style={stylesListGastos.proveedorCompacto}>
+          <Ionicons name="business-outline" size={12} color={MAIN_COLOR} />
+          <Text style={stylesListGastos.proveedorTextoCompacto}>{gasto.proveedor}</Text>
+        </View>
+      )}
+
       {/* Importe y Saldo en la misma fila */}
       <View style={stylesListGastos.importeSaldoContainer}>
         <View style={stylesListGastos.importeContainer}>
@@ -447,7 +455,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
               style={stylesListGastos.pagosScroll}
             >
               {gasto.pagos.map((pago: Pago, index: number) => (
-                <PagoCard key={pago.id || index} pago={pago} index={index} />
+                <PagoCard key={pago.id || index} pago={pago} index={index} proveedorNombre={gasto.proveedor} />
               ))}
             </ScrollView>
           )}
