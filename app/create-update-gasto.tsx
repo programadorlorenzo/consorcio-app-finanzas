@@ -180,20 +180,19 @@ export default function CreateUpdateGasto() {
           {
             title: "¡Gasto registrado exitosamente!",
             message: "¿Qué deseas hacer ahora?",
-            options: ["Cancelar", "Registrar Pago", "Finalizar"],
-            cancelButtonIndex: 0,
+            options: ["Registrar Pago", "Ver los gastos"],
           },
           (buttonIndex: number) => {
             switch (buttonIndex) {
-              case 1:
+              case 0:
                 // Registrar pago
                 router.push({
                   pathname: "/create-update-pago",
-                  params: { gastoId: createdGasto.id }
+                  params: { gastoId: createdGasto.id },
                 });
                 break;
-              case 2:
-                // Finalizar - ir a lista de gastos
+              case 1:
+                // Ver los gastos
                 router.push("/list-gastos");
                 break;
             }
@@ -208,15 +207,16 @@ export default function CreateUpdateGasto() {
             {
               text: "Finalizar",
               onPress: () => router.push("/list-gastos"),
-              style: "cancel"
+              style: "cancel",
             },
             {
               text: "Registrar Pago",
-              onPress: () => router.push({
-                pathname: "/create-update-pago",
-                params: { gastoId: createdGasto.id }
-              })
-            }
+              onPress: () =>
+                router.push({
+                  pathname: "/create-update-pago",
+                  params: { gastoId: createdGasto.id },
+                }),
+            },
           ],
           { cancelable: false }
         );
@@ -388,26 +388,28 @@ export default function CreateUpdateGasto() {
               placeholderTextColor="#8A9A97"
             />
           </View>
-
-          {/* Botón Submit */}
-          <TouchableOpacity
-            style={[
-              stylesBaseStylesCreateGasto.submitButton,
-              loading && stylesBaseStylesCreateGasto.submitButtonDisabled,
-            ]}
-            onPress={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={stylesBaseStylesCreateGasto.buttonText}>
-                {isEditing ? "Actualizar Gasto" : "Crear Gasto"}
-              </Text>
-            )}
-          </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Botón Submit fijo en la parte inferior */}
+      <View style={stylesBaseStylesCreateGasto.bottomContainer}>
+        <TouchableOpacity
+          style={[
+            stylesBaseStylesCreateGasto.submitButton,
+            loading && stylesBaseStylesCreateGasto.submitButtonDisabled,
+          ]}
+          onPress={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={stylesBaseStylesCreateGasto.buttonText}>
+              {isEditing ? "Actualizar Gasto" : "Crear Gasto"}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
 
       {/* Modal para opciones de archivo (Android) */}
       <ModalOpcionesArchivoCreateUpdateGasto

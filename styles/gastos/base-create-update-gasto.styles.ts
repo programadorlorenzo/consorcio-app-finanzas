@@ -227,7 +227,6 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
     borderRadius: 12,
     padding: 18,
     alignItems: "center",
-    marginTop: 20,
     shadowColor: MAIN_COLOR,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -242,6 +241,12 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
     fontWeight: "700",
     color: "#fff",
     letterSpacing: 0.5,
+  },
+  bottomContainer: {
+    padding: 20,
+    backgroundColor: "#FFFFFF",
+    borderTopWidth: 1,
+    borderTopColor: "#E5E7EB",
   },
   modalOverlay: {
     flex: 1,

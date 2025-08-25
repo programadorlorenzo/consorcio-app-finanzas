@@ -44,6 +44,23 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
     return isNaN(num) ? "0.00" : num.toFixed(2);
   };
 
+  // Helper function para obtener el símbolo de la moneda
+  const getMonedaSymbol = (moneda: Moneda | string | null | undefined): string => {
+    switch (moneda) {
+      case Moneda.SOLES:
+      case "SOLES":
+        return "S/";
+      case Moneda.DOLARES:
+      case "DOLARES":
+        return "US$";
+      case Moneda.PESOS_COLOMBIANOS:
+      case "PESOS_COLOMBIANOS":
+        return "COP$";
+      default:
+        return moneda?.toString() || "";
+    }
+  };
+
   // Función para verificar si es un archivo de imagen
   const isImageFile = (filename: string): boolean => {
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"];
@@ -95,7 +112,7 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
 
         <View style={stylesListGastos.pagoImporteContainer}>
           <Text style={stylesListGastos.pagoImporte}>
-            {pago.moneda === Moneda.SOLES ? "S/" : "$"}{" "}
+            {getMonedaSymbol(pago.moneda)}{" "}
             {formatImporte(pago.importe)}
           </Text>
         </View>

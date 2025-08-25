@@ -58,6 +58,23 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
     return isNaN(num) ? "0.00" : num.toFixed(2);
   };
 
+  // Helper function para obtener el símbolo de la moneda
+  const getMonedaSymbol = (moneda: Moneda | string | null | undefined): string => {
+    switch (moneda) {
+      case Moneda.SOLES:
+      case "SOLES":
+        return "S/";
+      case Moneda.DOLARES:
+      case "DOLARES":
+        return "US$";
+      case Moneda.PESOS_COLOMBIANOS:
+      case "PESOS_COLOMBIANOS":
+        return "COP$";
+      default:
+        return moneda?.toString() || "";
+    }
+  };
+
   // Función para calcular el total de pagos
   const calcularTotalPagos = (): number => {
     if (!gasto.pagos || gasto.pagos.length === 0) return 0;
@@ -146,7 +163,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
     let mensaje = `💰 *GASTO REGISTRADO*\n\n`;
     mensaje += `📋 *Descripción:* ${gasto.descripcion}\n`;
     mensaje += `📂 *Categoría:* ${categoria}\n`;
-    mensaje += `💵 *Importe:* ${gasto.moneda} ${gasto.importe}\n`;
+    mensaje += `💵 *Importe:* ${getMonedaSymbol(gasto.moneda)} ${gasto.importe}\n`;
     mensaje += `📅 *Fecha:* ${fecha} ${hora}\n`;
     mensaje += `👤 *Creado por:* ${gasto.usuarioRegistroGastoNombre}\n`;
     mensaje += `🏷️ *Estado:* ${gasto.estado}\n`;
@@ -268,7 +285,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
 
       {/* Importe */}
       <View style={stylesListGastos.importeContainer}>
-        <Text style={stylesListGastos.monedaText}>{gasto.moneda}</Text>
+        <Text style={stylesListGastos.monedaText}>{getMonedaSymbol(gasto.moneda)}</Text>
         <Text style={stylesListGastos.importeText}>{gasto.importe}</Text>
       </View>
 
@@ -281,7 +298,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
             color: saldo > 0 ? '#dc3545' : saldo < 0 ? '#28a745' : '#6c757d'
           }
         ]}>
-          {gasto.moneda} {formatImporte(saldo)}
+          {getMonedaSymbol(gasto.moneda)} {formatImporte(saldo)}
         </Text>
       </View>
 
