@@ -10,6 +10,7 @@ import ExpandableSection from "@/components/pagos/create-update-pagos/Expandable
 import ModalOpcionesArchivoCreateUpdatePago from "@/components/pagos/create-update-pagos/ModalOpcionesArchivoCreateUpdatePago";
 import { stylesBaseStylesCreatePago } from "@/styles/pagos/base-create-update-pago.styles";
 import {
+    EtiquetaGasto,
     Gasto,
     Moneda,
     OrigenPago,
@@ -116,6 +117,46 @@ export default function CreateUpdatePago() {
       ...prev,
       [field]: value,
     }));
+  };
+
+  // Helper function para obtener el símbolo de la moneda
+  const getMonedaSymbol = (moneda: Moneda | string | null | undefined): string => {
+    switch (moneda) {
+      case Moneda.SOLES:
+      case "SOLES":
+        return "S/";
+      case Moneda.DOLARES:
+      case "DOLARES":
+        return "US$";
+      case Moneda.PESOS_COLOMBIANOS:
+      case "PESOS_COLOMBIANOS":
+        return "COP$";
+      default:
+        return moneda?.toString() || "";
+    }
+  };
+
+  // Helper function para formatear importe de forma segura
+  const formatImporte = (importe: number | string | null | undefined): string => {
+    if (importe === null || importe === undefined) return "0.00";
+    const num = typeof importe === "string" ? parseFloat(importe) : importe;
+    return isNaN(num) ? "0.00" : num.toFixed(2);
+  };
+
+  // Función para calcular el total de pagos del gasto
+  const calcularTotalPagos = (gasto: Gasto): number => {
+    if (!gasto.pagos || gasto.pagos.length === 0) return 0;
+    return gasto.pagos.reduce((total, pago) => {
+      const importePago = typeof pago.importe === "string" ? parseFloat(pago.importe) : (pago.importe || 0);
+      return total + (isNaN(importePago) ? 0 : importePago);
+    }, 0);
+  };
+
+  // Función para calcular el saldo del gasto
+  const calcularSaldo = (gasto: Gasto): number => {
+    const importeGasto = typeof gasto.importe === "string" ? parseFloat(gasto.importe) : (gasto.importe || 0);
+    const totalPagos = calcularTotalPagos(gasto);
+    return (isNaN(importeGasto) ? 0 : importeGasto) - totalPagos;
   };
 
   const handleImporteChange = (text: string) => {
@@ -286,9 +327,61 @@ export default function CreateUpdatePago() {
                   ` > ${formatDisplayText(gastoInfo.subcategoria)}`}
               </Text>
               <Text style={stylesBaseStylesCreatePago.gastoInfoAmount}>
-                {gastoInfo.moneda} {gastoInfo.importe}
+                {getMonedaSymbol(gastoInfo.moneda)} {gastoInfo.importe}
               </Text>
             </View>
+            
+            {/* Saldo del gasto */}
+            <View style={stylesBaseStylesCreatePago.gastoSaldoContainer}>
+              <Text style={stylesBaseStylesCreatePago.gastoSaldoLabel}>
+                Saldo pendiente:
+              </Text>
+              <Text style={[
+                stylesBaseStylesCreatePago.gastoSaldoText,
+                {
+                  color: calcularSaldo(gastoInfo) > 0 ? '#dc3545' : 
+                         calcularSaldo(gastoInfo) < 0 ? '#28a745' : '#6c757d'
+                }
+              ]}>
+                {getMonedaSymbol(gastoInfo.moneda)} {formatImporte(calcularSaldo(gastoInfo))}
+              </Text>
+            </View>
+
+            {/* Etiquetas del gasto */}
+            {gastoInfo.etiquetas && gastoInfo.etiquetas.length > 0 && (
+              <View style={stylesBaseStylesCreatePago.gastoEtiquetasContainer}>
+                <Text style={stylesBaseStylesCreatePago.gastoEtiquetasLabel}>
+                  Etiquetas:
+                </Text>
+                <ScrollView 
+                  horizontal 
+                  showsHorizontalScrollIndicator={false}
+                  style={stylesBaseStylesCreatePago.gastoEtiquetasScroll}
+                >
+                  {gastoInfo.etiquetas.map((etiquetaGasto: EtiquetaGasto, index: number) => (
+                    <View
+                      key={index}
+                      style={[
+                        stylesBaseStylesCreatePago.gastoEtiquetaBadge,
+                        {
+                          backgroundColor: '#f0f0f0',
+                          borderColor: '#ddd'
+                        }
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          stylesBaseStylesCreatePago.gastoEtiquetaText,
+                          { color: '#666' }
+                        ]}
+                      >
+                        {etiquetaGasto.etiqueta?.nombre || 'Sin nombre'}
+                      </Text>
+                    </View>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
           </View>
         )}
 

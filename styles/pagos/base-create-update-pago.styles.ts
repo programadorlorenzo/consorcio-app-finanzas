@@ -68,6 +68,47 @@ export const stylesBaseStylesCreatePago = StyleSheet.create({
     fontWeight: '600',
     color: MAIN_COLOR,
   },
+  gastoSaldoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+  gastoSaldoLabel: {
+    fontSize: 13,
+    color: '#6c757d',
+    fontWeight: '500',
+  },
+  gastoSaldoText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  gastoEtiquetasContainer: {
+    marginTop: 12,
+  },
+  gastoEtiquetasLabel: {
+    fontSize: 13,
+    color: '#6c757d',
+    fontWeight: '500',
+    marginBottom: 6,
+  },
+  gastoEtiquetasScroll: {
+    flexDirection: 'row',
+  },
+  gastoEtiquetaBadge: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginRight: 6,
+  },
+  gastoEtiquetaText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
   loadingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
