@@ -649,7 +649,16 @@ export default function GastoDetalle() {
                       key={pago.id || index}
                       style={stylesGastoDetalle.pagoItemIntegrado}
                     >
-                      <PagoCard pago={pago} index={index} />
+                      <PagoCard 
+                        pago={pago} 
+                        index={index} 
+                        proveedorInfo={{
+                          nombre: gasto.proveedor,
+                          banco: gasto.proveedor_banco,
+                          cuenta: gasto.proveedor_cuenta,
+                          cci: gasto.proveedor_cci
+                        }}
+                      />
                     </View>
                   ))}
                 </View>

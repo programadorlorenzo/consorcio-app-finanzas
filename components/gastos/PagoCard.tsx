@@ -29,9 +29,15 @@ import { stylesListGastos } from "../../styles/gastos/list-gastos.styles";
 interface PagoCardProps {
   pago: Pago;
   index: number;
+  proveedorInfo?: {
+    nombre?: string | null;
+    banco?: string | null;
+    cuenta?: string | null;
+    cci?: string | null;
+  };
 }
 
-const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
+const PagoCard: React.FC<PagoCardProps> = ({ pago, index, proveedorInfo }) => {
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
 
@@ -166,6 +172,64 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
                 {pago.banco_destino && `(${pago.banco_destino})`}
               </Text>
             </View>
+          )}
+
+          {/* Información del Proveedor del Gasto */}
+          {proveedorInfo && (proveedorInfo.nombre || proveedorInfo.banco || proveedorInfo.cuenta || proveedorInfo.cci) && (
+            <>
+              {proveedorInfo.nombre && (
+                <View style={stylesListGastos.pagoDetalleItem}>
+                  <Ionicons
+                    name="business-outline"
+                    size={12}
+                    color="#6B7280"
+                  />
+                  <Text style={stylesListGastos.pagoDetalleLabel}>Proveedor:</Text>
+                  <Text style={stylesListGastos.pagoDetalleValue}>
+                    {proveedorInfo.nombre}
+                  </Text>
+                </View>
+              )}
+              {proveedorInfo.banco && (
+                <View style={stylesListGastos.pagoDetalleItem}>
+                  <Ionicons
+                    name="card-outline"
+                    size={12}
+                    color="#6B7280"
+                  />
+                  <Text style={stylesListGastos.pagoDetalleLabel}>Banco:</Text>
+                  <Text style={stylesListGastos.pagoDetalleValue}>
+                    {proveedorInfo.banco}
+                  </Text>
+                </View>
+              )}
+              {proveedorInfo.cuenta && (
+                <View style={stylesListGastos.pagoDetalleItem}>
+                  <Ionicons
+                    name="wallet-outline"
+                    size={12}
+                    color="#6B7280"
+                  />
+                  <Text style={stylesListGastos.pagoDetalleLabel}>Cuenta:</Text>
+                  <Text style={stylesListGastos.pagoDetalleValue}>
+                    {proveedorInfo.cuenta}
+                  </Text>
+                </View>
+              )}
+              {proveedorInfo.cci && (
+                <View style={stylesListGastos.pagoDetalleItem}>
+                  <Ionicons
+                    name="card"
+                    size={12}
+                    color="#6B7280"
+                  />
+                  <Text style={stylesListGastos.pagoDetalleLabel}>CCI:</Text>
+                  <Text style={stylesListGastos.pagoDetalleValue}>
+                    {proveedorInfo.cci}
+                  </Text>
+                </View>
+              )}
+            </>
           )}
         </View>
 
