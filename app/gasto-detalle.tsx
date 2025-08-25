@@ -460,13 +460,55 @@ export default function GastoDetalle() {
           )}
 
           {/* Información del Proveedor */}
-          {gasto.proveedor && (
+          {(gasto.proveedor || gasto.proveedor_banco || gasto.proveedor_cuenta || gasto.proveedor_cci) && (
             <View style={stylesGastoDetalle.proveedorContainer}>
               <View style={stylesGastoDetalle.proveedorHeader}>
                 <Ionicons name="business-outline" size={16} color={MAIN_COLOR} />
-                <Text style={stylesGastoDetalle.proveedorText}>
-                  {gasto.proveedor}
+                <Text style={stylesGastoDetalle.proveedorHeaderText}>
+                  Información del Proveedor
                 </Text>
+              </View>
+              
+              <View style={stylesGastoDetalle.proveedorContent}>
+                {gasto.proveedor && (
+                  <View style={stylesGastoDetalle.proveedorItem}>
+                    <Ionicons name="person-outline" size={14} color="#6B7280" />
+                    <Text style={stylesGastoDetalle.proveedorLabel}>Nombre:</Text>
+                    <Text style={stylesGastoDetalle.proveedorValue}>
+                      {gasto.proveedor}
+                    </Text>
+                  </View>
+                )}
+                
+                {gasto.proveedor_banco && (
+                  <View style={stylesGastoDetalle.proveedorItem}>
+                    <Ionicons name="card-outline" size={14} color="#6B7280" />
+                    <Text style={stylesGastoDetalle.proveedorLabel}>Banco:</Text>
+                    <Text style={stylesGastoDetalle.proveedorValue}>
+                      {gasto.proveedor_banco}
+                    </Text>
+                  </View>
+                )}
+                
+                {gasto.proveedor_cuenta && (
+                  <View style={stylesGastoDetalle.proveedorItem}>
+                    <Ionicons name="wallet-outline" size={14} color="#6B7280" />
+                    <Text style={stylesGastoDetalle.proveedorLabel}>Cuenta:</Text>
+                    <Text style={stylesGastoDetalle.proveedorValue}>
+                      {gasto.proveedor_cuenta}
+                    </Text>
+                  </View>
+                )}
+                
+                {gasto.proveedor_cci && (
+                  <View style={stylesGastoDetalle.proveedorItem}>
+                    <Ionicons name="card" size={14} color="#6B7280" />
+                    <Text style={stylesGastoDetalle.proveedorLabel}>CCI:</Text>
+                    <Text style={stylesGastoDetalle.proveedorValue}>
+                      {gasto.proveedor_cci}
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
           )}
@@ -649,16 +691,7 @@ export default function GastoDetalle() {
                       key={pago.id || index}
                       style={stylesGastoDetalle.pagoItemIntegrado}
                     >
-                      <PagoCard 
-                        pago={pago} 
-                        index={index} 
-                        proveedorInfo={{
-                          nombre: gasto.proveedor,
-                          banco: gasto.proveedor_banco,
-                          cuenta: gasto.proveedor_cuenta,
-                          cci: gasto.proveedor_cci
-                        }}
-                      />
+                      <PagoCard pago={pago} index={index} />
                     </View>
                   ))}
                 </View>

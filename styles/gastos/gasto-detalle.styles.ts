@@ -501,11 +501,43 @@ export const stylesGastoDetalle = StyleSheet.create({
   // Estilos para información del proveedor
   proveedorContainer: {
     marginVertical: 12,
+    backgroundColor: "#F8FAF9",
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#E1E8E6",
   },
   proveedorHeader: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
+    marginBottom: 12,
+  },
+  proveedorHeaderText: {
+    fontSize: 16,
+    color: MAIN_COLOR,
+    marginLeft: 8,
+    fontWeight: "600",
+  },
+  proveedorContent: {
+    gap: 8,
+  },
+  proveedorItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 4,
+  },
+  proveedorLabel: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginLeft: 8,
+    fontWeight: "500",
+    width: 80,
+  },
+  proveedorValue: {
+    fontSize: 14,
+    color: "#374151",
+    flex: 1,
+    marginLeft: 8,
   },
   proveedorText: {
     fontSize: 14,

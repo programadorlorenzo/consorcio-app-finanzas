@@ -455,17 +455,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
               style={stylesListGastos.pagosScroll}
             >
               {gasto.pagos.map((pago: Pago, index: number) => (
-                <PagoCard 
-                  key={pago.id || index} 
-                  pago={pago} 
-                  index={index} 
-                  proveedorInfo={{
-                    nombre: gasto.proveedor,
-                    banco: gasto.proveedor_banco,
-                    cuenta: gasto.proveedor_cuenta,
-                    cci: gasto.proveedor_cci
-                  }}
-                />
+                <PagoCard key={pago.id || index} pago={pago} index={index} />
               ))}
             </ScrollView>
           )}
