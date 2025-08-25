@@ -28,7 +28,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
+          title: "Config.",
         }}
       />
       <Tabs.Screen
@@ -40,13 +40,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="notifications"
         options={{
-          title: "Notis",
+          title: "Notific.",
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: "Perfil",
         }}
       />
     </Tabs>
