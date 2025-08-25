@@ -42,7 +42,6 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
   },
   sectionHeader: {
     marginTop: 10,
-    marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -491,5 +490,50 @@ export const stylesBaseStylesCreateGasto = StyleSheet.create({
   },
   rowItem: {
     flex: 1,
+  },
+  
+  // Estilos para BancoSelector
+  fieldContainer: {
+    marginBottom: 10,
+  },
+  bancoScrollView: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  bancoScrollContent: {
+    paddingHorizontal: 0,
+    gap: 0,
+  },
+  bancoChipHorizontal: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    backgroundColor: "#FFFFFF",
+    minHeight: 32,
+    marginRight: 8,
+  },
+  bancoChipSelected: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 2,
+  },
+  bancoChipIcon: {
+    marginRight: 6,
+  },
+  bancoChipTextHorizontal: {
+    fontSize: 11,
+    fontWeight: "600",
+    marginHorizontal: 4,
+  },
+  bancoCheckIcon: {
+    marginLeft: 2,
   },
 });

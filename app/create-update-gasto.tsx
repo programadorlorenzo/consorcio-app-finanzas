@@ -4,6 +4,7 @@ import ListArchivosCreateGasto from "@/components/gastos/create-update-pagos/Arc
 import CustomSelectorCreateGasto from "@/components/gastos/create-update-pagos/CustomSelectorCreateUpdateGasto";
 import EtiquetasSelectorCreateUpdateGasto from "@/components/gastos/create-update-pagos/EtiquetasSelectorCreateUpdateGasto";
 import ModalOpcionesArchivoCreateUpdateGasto from "@/components/gastos/create-update-pagos/ModalOpcionesArchivoCreateUpdateGasto";
+import BancoSelector from "@/components/pagos/create-update-pagos/BancoSelector";
 import { stylesBaseStylesCreateGasto } from "@/styles/gastos/base-create-update-gasto.styles";
 import {
   CategoriaGasto,
@@ -372,9 +373,13 @@ export default function CreateUpdateGasto() {
               onPress={() => setShowProveedorSection(!showProveedorSection)}
             >
               <View style={stylesBaseStylesCreateGasto.sectionHeaderLeft}>
-                <Ionicons name="business-outline" size={20} color={MAIN_COLOR} />
+                <Ionicons
+                  name="business-outline"
+                  size={20}
+                  color={MAIN_COLOR}
+                />
                 <Text style={stylesBaseStylesCreateGasto.sectionHeaderText}>
-                  Datos del Proveedor (Opcional)
+                  Datos del Proveedor
                 </Text>
               </View>
               <Ionicons
@@ -388,11 +393,12 @@ export default function CreateUpdateGasto() {
               <View style={stylesBaseStylesCreateGasto.sectionContent}>
                 {/* Nombre del Proveedor */}
                 <View style={stylesBaseStylesCreateGasto.inputGroup}>
-                  <Text style={stylesBaseStylesCreateGasto.label}>Proveedor</Text>
                   <TextInput
                     style={stylesBaseStylesCreateGasto.input}
                     value={formData.proveedor}
-                    onChangeText={(text) => handleInputChange("proveedor", text)}
+                    onChangeText={(text) =>
+                      handleInputChange("proveedor", text)
+                    }
                     placeholder="Nombre del proveedor"
                     placeholderTextColor="#8A9A97"
                     autoCapitalize="words"
@@ -401,24 +407,23 @@ export default function CreateUpdateGasto() {
 
                 {/* Banco del Proveedor */}
                 <View style={stylesBaseStylesCreateGasto.inputGroup}>
-                  <Text style={stylesBaseStylesCreateGasto.label}>Banco</Text>
-                  <TextInput
-                    style={stylesBaseStylesCreateGasto.input}
+                  <BancoSelector
                     value={formData.proveedor_banco}
-                    onChangeText={(text) => handleInputChange("proveedor_banco", text)}
-                    placeholder="Banco del proveedor"
-                    placeholderTextColor="#8A9A97"
-                    autoCapitalize="words"
+                    onSelect={(banco) => handleInputChange("proveedor_banco", banco)}
                   />
                 </View>
 
                 {/* Número de Cuenta */}
                 <View style={stylesBaseStylesCreateGasto.inputGroup}>
-                  <Text style={stylesBaseStylesCreateGasto.label}>Número de Cuenta</Text>
+                  <Text style={stylesBaseStylesCreateGasto.label}>
+                    Número de Cuenta
+                  </Text>
                   <TextInput
                     style={stylesBaseStylesCreateGasto.input}
                     value={formData.proveedor_cuenta}
-                    onChangeText={(text) => handleInputChange("proveedor_cuenta", text)}
+                    onChangeText={(text) =>
+                      handleInputChange("proveedor_cuenta", text)
+                    }
                     placeholder="Número de cuenta del proveedor"
                     placeholderTextColor="#8A9A97"
                     keyboardType="numeric"
@@ -431,7 +436,9 @@ export default function CreateUpdateGasto() {
                   <TextInput
                     style={stylesBaseStylesCreateGasto.input}
                     value={formData.proveedor_cci}
-                    onChangeText={(text) => handleInputChange("proveedor_cci", text)}
+                    onChangeText={(text) =>
+                      handleInputChange("proveedor_cci", text)
+                    }
                     placeholder="CCI del proveedor"
                     placeholderTextColor="#8A9A97"
                     keyboardType="numeric"
