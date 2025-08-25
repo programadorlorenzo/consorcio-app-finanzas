@@ -1,3 +1,4 @@
+import { obtenerGasto } from "@/api/gastos/gastos-api";
 import MenuCardGastos from "@/components/gastos/MenuCard";
 import { stylesMenuCardGastos } from "@/styles/gastos/menu-card.styles-create-update-gasto";
 import { Ionicons } from "@expo/vector-icons";
@@ -5,6 +6,7 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
+  Alert,
   SafeAreaView,
   ScrollView,
   Text,
@@ -24,6 +26,67 @@ export type GastoStatusType =
 
 const TabGastos = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Función para extraer el ID del código de gasto
+  const extractGastoId = (query: string): number | null => {
+    const trimmedQuery = query.trim();
+    
+    // Si empieza con G o g, extraer el número después
+    if (trimmedQuery.match(/^[Gg]\d+$/)) {
+      const id = parseInt(trimmedQuery.substring(1));
+      return isNaN(id) ? null : id;
+    }
+    
+    // Si es solo un número
+    if (trimmedQuery.match(/^\d+$/)) {
+      const id = parseInt(trimmedQuery);
+      return isNaN(id) ? null : id;
+    }
+    
+    return null;
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      Alert.alert("Error", "Por favor ingresa un código de gasto");
+      return;
+    }
+
+    const gastoId = extractGastoId(searchQuery);
+    
+    if (!gastoId) {
+      Alert.alert(
+        "Código inválido", 
+        "Por favor ingresa un código válido (ej: G15 o 15)"
+      );
+      return;
+    }
+
+    setIsSearching(true);
+    
+    try {
+      // Intentar obtener el gasto
+      await obtenerGasto(gastoId);
+      
+      // Si llegamos aquí, el gasto existe, navegar al detalle
+      router.push(`/gasto-detalle?id=${gastoId}`);
+      
+      // Limpiar el campo de búsqueda
+      setSearchQuery("");
+      
+    } catch (error) {
+      console.error("Error buscando gasto:", error);
+      
+      // Mostrar mensaje de error personalizado
+      Alert.alert(
+        "Gasto no encontrado", 
+        `El gasto G${gastoId} no existe`
+      );
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const menuOptions = [
     {
@@ -68,14 +131,6 @@ const TabGastos = () => {
     // },
   ];
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      console.log("Buscar Gasto:", searchQuery);
-      // Aquí podrías agregar navegación para buscar un Gasto específico
-      // router.push(`/create-update-Gasto?id=${searchQuery}`);
-    }
-  };
-
   return (
     <SafeAreaView style={stylesMenuCardGastos.container}>
       <StatusBar style="auto" />
@@ -88,16 +143,24 @@ const TabGastos = () => {
           </View>
           <TextInput
             style={stylesMenuCardGastos.searchInput}
-            placeholder="Buscar por código de Gasto"
+            placeholder="Buscar por código de Gasto (ej: G15 o 15)"
             value={searchQuery}
             onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+            returnKeyType="search"
             placeholderTextColor="#8A9A97"
           />
           <TouchableOpacity
             onPress={handleSearch}
-            style={stylesMenuCardGastos.searchButton}
+            style={[
+              stylesMenuCardGastos.searchButton,
+              isSearching && { opacity: 0.6 }
+            ]}
+            disabled={isSearching}
           >
-            <Text style={stylesMenuCardGastos.searchButtonText}>Buscar</Text>
+            <Text style={stylesMenuCardGastos.searchButtonText}>
+              {isSearching ? "Buscando..." : "Buscar"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
