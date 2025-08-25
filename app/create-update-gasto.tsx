@@ -51,6 +51,11 @@ export default function CreateUpdateGasto() {
     categoria: undefined,
     subcategoria: undefined,
     moneda: undefined,
+    // Campos del proveedor
+    proveedor: "",
+    proveedor_banco: "",
+    proveedor_cuenta: "",
+    proveedor_cci: "",
     rutasArchivos: [],
     etiquetasIds: [],
   });
@@ -61,6 +66,7 @@ export default function CreateUpdateGasto() {
   const [showCategoriaModal, setShowCategoriaModal] = useState(false);
   const [showSubcategoriaModal, setShowSubcategoriaModal] = useState(false);
   const [showMonedaModal, setShowMonedaModal] = useState(false);
+  const [showProveedorSection, setShowProveedorSection] = useState(false);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [showFileModal, setShowFileModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -357,6 +363,82 @@ export default function CreateUpdateGasto() {
                 placeholderTextColor="#8A9A97"
               />
             </View>
+          </View>
+
+          {/* Sección de Proveedor */}
+          <View style={stylesBaseStylesCreateGasto.inputGroup}>
+            <TouchableOpacity
+              style={stylesBaseStylesCreateGasto.sectionHeader}
+              onPress={() => setShowProveedorSection(!showProveedorSection)}
+            >
+              <View style={stylesBaseStylesCreateGasto.sectionHeaderLeft}>
+                <Ionicons name="business-outline" size={20} color={MAIN_COLOR} />
+                <Text style={stylesBaseStylesCreateGasto.sectionHeaderText}>
+                  Datos del Proveedor (Opcional)
+                </Text>
+              </View>
+              <Ionicons
+                name={showProveedorSection ? "chevron-up" : "chevron-down"}
+                size={20}
+                color={MAIN_COLOR}
+              />
+            </TouchableOpacity>
+
+            {showProveedorSection && (
+              <View style={stylesBaseStylesCreateGasto.sectionContent}>
+                {/* Nombre del Proveedor */}
+                <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                  <Text style={stylesBaseStylesCreateGasto.label}>Proveedor</Text>
+                  <TextInput
+                    style={stylesBaseStylesCreateGasto.input}
+                    value={formData.proveedor}
+                    onChangeText={(text) => handleInputChange("proveedor", text)}
+                    placeholder="Nombre del proveedor"
+                    placeholderTextColor="#8A9A97"
+                    autoCapitalize="words"
+                  />
+                </View>
+
+                {/* Banco del Proveedor */}
+                <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                  <Text style={stylesBaseStylesCreateGasto.label}>Banco</Text>
+                  <TextInput
+                    style={stylesBaseStylesCreateGasto.input}
+                    value={formData.proveedor_banco}
+                    onChangeText={(text) => handleInputChange("proveedor_banco", text)}
+                    placeholder="Banco del proveedor"
+                    placeholderTextColor="#8A9A97"
+                    autoCapitalize="words"
+                  />
+                </View>
+
+                {/* Número de Cuenta */}
+                <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                  <Text style={stylesBaseStylesCreateGasto.label}>Número de Cuenta</Text>
+                  <TextInput
+                    style={stylesBaseStylesCreateGasto.input}
+                    value={formData.proveedor_cuenta}
+                    onChangeText={(text) => handleInputChange("proveedor_cuenta", text)}
+                    placeholder="Número de cuenta del proveedor"
+                    placeholderTextColor="#8A9A97"
+                    keyboardType="numeric"
+                  />
+                </View>
+
+                {/* CCI */}
+                <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                  <Text style={stylesBaseStylesCreateGasto.label}>CCI</Text>
+                  <TextInput
+                    style={stylesBaseStylesCreateGasto.input}
+                    value={formData.proveedor_cci}
+                    onChangeText={(text) => handleInputChange("proveedor_cci", text)}
+                    placeholder="CCI del proveedor"
+                    placeholderTextColor="#8A9A97"
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+            )}
           </View>
 
           <TouchableOpacity

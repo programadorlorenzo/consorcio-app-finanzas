@@ -114,6 +114,11 @@ export interface Gasto {
   // Montos
   importe: number | null;
   moneda: Moneda | null;
+  // Datos del Proveedor
+  proveedor: string | null;
+  proveedor_banco: string | null;
+  proveedor_cuenta: string | null;
+  proveedor_cci: string | null;
   // Relaciones
   archivos: GastoFile[];
   etiquetas: EtiquetaGasto[];
@@ -130,6 +135,11 @@ export interface GastoCreateDto {
   // Montos
   importe: number; // Campo requerido
   moneda?: Moneda;
+  // Datos del Proveedor
+  proveedor?: string;
+  proveedor_banco?: string;
+  proveedor_cuenta?: string;
+  proveedor_cci?: string;
   // Archivos y etiquetas
   rutasArchivos?: string[];
   etiquetasIds?: number[];
