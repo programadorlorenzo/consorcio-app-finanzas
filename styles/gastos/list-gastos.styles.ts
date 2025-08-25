@@ -82,13 +82,29 @@ export const stylesListGastos = StyleSheet.create({
     opacity: 0.2,
   },
 
+  // Header completo con fondo sólido
+  fullHeader: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    marginHorizontal: -20,
+    marginTop: -20,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    paddingTop: 12,
+  },
+
   // Header
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 5,
     zIndex: 1,
+    borderRadius: 8,
+    padding: 8,
+    marginHorizontal: -8,
   },
   estadoContainer: {
     flexDirection: "row",
@@ -331,7 +347,25 @@ export const stylesListGastos = StyleSheet.create({
 
   // Footer reorganizado
   footerContainer: {
-    marginTop: 5,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    marginHorizontal: -20,
+    marginBottom: -20,
+    marginTop: 12,
+    padding: 8,
+    paddingHorizontal: 12,
+    position: 'relative',
+  },
+  footerWave: {
+    position: 'absolute',
+    bottom: -10,
+    right: -20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    opacity: 0.3,
   },
   fechaEstadoRow: {
     flexDirection: "row",
@@ -611,8 +645,11 @@ export const stylesListGastos = StyleSheet.create({
   codigoEstadoContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
     gap: 5, // Espacio entre código y badge
+    borderRadius: 8,
+    padding: 8,
+    marginHorizontal: -8,
+    marginTop: -8,
   },
   importeSaldoContainer: {
     flexDirection: "row",
@@ -629,19 +666,12 @@ export const stylesListGastos = StyleSheet.create({
     zIndex: 1000,
   },
   menuButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    width: 36,
+    height: 36,
+    borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.1)",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    borderWidth: 2,
   },
   menuOverlay: {
     position: "absolute",

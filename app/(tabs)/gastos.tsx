@@ -31,19 +31,19 @@ const TabGastos = () => {
   // Función para extraer el ID del código de gasto
   const extractGastoId = (query: string): number | null => {
     const trimmedQuery = query.trim();
-    
+
     // Si empieza con G o g, extraer el número después
     if (trimmedQuery.match(/^[Gg]\d+$/)) {
       const id = parseInt(trimmedQuery.substring(1));
       return isNaN(id) ? null : id;
     }
-    
+
     // Si es solo un número
     if (trimmedQuery.match(/^\d+$/)) {
       const id = parseInt(trimmedQuery);
       return isNaN(id) ? null : id;
     }
-    
+
     return null;
   };
 
@@ -54,35 +54,31 @@ const TabGastos = () => {
     }
 
     const gastoId = extractGastoId(searchQuery);
-    
+
     if (!gastoId) {
       Alert.alert(
-        "Código inválido", 
+        "Código inválido",
         "Por favor ingresa un código válido (ej: G15 o 15)"
       );
       return;
     }
 
     setIsSearching(true);
-    
+
     try {
       // Intentar obtener el gasto
       await obtenerGasto(gastoId);
-      
+
       // Si llegamos aquí, el gasto existe, navegar al detalle
       router.push(`/gasto-detalle?id=${gastoId}`);
-      
+
       // Limpiar el campo de búsqueda
       setSearchQuery("");
-      
     } catch (error) {
       console.error("Error buscando gasto:", error);
-      
+
       // Mostrar mensaje de error personalizado
-      Alert.alert(
-        "Gasto no encontrado", 
-        `El gasto G${gastoId} no existe`
-      );
+      Alert.alert("Gasto no encontrado", `El gasto G${gastoId} no existe`);
     } finally {
       setIsSearching(false);
     }
@@ -143,7 +139,7 @@ const TabGastos = () => {
           </View>
           <TextInput
             style={stylesMenuCardGastos.searchInput}
-            placeholder="Buscar por código de Gasto (ej: G15 o 15)"
+            placeholder="Buscar por código"
             value={searchQuery}
             onChangeText={setSearchQuery}
             onSubmitEditing={handleSearch}
@@ -154,7 +150,7 @@ const TabGastos = () => {
             onPress={handleSearch}
             style={[
               stylesMenuCardGastos.searchButton,
-              isSearching && { opacity: 0.6 }
+              isSearching && { opacity: 0.6 },
             ]}
             disabled={isSearching}
           >

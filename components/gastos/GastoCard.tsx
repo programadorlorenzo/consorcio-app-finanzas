@@ -53,14 +53,18 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
   const [isPagosExpanded, setIsPagosExpanded] = useState(false); // Estado para expandir pagos
 
   // Helper function para formatear importe de forma segura
-  const formatImporte = (importe: number | string | null | undefined): string => {
+  const formatImporte = (
+    importe: number | string | null | undefined
+  ): string => {
     if (importe === null || importe === undefined) return "0.00";
     const num = typeof importe === "string" ? parseFloat(importe) : importe;
     return isNaN(num) ? "0.00" : num.toFixed(2);
   };
 
   // Helper function para obtener el símbolo de la moneda
-  const getMonedaSymbol = (moneda: Moneda | string | null | undefined): string => {
+  const getMonedaSymbol = (
+    moneda: Moneda | string | null | undefined
+  ): string => {
     switch (moneda) {
       case Moneda.SOLES:
       case "SOLES":
@@ -80,14 +84,20 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
   const calcularTotalPagos = (): number => {
     if (!gasto.pagos || gasto.pagos.length === 0) return 0;
     return gasto.pagos.reduce((total, pago) => {
-      const importePago = typeof pago.importe === "string" ? parseFloat(pago.importe) : (pago.importe || 0);
+      const importePago =
+        typeof pago.importe === "string"
+          ? parseFloat(pago.importe)
+          : pago.importe || 0;
       return total + (isNaN(importePago) ? 0 : importePago);
     }, 0);
   };
 
   // Función para calcular el saldo
   const calcularSaldo = (): number => {
-    const importeGasto = typeof gasto.importe === "string" ? parseFloat(gasto.importe) : (gasto.importe || 0);
+    const importeGasto =
+      typeof gasto.importe === "string"
+        ? parseFloat(gasto.importe)
+        : gasto.importe || 0;
     const totalPagos = calcularTotalPagos();
     return (isNaN(importeGasto) ? 0 : importeGasto) - totalPagos;
   };
@@ -116,7 +126,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
     closeMenu();
     router.push({
       pathname: "/create-update-pago",
-      params: { gastoId: gasto.id }
+      params: { gastoId: gasto.id },
     });
   };
 
@@ -166,7 +176,9 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
     let mensaje = `💰 *GASTO REGISTRADO*\n\n`;
     mensaje += `📋 *Descripción:* ${gasto.descripcion}\n`;
     mensaje += `📂 *Categoría:* ${categoria}\n`;
-    mensaje += `💵 *Importe:* ${getMonedaSymbol(gasto.moneda)} ${gasto.importe}\n`;
+    mensaje += `💵 *Importe:* ${getMonedaSymbol(gasto.moneda)} ${
+      gasto.importe
+    }\n`;
     mensaje += `📅 *Fecha:* ${fecha} ${hora}\n`;
     mensaje += `👤 *Creado por:* ${gasto.usuarioRegistroGastoNombre}\n`;
     mensaje += `🏷️ *Estado:* ${gasto.estado}\n`;
@@ -188,7 +200,9 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
       gasto.pagos.forEach((pago, index) => {
         const importePago = formatImporte(pago.importe);
         const monedaPago = pago.moneda === Moneda.SOLES ? "S/" : "$";
-        mensaje += `   ${index + 1}. ${pago.tipo} - ${monedaPago} ${importePago}`;
+        mensaje += `   ${index + 1}. ${
+          pago.tipo
+        } - ${monedaPago} ${importePago}`;
         if (pago.numeroOperacion) {
           mensaje += ` (Op: ${pago.numeroOperacion})`;
         }
@@ -229,53 +243,60 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         { backgroundColor: `${estadoColor}11` }, // Color muy sutil (11 = ~6% opacity)
       ]}
     >
-      {/* Wave Pattern */}
-      <View style={stylesListGastos.waveContainer}>
-        <View
-          style={[
-            stylesListGastos.wave1,
-            { backgroundColor: `${estadoColor}12` },
-          ]}
-        />
-        <View
-          style={[
-            stylesListGastos.wave2,
-            { backgroundColor: `${estadoColor}08` },
-          ]}
-        />
-      </View>
-
-      {/* Código del gasto y Estado Badge en fila */}
-      <View style={stylesListGastos.codigoEstadoContainer}>
-        <View style={stylesListGastos.codigoContainer}>
-          <Text style={stylesListGastos.codigoText}>
-            #G{gasto.id}
-          </Text>
-        </View>
-        <View style={stylesListGastos.estadoBadge}>
-          <Ionicons name="ellipse" size={8} color={estadoColor} />
-          <Text
-            style={[stylesListGastos.estadoBadgeText, { color: estadoColor }]}
+      {/* Header completo con fondo sólido del color del estado */}
+      <View
+        style={[
+          stylesListGastos.fullHeader,
+          { backgroundColor: `${estadoColor}95` },
+        ]}
+      >
+        {/* Código del gasto y Estado Badge en fila */}
+        <View style={stylesListGastos.codigoEstadoContainer}>
+          <View style={stylesListGastos.codigoContainer}>
+            <Text style={stylesListGastos.codigoText}>#G{gasto.id}</Text>
+          </View>
+          <View
+            style={[
+              stylesListGastos.estadoBadge,
+              { backgroundColor: estadoColor },
+            ]}
           >
-            {gasto.estado}
-          </Text>
+            <Ionicons name="ellipse" size={8} color="white" />
+            <Text
+              style={[stylesListGastos.estadoBadgeText, { color: "white" }]}
+            >
+              {gasto.estado}
+            </Text>
+          </View>
         </View>
-      </View>
 
-      {/* Header con Categoría/Subcategoría */}
-      <View style={stylesListGastos.cardHeader}>
-        <View style={stylesListGastos.breadcrumbContainer}>
-          <Text style={stylesListGastos.breadcrumbText}>
-            {formatDisplayText(gasto.categoria || "")}
-          </Text>
-          {gasto.subcategoria && (
-            <>
-              <Text style={stylesListGastos.breadcrumbSeparator}>{" > "}</Text>
-              <Text style={stylesListGastos.breadcrumbSubText}>
-                {formatDisplayText(gasto.subcategoria)}
-              </Text>
-            </>
-          )}
+        {/* Categoría/Subcategoría */}
+        <View style={stylesListGastos.cardHeader}>
+          <View style={stylesListGastos.breadcrumbContainer}>
+            <Text style={[stylesListGastos.breadcrumbText, { color: "white" }]}>
+              {formatDisplayText(gasto.categoria || "")}
+            </Text>
+            {gasto.subcategoria && (
+              <>
+                <Text
+                  style={[
+                    stylesListGastos.breadcrumbSeparator,
+                    { color: "white" },
+                  ]}
+                >
+                  {" > "}
+                </Text>
+                <Text
+                  style={[
+                    stylesListGastos.breadcrumbSubText,
+                    { color: "white" },
+                  ]}
+                >
+                  {formatDisplayText(gasto.subcategoria)}
+                </Text>
+              </>
+            )}
+          </View>
         </View>
       </View>
 
@@ -294,17 +315,22 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
       {/* Importe y Saldo en la misma fila */}
       <View style={stylesListGastos.importeSaldoContainer}>
         <View style={stylesListGastos.importeContainer}>
-          <Text style={stylesListGastos.monedaText}>{getMonedaSymbol(gasto.moneda)}</Text>
+          <Text style={stylesListGastos.monedaText}>
+            {getMonedaSymbol(gasto.moneda)}
+          </Text>
           <Text style={stylesListGastos.importeText}>{gasto.importe}</Text>
         </View>
         <View style={stylesListGastos.saldoContainer}>
           <Text style={stylesListGastos.saldoLabel}>Saldo:</Text>
-          <Text style={[
-            stylesListGastos.saldoText,
-            {
-              color: saldo > 0 ? '#dc3545' : saldo < 0 ? '#28a745' : '#6c757d'
-            }
-          ]}>
+          <Text
+            style={[
+              stylesListGastos.saldoText,
+              {
+                color:
+                  saldo > 0 ? "#dc3545" : saldo < 0 ? "#28a745" : "#6c757d",
+              },
+            ]}
+          >
             {getMonedaSymbol(gasto.moneda)} {formatImporte(saldo)}
           </Text>
         </View>
@@ -422,7 +448,7 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
               color={estadoColor}
             />
           </TouchableOpacity>
-          
+
           {isPagosExpanded && (
             <ScrollView
               horizontal
@@ -437,8 +463,15 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         </View>
       )}
 
-      {/* Usuario, Fecha y Estado */}
-      <View style={stylesListGastos.footerContainer}>
+      {/* Usuario, Fecha y Estado con fondo sutil estilo footer */}
+      <View
+        style={[
+          stylesListGastos.footerContainer,
+          {
+            backgroundColor: `${estadoColor}30`,
+          },
+        ]}
+      >
         <View style={stylesListGastos.usuarioFechaContainer}>
           <View style={stylesListGastos.usuarioContainer}>
             <Ionicons name="person-circle" size={18} color="#8A9A97" />
@@ -460,14 +493,20 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         </View>
       </View>
 
-      {/* Menú de tres puntos en lugar del botón de acción */}
+      {/* Menú de tres puntos con estilo que haga juego */}
       <View style={stylesListGastos.menuContainer}>
         <TouchableOpacity
-          style={stylesListGastos.menuButton}
+          style={[
+            stylesListGastos.menuButton,
+            {
+              backgroundColor: `${estadoColor}20`,
+              borderColor: estadoColor,
+            }
+          ]}
           onPress={toggleMenu}
           activeOpacity={0.7}
         >
-          <Ionicons name="ellipsis-vertical" size={18} color="#64748B" />
+          <Ionicons name="ellipsis-vertical" size={20} color={estadoColor} />
         </TouchableOpacity>
 
         {/* Menú dropdown */}
