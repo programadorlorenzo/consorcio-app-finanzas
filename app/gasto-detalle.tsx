@@ -223,22 +223,59 @@ export default function GastoDetalle() {
       mensaje += `📝 *Observaciones:* ${gasto.observaciones}\n`;
     }
 
+    // Información del proveedor
+    if (gasto.proveedor || gasto.proveedor_banco || gasto.proveedor_cuenta || gasto.proveedor_cci) {
+      mensaje += `\n🏢 *INFORMACIÓN DEL PROVEEDOR:*\n`;
+      
+      if (gasto.proveedor) {
+        mensaje += `   👤 Nombre: ${gasto.proveedor}\n`;
+      }
+      
+      if (gasto.proveedor_banco) {
+        mensaje += `   🏛️ Banco: ${gasto.proveedor_banco}\n`;
+      }
+      
+      if (gasto.proveedor_cuenta) {
+        mensaje += `   💳 Cuenta: ${gasto.proveedor_cuenta}\n`;
+      }
+      
+      if (gasto.proveedor_cci) {
+        mensaje += `   🔢 CCI: ${gasto.proveedor_cci}\n`;
+      }
+    }
+
     if (gasto.archivos && gasto.archivos.length > 0) {
       mensaje += `📎 *Archivos adjuntos:* ${gasto.archivos.length}\n`;
     }
 
     if (gasto.pagos && gasto.pagos.length > 0) {
-      mensaje += `💳 *Pagos registrados:* ${gasto.pagos.length}\n`;
+      mensaje += `\n💳 *PAGOS REGISTRADOS:* ${gasto.pagos.length}\n`;
       gasto.pagos.forEach((pago, index) => {
         const importePago = formatImporte(pago.importe);
         const monedaPago = pago.moneda === Moneda.SOLES ? "S/" : "$";
-        mensaje += `   ${index + 1}. ${
-          pago.tipo
-        } - ${monedaPago} ${importePago}`;
+        const fechaPago = new Date(pago.fechaRegistro || "").toLocaleDateString("es-ES");
+        
+        mensaje += `\n${index + 1}. *${pago.tipo}*\n`;
+        mensaje += `   💰 Importe: ${monedaPago} ${importePago}\n`;
+        mensaje += `   📅 Fecha: ${fechaPago}\n`;
+        
         if (pago.numeroOperacion) {
-          mensaje += ` (Op: ${pago.numeroOperacion})`;
+          mensaje += `   🔢 Op: ${pago.numeroOperacion}\n`;
         }
-        mensaje += `\n`;
+        
+        if (pago.origen) {
+          mensaje += `   🏦 Origen: ${pago.origen}\n`;
+        }
+        
+        if (pago.titular_origen) {
+          mensaje += `   👤 Titular origen: ${pago.titular_origen}\n`;
+        }
+        
+        if (pago.banco_origen) {
+          mensaje += `   🏛️ Banco origen: ${pago.banco_origen}\n`;
+        }
+        
+        mensaje += `   👤 Registrado por: ${pago.usuarioRegistroPagoNombre}\n`;
       });
     }
 
