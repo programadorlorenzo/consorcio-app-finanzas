@@ -72,6 +72,7 @@ export interface Pago {
   gastoId: number | null;
   rendicionId: number | null;
   usuarioRegistroPagoId: number | null;
+  usuarioRegistroPagoNombre: string | null;
   fechaRegistro: Date | null;
   titular_origen: string | null;
   cuenta_bancaria_origen: string | null;
