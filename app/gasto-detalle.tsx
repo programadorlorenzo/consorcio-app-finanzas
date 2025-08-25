@@ -459,6 +459,18 @@ export default function GastoDetalle() {
             </Text>
           )}
 
+          {/* Información del Proveedor */}
+          {gasto.proveedor && (
+            <View style={stylesGastoDetalle.proveedorContainer}>
+              <View style={stylesGastoDetalle.proveedorHeader}>
+                <Ionicons name="business-outline" size={16} color={MAIN_COLOR} />
+                <Text style={stylesGastoDetalle.proveedorText}>
+                  {gasto.proveedor}
+                </Text>
+              </View>
+            </View>
+          )}
+
           {/* Importe y Saldo */}
           <View style={stylesGastoDetalle.importeSaldoContainer}>
             <View style={stylesGastoDetalle.importeContainer}>
