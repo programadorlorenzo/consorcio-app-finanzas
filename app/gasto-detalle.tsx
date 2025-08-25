@@ -4,17 +4,17 @@ import { MAIN_COLOR } from "@/app/constants";
 import PagoCard from "@/components/gastos/PagoCard";
 import { stylesGastoDetalle } from "@/styles/gastos/gasto-detalle.styles";
 import {
-    EtiquetaGasto,
-    Gasto,
-    GastoFile,
-    Moneda,
-    Pago,
+  EtiquetaGasto,
+  Gasto,
+  GastoFile,
+  Moneda,
+  Pago,
 } from "@/types/gastos/gastos.types";
 import {
-    downloadFile,
-    getBadgeColor,
-    getFileIcon,
-    truncateFileName,
+  downloadFile,
+  getBadgeColor,
+  getFileIcon,
+  truncateFileName,
 } from "@/utils/gastos/create-gasto-utils";
 import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_gasto.utils";
 import { getEstadoColor } from "@/utils/gastos/list-gastos-utils";
@@ -24,19 +24,19 @@ import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    Animated,
-    Dimensions,
-    Image,
-    Linking,
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Animated,
+  Dimensions,
+  Image,
+  Linking,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
@@ -243,7 +243,10 @@ export default function GastoDetalle() {
     }
 
     try {
+      console.log("Intentando copiar al portapapeles:", mensaje);
       await Clipboard.setStringAsync(mensaje);
+      console.log("Copiado exitosamente al portapapeles");
+      
       const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(mensaje)}`;
       const supported = await Linking.canOpenURL(whatsappUrl);
 
@@ -258,9 +261,24 @@ export default function GastoDetalle() {
       }
     } catch (error) {
       console.error("Error al copiar o abrir WhatsApp:", error);
-      Alert.alert("Error", "No se pudo copiar el mensaje al portapapeles.", [
-        { text: "OK" },
-      ]);
+      
+      // Intentar mostrar el mensaje directamente si no se pudo copiar
+      Alert.alert(
+        "Mensaje del gasto", 
+        mensaje,
+        [
+          {
+            text: "Copiar manualmente",
+            onPress: () => {
+              // Fallback: intentar copiar de nuevo
+              Clipboard.setStringAsync(mensaje).catch(() => {
+                console.log("No se pudo copiar automáticamente");
+              });
+            }
+          },
+          { text: "Cerrar" }
+        ]
+      );
     }
   };
 

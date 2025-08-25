@@ -212,7 +212,9 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
 
     try {
       // Copiar al portapapeles usando expo-clipboard
+      console.log("Intentando copiar al portapapeles:", mensaje);
       await Clipboard.setStringAsync(mensaje);
+      console.log("Copiado exitosamente al portapapeles");
 
       // Intentar abrir WhatsApp
       const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(mensaje)}`;
@@ -230,9 +232,24 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
       }
     } catch (error) {
       console.error("Error al copiar o abrir WhatsApp:", error);
-      Alert.alert("Error", "No se pudo copiar el mensaje al portapapeles.", [
-        { text: "OK" },
-      ]);
+      
+      // Intentar mostrar el mensaje directamente si no se pudo copiar
+      Alert.alert(
+        "Mensaje del gasto", 
+        mensaje,
+        [
+          {
+            text: "Copiar manualmente",
+            onPress: () => {
+              // Fallback: intentar copiar de nuevo
+              Clipboard.setStringAsync(mensaje).catch(() => {
+                console.log("No se pudo copiar automáticamente");
+              });
+            }
+          },
+          { text: "Cerrar" }
+        ]
+      );
     }
   };
 
