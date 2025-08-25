@@ -6,11 +6,11 @@ import {
     isImage,
 } from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
     Alert,
-    Image,
     Modal,
     SafeAreaView,
     ScrollView,
@@ -94,7 +94,10 @@ const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
                     <Image
                       source={{ uri: file.uri }}
                       style={stylesArchivosCreatePago.fileImage}
-                      resizeMode="cover"
+                      contentFit="cover"
+                      placeholder="📷"
+                      transition={150}
+                      cachePolicy="memory-disk"
                     />
                   ) : (
                     <View style={stylesArchivosCreatePago.fileIconContainer}>
@@ -184,7 +187,10 @@ const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
               <Image
                 source={{ uri: selectedImageUri }}
                 style={stylesArchivosCreatePago.fullScreenImage}
-                resizeMode="contain"
+                contentFit="contain"
+                placeholder="Loading image..."
+                transition={200}
+                cachePolicy="memory-disk"
               />
             )}
           </ScrollView>

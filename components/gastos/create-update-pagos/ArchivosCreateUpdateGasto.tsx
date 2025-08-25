@@ -6,11 +6,11 @@ import {
   isImage,
 } from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   Alert,
-  Image,
   Modal,
   SafeAreaView,
   ScrollView,
@@ -116,7 +116,10 @@ const ListArchivosCreateGasto = ({
                     <Image
                       source={{ uri: item.uri }}
                       style={stylesBaseStylesCreateGasto.gridImagePreview}
-                      resizeMode="cover"
+                      contentFit="cover"
+                      placeholder="📷"
+                      transition={150}
+                      cachePolicy="memory-disk"
                       onError={(error) =>
                         console.log("Image load error:", error)
                       }
@@ -195,7 +198,10 @@ const ListArchivosCreateGasto = ({
               <Image
                 source={{ uri: selectedImageUri }}
                 style={stylesBaseStylesCreateGasto.fullScreenImage}
-                resizeMode="contain"
+                contentFit="contain"
+                placeholder="Loading image..."
+                transition={200}
+                cachePolicy="memory-disk"
               />
             )}
           </ScrollView>

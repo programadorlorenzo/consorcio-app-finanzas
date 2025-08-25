@@ -13,16 +13,16 @@ import {
   truncateFileName,
 } from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import React, { useState } from "react";
 import {
-  Image,
   Modal,
   SafeAreaView,
   ScrollView,
   StatusBar,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { stylesListGastos } from "../../styles/gastos/list-gastos.styles";
 
@@ -198,7 +198,10 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
                           uri: `${API_URL_BASE}/${archivo.filename}`,
                         }}
                         style={stylesListGastos.pagoArchivoImage}
-                        resizeMode="cover"
+                        contentFit="cover"
+                        placeholder="📄"
+                        transition={150}
+                        cachePolicy="memory-disk"
                       />
                       <View style={stylesListGastos.pagoImageOverlay}>
                         <Ionicons name="expand" size={14} color="white" />
@@ -316,7 +319,10 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
               <Image
                 source={{ uri: selectedImageUri }}
                 style={stylesListGastos.fullScreenImage}
-                resizeMode="contain"
+                contentFit="contain"
+                placeholder="Loading..."
+                transition={200}
+                cachePolicy="memory-disk"
               />
             )}
           </ScrollView>

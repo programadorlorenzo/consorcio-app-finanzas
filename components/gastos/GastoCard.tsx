@@ -17,11 +17,11 @@ import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_
 import { getEstadoColor } from "@/utils/gastos/list-gastos-utils";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
-  Image,
   Linking,
   Modal,
   SafeAreaView,
@@ -407,7 +407,10 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
                         uri: `${API_URL_BASE}/${archivo.filename}`,
                       }}
                       style={stylesListGastos.archivoImage}
-                      resizeMode="cover"
+                      contentFit="cover"
+                      placeholder="📷"
+                      transition={150}
+                      cachePolicy="memory-disk"
                     />
                     <View style={stylesListGastos.imageOverlay}>
                       <Ionicons name="expand" size={16} color="white" />
@@ -623,7 +626,10 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
               <Image
                 source={{ uri: selectedImageUri }}
                 style={stylesListGastos.fullScreenImage}
-                resizeMode="contain"
+                contentFit="contain"
+                placeholder="Loading image..."
+                transition={200}
+                cachePolicy="memory-disk"
               />
             )}
           </ScrollView>

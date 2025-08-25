@@ -21,6 +21,7 @@ import { getEstadoColor } from "@/utils/gastos/list-gastos-utils";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
+import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
@@ -28,7 +29,6 @@ import {
   Alert,
   Animated,
   Dimensions,
-  Image,
   Linking,
   Modal,
   SafeAreaView,
@@ -614,7 +614,10 @@ export default function GastoDetalle() {
                             uri: `${API_URL_BASE}/${archivo.filename}`,
                           }}
                           style={stylesGastoDetalle.archivoImage}
-                          resizeMode="cover"
+                          contentFit="cover"
+                          placeholder="📷"
+                          transition={150}
+                          cachePolicy="memory-disk"
                         />
                         <View style={stylesGastoDetalle.imageOverlay}>
                           <Ionicons name="expand" size={14} color="white" />
@@ -773,7 +776,10 @@ export default function GastoDetalle() {
               <Image
                 source={{ uri: selectedImageUri }}
                 style={stylesGastoDetalle.fullScreenImage}
-                resizeMode="contain"
+                contentFit="contain"
+                placeholder="Loading image..."
+                transition={200}
+                cachePolicy="memory-disk"
               />
             )}
           </ScrollView>

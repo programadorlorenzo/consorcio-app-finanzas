@@ -5,18 +5,18 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { ThemedText } from "@/components/ThemedText";
 import { loginStyles } from "@/styles/login/styles";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
@@ -99,7 +99,9 @@ export default function LoginScreen() {
               right: 0,
               bottom: 0,
             }}
-            resizeMode="contain"
+            contentFit="contain"
+            transition={100}
+            cachePolicy="memory-disk"
           />
         </View>
 
