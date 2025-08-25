@@ -82,15 +82,15 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
   return (
     <>
       <View key={pago.id || index} style={stylesListGastos.pagoItem}>
-        {/* Código del pago */}
-        <View style={stylesListGastos.pagoCodigoContainer}>
-          <Text style={stylesListGastos.pagoCodigoText}>
-            #P{pago.id}
-          </Text>
-        </View>
-
         <View style={stylesListGastos.pagoHeader}>
           <View style={stylesListGastos.pagoTipoOrigenContainer}>
+            {/* Código del pago */}
+            <View style={stylesListGastos.pagoCodigoContainer}>
+              <Text style={stylesListGastos.pagoCodigoText}>
+                #P{pago.id}
+              </Text>
+            </View>
+            
             <View style={stylesListGastos.pagoTipoBadge}>
               <Ionicons
                 name={

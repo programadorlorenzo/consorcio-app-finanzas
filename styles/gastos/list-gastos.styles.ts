@@ -186,6 +186,7 @@ export const stylesListGastos = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 12,
     paddingHorizontal: 2,
+    gap: 8,
   },
   saldoLabel: {
     fontSize: 13,
@@ -579,8 +580,8 @@ export const stylesListGastos = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   estadoBadgeText: {
@@ -593,7 +594,6 @@ export const stylesListGastos = StyleSheet.create({
   // Código del gasto
   codigoContainer: {
     flexDirection: "row",
-    marginBottom: 8,
   },
   codigoText: {
     fontSize: 13,
@@ -605,6 +605,20 @@ export const stylesListGastos = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: "#e9ecef",
+  },
+
+  // Contenedores inline para optimización de espacio
+  codigoEstadoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+    gap: 5, // Espacio entre código y badge
+  },
+  importeSaldoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center", // Cambiar a center para misma altura
+    marginBottom: 12,
   },
 
   // Menú de tres puntos
@@ -903,16 +917,21 @@ export const stylesListGastos = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 6,
+    gap: 5,
   },
   pagoTipoBadge: {
+    fontSize: 11,
+    fontWeight: "600",
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#EBF8FF",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    borderWidth: 1,
+    marginBottom: 6,
+    borderColor: "#BEE3F8",
     flex: 1,
-    marginRight: 6,
     justifyContent: "center",
   },
   pagoTipoText: {
@@ -922,13 +941,18 @@ export const stylesListGastos = StyleSheet.create({
     marginLeft: 4,
   },
   pagoOrigenBadge: {
+    fontSize: 11,
+    fontWeight: "600",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#ECFDF5",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginBottom: 6,
+    borderWidth: 1,
+    borderColor: "#6ecfa2ff",
     flex: 1,
   },
   pagoOrigenText: {

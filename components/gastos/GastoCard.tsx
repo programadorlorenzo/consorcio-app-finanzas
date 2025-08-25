@@ -242,8 +242,13 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         />
       </View>
 
-      {/* Estado Badge arriba del título */}
-      <View style={stylesListGastos.estadoBadgeContainer}>
+      {/* Código del gasto y Estado Badge en fila */}
+      <View style={stylesListGastos.codigoEstadoContainer}>
+        <View style={stylesListGastos.codigoContainer}>
+          <Text style={stylesListGastos.codigoText}>
+            #G{gasto.id}
+          </Text>
+        </View>
         <View style={stylesListGastos.estadoBadge}>
           <Ionicons name="ellipse" size={8} color={estadoColor} />
           <Text
@@ -252,13 +257,6 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
             {gasto.estado}
           </Text>
         </View>
-      </View>
-
-      {/* Código del gasto */}
-      <View style={stylesListGastos.codigoContainer}>
-        <Text style={stylesListGastos.codigoText}>
-          #G{gasto.id}
-        </Text>
       </View>
 
       {/* Header con Categoría/Subcategoría */}
@@ -290,23 +288,23 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         </Text>
       )}
 
-      {/* Importe */}
-      <View style={stylesListGastos.importeContainer}>
-        <Text style={stylesListGastos.monedaText}>{getMonedaSymbol(gasto.moneda)}</Text>
-        <Text style={stylesListGastos.importeText}>{gasto.importe}</Text>
-      </View>
-
-      {/* Saldo */}
-      <View style={stylesListGastos.saldoContainer}>
-        <Text style={stylesListGastos.saldoLabel}>Saldo pendiente:</Text>
-        <Text style={[
-          stylesListGastos.saldoText,
-          {
-            color: saldo > 0 ? '#dc3545' : saldo < 0 ? '#28a745' : '#6c757d'
-          }
-        ]}>
-          {getMonedaSymbol(gasto.moneda)} {formatImporte(saldo)}
-        </Text>
+      {/* Importe y Saldo en la misma fila */}
+      <View style={stylesListGastos.importeSaldoContainer}>
+        <View style={stylesListGastos.importeContainer}>
+          <Text style={stylesListGastos.monedaText}>{getMonedaSymbol(gasto.moneda)}</Text>
+          <Text style={stylesListGastos.importeText}>{gasto.importe}</Text>
+        </View>
+        <View style={stylesListGastos.saldoContainer}>
+          <Text style={stylesListGastos.saldoLabel}>Saldo:</Text>
+          <Text style={[
+            stylesListGastos.saldoText,
+            {
+              color: saldo > 0 ? '#dc3545' : saldo < 0 ? '#28a745' : '#6c757d'
+            }
+          ]}>
+            {getMonedaSymbol(gasto.moneda)} {formatImporte(saldo)}
+          </Text>
+        </View>
       </View>
 
       {/* Etiquetas */}
