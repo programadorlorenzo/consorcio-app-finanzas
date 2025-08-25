@@ -270,31 +270,22 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
           </View>
         </View>
 
-        {/* Categoría/Subcategoría */}
+        {/* Categoría/Subcategoría como badges con íconos */}
         <View style={stylesListGastos.cardHeader}>
           <View style={stylesListGastos.breadcrumbContainer}>
-            <Text style={[stylesListGastos.breadcrumbText, { color: "white" }]}>
-              {formatDisplayText(gasto.categoria || "")}
-            </Text>
+            <View style={stylesListGastos.categoriaHeaderBadge}>
+              <Ionicons name="folder-outline" size={14} color="white" />
+              <Text style={stylesListGastos.categoriaHeaderBadgeText}>
+                {formatDisplayText(gasto.categoria || "")}
+              </Text>
+            </View>
             {gasto.subcategoria && (
-              <>
-                <Text
-                  style={[
-                    stylesListGastos.breadcrumbSeparator,
-                    { color: "white" },
-                  ]}
-                >
-                  {" > "}
-                </Text>
-                <Text
-                  style={[
-                    stylesListGastos.breadcrumbSubText,
-                    { color: "white" },
-                  ]}
-                >
+              <View style={stylesListGastos.subcategoriaHeaderBadge}>
+                <Ionicons name="chevron-forward" size={10} color="white" />
+                <Text style={stylesListGastos.subcategoriaHeaderBadgeText}>
                   {formatDisplayText(gasto.subcategoria)}
                 </Text>
-              </>
+              </View>
             )}
           </View>
         </View>
@@ -493,20 +484,14 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         </View>
       </View>
 
-      {/* Menú de tres puntos con estilo que haga juego */}
+      {/* Menú de tres puntos con mejor visibilidad */}
       <View style={stylesListGastos.menuContainer}>
         <TouchableOpacity
-          style={[
-            stylesListGastos.menuButton,
-            {
-              backgroundColor: `${estadoColor}20`,
-              borderColor: estadoColor,
-            }
-          ]}
+          style={stylesListGastos.menuButton}
           onPress={toggleMenu}
           activeOpacity={0.7}
         >
-          <Ionicons name="ellipsis-vertical" size={20} color={estadoColor} />
+          <Ionicons name="ellipsis-vertical" size={18} color="#64748B" />
         </TouchableOpacity>
 
         {/* Menú dropdown */}
