@@ -1,28 +1,28 @@
 import { API_URL_BASE } from "@/app/backend";
 import { MAIN_COLOR } from "@/app/constants";
 import {
-    Moneda,
-    OrigenPago,
-    Pago,
-    PagoFile,
-    TipoPago,
+  Moneda,
+  OrigenPago,
+  Pago,
+  PagoFile,
+  TipoPago,
 } from "@/types/gastos/gastos.types";
 import {
-    downloadFile,
-    getFileIcon,
-    truncateFileName,
+  downloadFile,
+  getFileIcon,
+  truncateFileName,
 } from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-    Image,
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { stylesListGastos } from "../../styles/gastos/list-gastos.styles";
 
@@ -156,6 +156,30 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
               </Text>
             </View>
           )}
+
+          {/* Creado por */}
+          {pago.usuarioRegistroPagoNombre && (
+            <View style={stylesListGastos.pagoDetalleItem}>
+              <Ionicons name="person-outline" size={12} color="#6B7280" />
+              <Text style={stylesListGastos.pagoDetalleLabel}>Creado por:</Text>
+              <Text style={stylesListGastos.pagoDetalleValue}>{pago.usuarioRegistroPagoNombre}</Text>
+            </View>
+          )}
+
+          {/* Fecha de registro */}
+          {pago.fechaRegistro && (
+            <View style={stylesListGastos.pagoDetalleItem}>
+              <Ionicons name="calendar-outline" size={12} color="#6B7280" />
+              <Text style={stylesListGastos.pagoDetalleLabel}>Fecha:</Text>
+              <Text style={stylesListGastos.pagoDetalleValue}>
+                {new Date(pago.fechaRegistro).toLocaleDateString('es-ES', {
+                  day: '2-digit',
+                  month: '2-digit', 
+                  year: 'numeric'
+                })}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Archivos del pago */}
@@ -232,6 +256,33 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
             <Text style={stylesListGastos.pagoOperacionNumero}>
               {pago.numeroOperacion}
             </Text>
+          </View>
+        )}
+
+        {/* Usuario y Fecha del Pago */}
+        {(pago.usuarioRegistroPagoNombre || pago.fechaRegistro) && (
+          <View style={stylesListGastos.pagoFooterContainer}>
+            {pago.usuarioRegistroPagoNombre && (
+              <View style={stylesListGastos.pagoUsuarioContainer}>
+                <Ionicons name="person-circle" size={16} color="#8A9A97" />
+                <Text style={stylesListGastos.pagoCreadorLabel}>
+                  Creado por {pago.usuarioRegistroPagoNombre}
+                </Text>
+              </View>
+            )}
+            {pago.fechaRegistro && (
+              <View style={stylesListGastos.pagoFechaContainer}>
+                <Ionicons name="time" size={14} color="#94A3B8" />
+                <Text style={stylesListGastos.pagoRegistradoLabel}>
+                  Registrado el{" "}
+                  {new Date(pago.fechaRegistro).toLocaleDateString("es-ES")}{" "}
+                  {new Date(pago.fechaRegistro).toLocaleTimeString("es-ES", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </Text>
+              </View>
+            )}
           </View>
         )}
       </View>

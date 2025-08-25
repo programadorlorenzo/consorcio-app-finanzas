@@ -1020,6 +1020,34 @@ export const stylesListGastos = StyleSheet.create({
     marginLeft: 4,
   },
 
+  // Footer del pago (usuario y fecha)
+  pagoFooterContainer: {
+    marginTop: 12,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#F3F4F6",
+  },
+  pagoUsuarioContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  pagoCreadorLabel: {
+    fontSize: 11,
+    color: "#6B7280",
+    marginLeft: 6,
+    fontWeight: "500",
+  },
+  pagoFechaContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  pagoRegistradoLabel: {
+    fontSize: 10,
+    color: "#94A3B8",
+    marginLeft: 6,
+  },
+
   // Estilos específicos para archivos de pagos
   pagoArchivosContainer: {
     marginTop: 8,
