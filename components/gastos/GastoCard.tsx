@@ -1,17 +1,17 @@
 import { API_URL_BASE } from "@/app/backend";
 import { MAIN_COLOR } from "@/app/constants";
 import {
-    EtiquetaGasto,
-    Gasto,
-    GastoFile,
-    Moneda,
-    Pago,
+  EtiquetaGasto,
+  Gasto,
+  GastoFile,
+  Moneda,
+  Pago,
 } from "@/types/gastos/gastos.types";
 import {
-    downloadFile,
-    getBadgeColor,
-    getFileIcon,
-    truncateFileName,
+  downloadFile,
+  getBadgeColor,
+  getFileIcon,
+  truncateFileName,
 } from "@/utils/gastos/create-gasto-utils";
 import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_gasto.utils";
 import { getEstadoColor } from "@/utils/gastos/list-gastos-utils";
@@ -20,16 +20,16 @@ import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-    Alert,
-    Image,
-    Linking,
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  Image,
+  Linking,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { stylesListGastos } from "../../styles/gastos/list-gastos.styles";
 import PagoCard from "./PagoCard";
@@ -127,8 +127,10 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
 
   const handleVerMas = () => {
     closeMenu();
-    console.log("Ver más detalles gasto:", gasto.id);
-    if (onPress) onPress();
+    router.push({
+      pathname: "/gasto-detalle",
+      params: { id: gasto.id },
+    });
   };
 
   const handleCopiarWhatsApp = async () => {
