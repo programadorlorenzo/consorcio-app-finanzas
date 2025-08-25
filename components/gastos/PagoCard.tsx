@@ -45,7 +45,9 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
   };
 
   // Helper function para obtener el símbolo de la moneda
-  const getMonedaSymbol = (moneda: Moneda | string | null | undefined): string => {
+  const getMonedaSymbol = (
+    moneda: Moneda | string | null | undefined
+  ): string => {
     switch (moneda) {
       case Moneda.SOLES:
       case "SOLES":
@@ -86,11 +88,9 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
           <View style={stylesListGastos.pagoTipoOrigenContainer}>
             {/* Código del pago */}
             <View style={stylesListGastos.pagoCodigoContainer}>
-              <Text style={stylesListGastos.pagoCodigoText}>
-                #P{pago.id}
-              </Text>
+              <Text style={stylesListGastos.pagoCodigoText}>#P{pago.id}</Text>
             </View>
-            
+
             <View style={stylesListGastos.pagoTipoBadge}>
               <Ionicons
                 name={
@@ -119,8 +119,7 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
 
         <View style={stylesListGastos.pagoImporteContainer}>
           <Text style={stylesListGastos.pagoImporte}>
-            {getMonedaSymbol(pago.moneda)}{" "}
-            {formatImporte(pago.importe)}
+            {getMonedaSymbol(pago.moneda)} {formatImporte(pago.importe)}
           </Text>
         </View>
 
@@ -131,17 +130,24 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
             <View style={stylesListGastos.pagoDetalleItem}>
               <Ionicons name="receipt-outline" size={12} color="#6B7280" />
               <Text style={stylesListGastos.pagoDetalleLabel}>Op:</Text>
-              <Text style={stylesListGastos.pagoDetalleValue}>{pago.numeroOperacion}</Text>
+              <Text style={stylesListGastos.pagoDetalleValue}>
+                {pago.numeroOperacion}
+              </Text>
             </View>
           )}
 
           {/* Origen */}
           {(pago.titular_origen || pago.banco_origen) && (
             <View style={stylesListGastos.pagoDetalleItem}>
-              <Ionicons name="arrow-up-circle-outline" size={12} color="#6B7280" />
+              <Ionicons
+                name="arrow-up-circle-outline"
+                size={12}
+                color="#6B7280"
+              />
               <Text style={stylesListGastos.pagoDetalleLabel}>De:</Text>
               <Text style={stylesListGastos.pagoDetalleValue}>
-                {pago.titular_origen || 'Sin titular'} {pago.banco_origen && `(${pago.banco_origen})`}
+                {pago.titular_origen || "Sin titular"}{" "}
+                {pago.banco_origen && `(${pago.banco_origen})`}
               </Text>
             </View>
           )}
@@ -149,34 +155,15 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
           {/* Destino */}
           {(pago.titular_destino || pago.banco_destino) && (
             <View style={stylesListGastos.pagoDetalleItem}>
-              <Ionicons name="arrow-down-circle-outline" size={12} color="#6B7280" />
+              <Ionicons
+                name="arrow-down-circle-outline"
+                size={12}
+                color="#6B7280"
+              />
               <Text style={stylesListGastos.pagoDetalleLabel}>A:</Text>
               <Text style={stylesListGastos.pagoDetalleValue}>
-                {pago.titular_destino || 'Sin titular'} {pago.banco_destino && `(${pago.banco_destino})`}
-              </Text>
-            </View>
-          )}
-
-          {/* Creado por */}
-          {pago.usuarioRegistroPagoNombre && (
-            <View style={stylesListGastos.pagoDetalleItem}>
-              <Ionicons name="person-outline" size={12} color="#6B7280" />
-              <Text style={stylesListGastos.pagoDetalleLabel}>Creado por:</Text>
-              <Text style={stylesListGastos.pagoDetalleValue}>{pago.usuarioRegistroPagoNombre}</Text>
-            </View>
-          )}
-
-          {/* Fecha de registro */}
-          {pago.fechaRegistro && (
-            <View style={stylesListGastos.pagoDetalleItem}>
-              <Ionicons name="calendar-outline" size={12} color="#6B7280" />
-              <Text style={stylesListGastos.pagoDetalleLabel}>Fecha:</Text>
-              <Text style={stylesListGastos.pagoDetalleValue}>
-                {new Date(pago.fechaRegistro).toLocaleDateString('es-ES', {
-                  day: '2-digit',
-                  month: '2-digit', 
-                  year: 'numeric'
-                })}
+                {pago.titular_destino || "Sin titular"}{" "}
+                {pago.banco_destino && `(${pago.banco_destino})`}
               </Text>
             </View>
           )}

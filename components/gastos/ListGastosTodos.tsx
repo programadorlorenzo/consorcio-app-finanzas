@@ -2,7 +2,8 @@ import { listarGastos } from "@/api/gastos/gastos-api";
 import { MAIN_COLOR } from "@/app/constants";
 import { Gasto } from "@/types/gastos/gastos.types";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -37,9 +38,12 @@ export default function ListGastosTodos() {
     await loadGastos();
   };
 
-  useEffect(() => {
-    loadGastos();
-  }, []);
+  // useFocusEffect para recargar datos cada vez que la pantalla recibe el foco
+  useFocusEffect(
+    useCallback(() => {
+      loadGastos();
+    }, [])
+  );
 
   if (loading) {
     return (

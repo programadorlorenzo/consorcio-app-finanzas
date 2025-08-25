@@ -1037,6 +1037,7 @@ export const stylesListGastos = StyleSheet.create({
     color: "#6B7280",
     marginLeft: 6,
     fontWeight: "500",
+    fontStyle: "italic",
   },
   pagoFechaContainer: {
     flexDirection: "row",
@@ -1046,6 +1047,7 @@ export const stylesListGastos = StyleSheet.create({
     fontSize: 10,
     color: "#94A3B8",
     marginLeft: 6,
+    fontStyle: "italic",
   },
 
   // Estilos específicos para archivos de pagos
