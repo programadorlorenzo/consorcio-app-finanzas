@@ -254,6 +254,13 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
         </View>
       </View>
 
+      {/* Código del gasto */}
+      <View style={stylesListGastos.codigoContainer}>
+        <Text style={stylesListGastos.codigoText}>
+          #G{gasto.id}
+        </Text>
+      </View>
+
       {/* Header con Categoría/Subcategoría */}
       <View style={stylesListGastos.cardHeader}>
         <View style={stylesListGastos.breadcrumbContainer}>
@@ -459,16 +466,21 @@ const GastoCard: React.FC<GastoCardProps> = ({ gasto, onPress }) => {
 
             {/* Opciones del menú */}
             <View style={stylesListGastos.menuDropdown}>
-              <TouchableOpacity
-                style={stylesListGastos.menuOption}
-                onPress={handlePagar}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="card-outline" size={16} color="#10B981" />
-                <Text style={stylesListGastos.menuOptionText}>Pagar</Text>
-              </TouchableOpacity>
+              {/* Botón Pagar - solo si hay saldo pendiente */}
+              {saldo > 0 && (
+                <>
+                  <TouchableOpacity
+                    style={stylesListGastos.menuOption}
+                    onPress={handlePagar}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="card-outline" size={16} color="#10B981" />
+                    <Text style={stylesListGastos.menuOptionText}>Pagar</Text>
+                  </TouchableOpacity>
 
-              <View style={stylesListGastos.menuSeparator} />
+                  <View style={stylesListGastos.menuSeparator} />
+                </>
+              )}
 
               <TouchableOpacity
                 style={stylesListGastos.menuOption}

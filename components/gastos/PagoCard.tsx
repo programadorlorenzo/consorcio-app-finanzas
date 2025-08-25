@@ -82,6 +82,13 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
   return (
     <>
       <View key={pago.id || index} style={stylesListGastos.pagoItem}>
+        {/* Código del pago */}
+        <View style={stylesListGastos.pagoCodigoContainer}>
+          <Text style={stylesListGastos.pagoCodigoText}>
+            #P{pago.id}
+          </Text>
+        </View>
+
         <View style={stylesListGastos.pagoHeader}>
           <View style={stylesListGastos.pagoTipoOrigenContainer}>
             <View style={stylesListGastos.pagoTipoBadge}>
@@ -115,6 +122,40 @@ const PagoCard: React.FC<PagoCardProps> = ({ pago, index }) => {
             {getMonedaSymbol(pago.moneda)}{" "}
             {formatImporte(pago.importe)}
           </Text>
+        </View>
+
+        {/* Información adicional del pago */}
+        <View style={stylesListGastos.pagoDetallesContainer}>
+          {/* Número de operación */}
+          {pago.numeroOperacion && (
+            <View style={stylesListGastos.pagoDetalleItem}>
+              <Ionicons name="receipt-outline" size={12} color="#6B7280" />
+              <Text style={stylesListGastos.pagoDetalleLabel}>Op:</Text>
+              <Text style={stylesListGastos.pagoDetalleValue}>{pago.numeroOperacion}</Text>
+            </View>
+          )}
+
+          {/* Origen */}
+          {(pago.titular_origen || pago.banco_origen) && (
+            <View style={stylesListGastos.pagoDetalleItem}>
+              <Ionicons name="arrow-up-circle-outline" size={12} color="#6B7280" />
+              <Text style={stylesListGastos.pagoDetalleLabel}>De:</Text>
+              <Text style={stylesListGastos.pagoDetalleValue}>
+                {pago.titular_origen || 'Sin titular'} {pago.banco_origen && `(${pago.banco_origen})`}
+              </Text>
+            </View>
+          )}
+
+          {/* Destino */}
+          {(pago.titular_destino || pago.banco_destino) && (
+            <View style={stylesListGastos.pagoDetalleItem}>
+              <Ionicons name="arrow-down-circle-outline" size={12} color="#6B7280" />
+              <Text style={stylesListGastos.pagoDetalleLabel}>A:</Text>
+              <Text style={stylesListGastos.pagoDetalleValue}>
+                {pago.titular_destino || 'Sin titular'} {pago.banco_destino && `(${pago.banco_destino})`}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Archivos del pago */}

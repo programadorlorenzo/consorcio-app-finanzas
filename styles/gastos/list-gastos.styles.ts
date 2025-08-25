@@ -590,6 +590,23 @@ export const stylesListGastos = StyleSheet.create({
     marginLeft: 10,
   },
 
+  // Código del gasto
+  codigoContainer: {
+    flexDirection: "row",
+    marginBottom: 8,
+  },
+  codigoText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#666",
+    backgroundColor: "#f8f9fa",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+  },
+
   // Menú de tres puntos
   menuContainer: {
     position: "absolute",
@@ -863,6 +880,21 @@ export const stylesListGastos = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E7EB",
   },
+  pagoCodigoContainer: {
+    flexDirection: "row",
+    marginBottom: 6,
+  },
+  pagoCodigoText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#666",
+    backgroundColor: "#e9ecef",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#dee2e6",
+  },
   pagoHeader: {
     marginBottom: 8,
   },
@@ -913,6 +945,28 @@ export const stylesListGastos = StyleSheet.create({
     fontWeight: "700",
     color: "#111827",
     textAlign: "center",
+  },
+  pagoDetallesContainer: {
+    marginTop: 6,
+    marginBottom: 8,
+  },
+  pagoDetalleItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 3,
+  },
+  pagoDetalleLabel: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#6B7280",
+    marginLeft: 4,
+    marginRight: 3,
+    minWidth: 20,
+  },
+  pagoDetalleValue: {
+    fontSize: 10,
+    color: "#374151",
+    flex: 1,
   },
   pagoArchivosInfo: {
     flexDirection: "row",

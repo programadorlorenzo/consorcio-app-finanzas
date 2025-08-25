@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 export const stylesArchivosCreatePago = StyleSheet.create({
   container: {
     marginBottom: 0,
+    marginTop: 10,
   },
   label: {
     fontSize: 16,

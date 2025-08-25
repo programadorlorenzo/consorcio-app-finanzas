@@ -59,10 +59,6 @@ const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
   return (
     <>
       <View style={stylesArchivosCreatePago.container}>
-        <Text style={stylesArchivosCreatePago.label}>
-          Voucher / Archivo
-        </Text>
-
         {/* Botón para agregar archivos */}
         <TouchableOpacity
           style={stylesArchivosCreatePago.addButton}
@@ -173,9 +169,7 @@ const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
           {/* Imagen con zoom */}
           <ScrollView
             style={stylesArchivosCreatePago.imageZoomScrollView}
-            contentContainerStyle={
-              stylesArchivosCreatePago.imageZoomContainer
-            }
+            contentContainerStyle={stylesArchivosCreatePago.imageZoomContainer}
             maximumZoomScale={4}
             minimumZoomScale={1}
             showsHorizontalScrollIndicator={false}
