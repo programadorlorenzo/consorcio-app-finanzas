@@ -259,236 +259,250 @@ export default function CreateUpdateGasto() {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        enabled={true}
       >
         <ScrollView
           ref={scrollViewRef}
           style={stylesBaseStylesCreateGasto.content}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingBottom: 100 }}
-          automaticallyAdjustKeyboardInsets={Platform.OS === "ios"}
         >
-        <View style={stylesBaseStylesCreateGasto.form}>
-          {/* Categoría */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Categoría</Text>
-            <CustomSelectorCreateGasto
-              label="Seleccionar Categoría"
-              value={formData.categoria}
-              placeholder="Seleccionar categoría"
-              options={Object.values(CategoriaGasto)}
-              onSelect={(value) => handleInputChange("categoria", value)}
-              isVisible={showCategoriaModal}
-              onClose={() => setShowCategoriaModal(!showCategoriaModal)}
-            />
-          </View>
-
-          {/* Subcategoría */}
-          {formData.categoria &&
-            getAvailableSubcategorias(formData).length > 0 && (
-              <View style={stylesBaseStylesCreateGasto.inputGroup}>
-                <Text style={stylesBaseStylesCreateGasto.label}>
-                  Subcategoría de {formatDisplayText(formData.categoria)}
-                </Text>
-                <CustomSelectorCreateGasto
-                  label="Seleccionar Subcategoría"
-                  value={formData.subcategoria}
-                  placeholder="Seleccionar subcategoría"
-                  options={getAvailableSubcategorias(formData)}
-                  onSelect={(value) => handleInputChange("subcategoria", value)}
-                  isVisible={showSubcategoriaModal}
-                  onClose={() =>
-                    setShowSubcategoriaModal(!showSubcategoriaModal)
-                  }
-                />
-              </View>
-            )}
-
-          {/* Descripción */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Descripción *</Text>
-            <TextInput
-              style={stylesBaseStylesCreateGasto.input}
-              value={formData.descripcion}
-              onChangeText={(text) =>
-                handleInputChange("descripcion", text.toUpperCase())
-              }
-              placeholder="Descripción del gasto"
-              placeholderTextColor="#8A9A97"
-              autoCapitalize="characters"
-            />
-          </View>
-
-          {/* Etiquetas */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Etiquetas</Text>
-            <EtiquetasSelectorCreateUpdateGasto
-              selectedEtiquetasIds={formData.etiquetasIds || []}
-              onEtiquetasChange={(etiquetasIds) =>
-                handleInputChange("etiquetasIds", etiquetasIds)
-              }
-              isVisible={false}
-              onClose={() => {}}
-            />
-          </View>
-
-          {/* Importe y Moneda en la misma línea */}
-          <View style={stylesBaseStylesCreateGasto.rowContainer}>
-            {/* Moneda */}
-            <View style={stylesBaseStylesCreateGasto.rowItem}>
-              <Text style={stylesBaseStylesCreateGasto.label}>Moneda</Text>
+          <View style={stylesBaseStylesCreateGasto.form}>
+            {/* Categoría */}
+            <View style={stylesBaseStylesCreateGasto.inputGroup}>
+              <Text style={stylesBaseStylesCreateGasto.label}>Categoría</Text>
               <CustomSelectorCreateGasto
-                label="Seleccionar Moneda"
-                value={formData.moneda}
-                placeholder="Moneda"
-                options={Object.values(Moneda)}
-                onSelect={(value) => handleInputChange("moneda", value)}
-                isVisible={showMonedaModal}
-                onClose={() => setShowMonedaModal(!showMonedaModal)}
+                label="Seleccionar Categoría"
+                value={formData.categoria}
+                placeholder="Seleccionar categoría"
+                options={Object.values(CategoriaGasto)}
+                onSelect={(value) => handleInputChange("categoria", value)}
+                isVisible={showCategoriaModal}
+                onClose={() => setShowCategoriaModal(!showCategoriaModal)}
               />
             </View>
 
-            {/* Importe */}
-            <View style={stylesBaseStylesCreateGasto.rowItem}>
-              <Text style={stylesBaseStylesCreateGasto.label}>Importe *</Text>
+            {/* Subcategoría */}
+            {formData.categoria &&
+              getAvailableSubcategorias(formData).length > 0 && (
+                <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                  <Text style={stylesBaseStylesCreateGasto.label}>
+                    Subcategoría de {formatDisplayText(formData.categoria)}
+                  </Text>
+                  <CustomSelectorCreateGasto
+                    label="Seleccionar Subcategoría"
+                    value={formData.subcategoria}
+                    placeholder="Seleccionar subcategoría"
+                    options={getAvailableSubcategorias(formData)}
+                    onSelect={(value) =>
+                      handleInputChange("subcategoria", value)
+                    }
+                    isVisible={showSubcategoriaModal}
+                    onClose={() =>
+                      setShowSubcategoriaModal(!showSubcategoriaModal)
+                    }
+                  />
+                </View>
+              )}
+
+            {/* Descripción */}
+            <View style={stylesBaseStylesCreateGasto.inputGroup}>
+              <Text style={stylesBaseStylesCreateGasto.label}>
+                Descripción *
+              </Text>
               <TextInput
                 style={stylesBaseStylesCreateGasto.input}
-                value={importeText}
-                onChangeText={(text) => {
-                  // Permitir números decimales (reemplazar comas con puntos)
-                  const sanitizedText = text.replace(/,/g, ".");
-                  // Solo permitir formatos numéricos válidos (dígitos y máximo un punto decimal)
-                  if (
-                    sanitizedText === "" ||
-                    /^\d*\.?\d*$/.test(sanitizedText)
-                  ) {
-                    setImporteText(sanitizedText);
-                    // Actualizar el valor numérico en formData
-                    const numericValue =
-                      sanitizedText === "" ? 0 : parseFloat(sanitizedText) || 0;
-                    handleInputChange("importe", numericValue);
-                  }
-                }}
-                placeholder="0.00"
-                keyboardType="decimal-pad"
+                value={formData.descripcion}
+                onChangeText={(text) =>
+                  handleInputChange("descripcion", text.toUpperCase())
+                }
+                placeholder="Descripción del gasto"
+                placeholderTextColor="#8A9A97"
+                autoCapitalize="characters"
+              />
+            </View>
+
+            {/* Etiquetas */}
+            <View style={stylesBaseStylesCreateGasto.inputGroup}>
+              <Text style={stylesBaseStylesCreateGasto.label}>Etiquetas</Text>
+              <EtiquetasSelectorCreateUpdateGasto
+                selectedEtiquetasIds={formData.etiquetasIds || []}
+                onEtiquetasChange={(etiquetasIds) =>
+                  handleInputChange("etiquetasIds", etiquetasIds)
+                }
+                isVisible={false}
+                onClose={() => {}}
+              />
+            </View>
+
+            {/* Importe y Moneda en la misma línea */}
+            <View style={stylesBaseStylesCreateGasto.rowContainer}>
+              {/* Moneda */}
+              <View style={stylesBaseStylesCreateGasto.rowItem}>
+                <Text style={stylesBaseStylesCreateGasto.label}>Moneda</Text>
+                <CustomSelectorCreateGasto
+                  label="Seleccionar Moneda"
+                  value={formData.moneda}
+                  placeholder="Moneda"
+                  options={Object.values(Moneda)}
+                  onSelect={(value) => handleInputChange("moneda", value)}
+                  isVisible={showMonedaModal}
+                  onClose={() => setShowMonedaModal(!showMonedaModal)}
+                />
+              </View>
+
+              {/* Importe */}
+              <View style={stylesBaseStylesCreateGasto.rowItem}>
+                <Text style={stylesBaseStylesCreateGasto.label}>Importe *</Text>
+                <TextInput
+                  style={stylesBaseStylesCreateGasto.input}
+                  value={importeText}
+                  onChangeText={(text) => {
+                    // Permitir números decimales (reemplazar comas con puntos)
+                    const sanitizedText = text.replace(/,/g, ".");
+                    // Solo permitir formatos numéricos válidos (dígitos y máximo un punto decimal)
+                    if (
+                      sanitizedText === "" ||
+                      /^\d*\.?\d*$/.test(sanitizedText)
+                    ) {
+                      setImporteText(sanitizedText);
+                      // Actualizar el valor numérico en formData
+                      const numericValue =
+                        sanitizedText === ""
+                          ? 0
+                          : parseFloat(sanitizedText) || 0;
+                      handleInputChange("importe", numericValue);
+                    }
+                  }}
+                  placeholder="0.00"
+                  keyboardType="decimal-pad"
+                  placeholderTextColor="#8A9A97"
+                />
+              </View>
+            </View>
+
+            {/* Sección de Proveedor */}
+            <View style={stylesBaseStylesCreateGasto.inputGroup}>
+              <TouchableOpacity
+                style={stylesBaseStylesCreateGasto.sectionHeader}
+                onPress={() => setShowProveedorSection(!showProveedorSection)}
+              >
+                <View style={stylesBaseStylesCreateGasto.sectionHeaderLeft}>
+                  <Ionicons
+                    name="business-outline"
+                    size={20}
+                    color={MAIN_COLOR}
+                  />
+                  <Text style={stylesBaseStylesCreateGasto.sectionHeaderText}>
+                    Datos del Proveedor
+                  </Text>
+                </View>
+                <Ionicons
+                  name={showProveedorSection ? "chevron-up" : "chevron-down"}
+                  size={20}
+                  color={MAIN_COLOR}
+                />
+              </TouchableOpacity>
+
+              {showProveedorSection && (
+                <View style={stylesBaseStylesCreateGasto.sectionContent}>
+                  {/* Nombre del Proveedor */}
+                  <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                    <TextInput
+                      style={stylesBaseStylesCreateGasto.input}
+                      value={formData.proveedor}
+                      onChangeText={(text) =>
+                        handleInputChange("proveedor", text)
+                      }
+                      placeholder="Nombre del proveedor"
+                      placeholderTextColor="#8A9A97"
+                      autoCapitalize="words"
+                    />
+                  </View>
+
+                  {/* Banco del Proveedor */}
+                  <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                    <BancoSelector
+                      value={formData.proveedor_banco}
+                      onSelect={(banco) =>
+                        handleInputChange("proveedor_banco", banco)
+                      }
+                    />
+                  </View>
+
+                  {/* Número de Cuenta */}
+                  <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                    <Text style={stylesBaseStylesCreateGasto.label}>
+                      Número de Cuenta
+                    </Text>
+                    <TextInput
+                      style={stylesBaseStylesCreateGasto.input}
+                      value={formData.proveedor_cuenta}
+                      onChangeText={(text) =>
+                        handleInputChange("proveedor_cuenta", text)
+                      }
+                      placeholder="Número de cuenta del proveedor"
+                      placeholderTextColor="#8A9A97"
+                      keyboardType="numeric"
+                    />
+                  </View>
+
+                  {/* CCI */}
+                  <View style={stylesBaseStylesCreateGasto.inputGroup}>
+                    <Text style={stylesBaseStylesCreateGasto.label}>CCI</Text>
+                    <TextInput
+                      style={stylesBaseStylesCreateGasto.input}
+                      value={formData.proveedor_cci}
+                      onChangeText={(text) =>
+                        handleInputChange("proveedor_cci", text)
+                      }
+                      placeholder="CCI del proveedor"
+                      placeholderTextColor="#8A9A97"
+                      keyboardType="numeric"
+                    />
+                  </View>
+                </View>
+              )}
+            </View>
+
+            <TouchableOpacity
+              style={stylesBaseStylesCreateGasto.addFileButton}
+              onPress={showFileOptions}
+            >
+              <Ionicons
+                name="add-circle-outline"
+                size={24}
+                color={MAIN_COLOR}
+              />
+              <Text style={stylesBaseStylesCreateGasto.addFileText}>
+                Agregar Archivo
+              </Text>
+            </TouchableOpacity>
+
+            {files.length > 0 && (
+              <ListArchivosCreateGasto files={files} removeFile={removeFile} />
+            )}
+
+            {/* Observaciones */}
+            <View style={stylesBaseStylesCreateGasto.inputGroup}>
+              <Text style={stylesBaseStylesCreateGasto.label}>
+                Observaciones
+              </Text>
+              <TextInput
+                style={[
+                  stylesBaseStylesCreateGasto.input,
+                  { height: 80, textAlignVertical: "top" },
+                ]}
+                value={formData.observaciones}
+                onChangeText={(text) =>
+                  handleInputChange("observaciones", text)
+                }
+                placeholder="Observaciones adicionales"
+                multiline
                 placeholderTextColor="#8A9A97"
               />
             </View>
           </View>
-
-          {/* Sección de Proveedor */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <TouchableOpacity
-              style={stylesBaseStylesCreateGasto.sectionHeader}
-              onPress={() => setShowProveedorSection(!showProveedorSection)}
-            >
-              <View style={stylesBaseStylesCreateGasto.sectionHeaderLeft}>
-                <Ionicons
-                  name="business-outline"
-                  size={20}
-                  color={MAIN_COLOR}
-                />
-                <Text style={stylesBaseStylesCreateGasto.sectionHeaderText}>
-                  Datos del Proveedor
-                </Text>
-              </View>
-              <Ionicons
-                name={showProveedorSection ? "chevron-up" : "chevron-down"}
-                size={20}
-                color={MAIN_COLOR}
-              />
-            </TouchableOpacity>
-
-            {showProveedorSection && (
-              <View style={stylesBaseStylesCreateGasto.sectionContent}>
-                {/* Nombre del Proveedor */}
-                <View style={stylesBaseStylesCreateGasto.inputGroup}>
-                  <TextInput
-                    style={stylesBaseStylesCreateGasto.input}
-                    value={formData.proveedor}
-                    onChangeText={(text) =>
-                      handleInputChange("proveedor", text)
-                    }
-                    placeholder="Nombre del proveedor"
-                    placeholderTextColor="#8A9A97"
-                    autoCapitalize="words"
-                  />
-                </View>
-
-                {/* Banco del Proveedor */}
-                <View style={stylesBaseStylesCreateGasto.inputGroup}>
-                  <BancoSelector
-                    value={formData.proveedor_banco}
-                    onSelect={(banco) => handleInputChange("proveedor_banco", banco)}
-                  />
-                </View>
-
-                {/* Número de Cuenta */}
-                <View style={stylesBaseStylesCreateGasto.inputGroup}>
-                  <Text style={stylesBaseStylesCreateGasto.label}>
-                    Número de Cuenta
-                  </Text>
-                  <TextInput
-                    style={stylesBaseStylesCreateGasto.input}
-                    value={formData.proveedor_cuenta}
-                    onChangeText={(text) =>
-                      handleInputChange("proveedor_cuenta", text)
-                    }
-                    placeholder="Número de cuenta del proveedor"
-                    placeholderTextColor="#8A9A97"
-                    keyboardType="numeric"
-                  />
-                </View>
-
-                {/* CCI */}
-                <View style={stylesBaseStylesCreateGasto.inputGroup}>
-                  <Text style={stylesBaseStylesCreateGasto.label}>CCI</Text>
-                  <TextInput
-                    style={stylesBaseStylesCreateGasto.input}
-                    value={formData.proveedor_cci}
-                    onChangeText={(text) =>
-                      handleInputChange("proveedor_cci", text)
-                    }
-                    placeholder="CCI del proveedor"
-                    placeholderTextColor="#8A9A97"
-                    keyboardType="numeric"
-                  />
-                </View>
-              </View>
-            )}
-          </View>
-
-          <TouchableOpacity
-            style={stylesBaseStylesCreateGasto.addFileButton}
-            onPress={showFileOptions}
-          >
-            <Ionicons name="add-circle-outline" size={24} color={MAIN_COLOR} />
-            <Text style={stylesBaseStylesCreateGasto.addFileText}>
-              Agregar Archivo
-            </Text>
-          </TouchableOpacity>
-
-          {files.length > 0 && (
-            <ListArchivosCreateGasto files={files} removeFile={removeFile} />
-          )}
-
-          {/* Observaciones */}
-          <View style={stylesBaseStylesCreateGasto.inputGroup}>
-            <Text style={stylesBaseStylesCreateGasto.label}>Observaciones</Text>
-            <TextInput
-              style={[
-                stylesBaseStylesCreateGasto.input,
-                { height: 80, textAlignVertical: "top" },
-              ]}
-              value={formData.observaciones}
-              onChangeText={(text) => handleInputChange("observaciones", text)}
-              placeholder="Observaciones adicionales"
-              multiline
-              placeholderTextColor="#8A9A97"
-            />
-          </View>
-        </View>
         </ScrollView>
 
         {/* Botón Submit fijo en la parte inferior */}

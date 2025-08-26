@@ -315,14 +315,13 @@ export default function CreateUpdatePago() {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        enabled={true}
       >
         <ScrollView 
           ref={scrollViewRef}
           style={stylesBaseStylesCreatePago.scrollView}
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingBottom: 100 }}
-          automaticallyAdjustKeyboardInsets={Platform.OS === "ios"}
+          showsVerticalScrollIndicator={false}
         >
         {/* Información del gasto */}
         {gastoInfo && (
