@@ -135,6 +135,7 @@ export interface GastoCreateDto {
   categoria?: CategoriaGasto;
   subcategoria?: SubCategoriaGasto;
   estado?: EstadoGasto;
+  fechaRegistro?: string; // ISO string para formularios
   // Montos
   importe: number; // Campo requerido
   moneda?: Moneda;

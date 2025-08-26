@@ -54,6 +54,7 @@ export default function CreateUpdateGasto() {
     categoria: undefined,
     subcategoria: undefined,
     moneda: undefined,
+    fechaRegistro: new Date().toISOString(),
     // Campos del proveedor
     proveedor: "",
     proveedor_banco: "",
@@ -65,6 +66,9 @@ export default function CreateUpdateGasto() {
 
   // Estado separado para el importe como string para manejar decimales
   const [importeText, setImporteText] = useState<string>("");
+
+  // Estado separado para la fecha para el input
+  const [fechaText, setFechaText] = useState<string>("");
 
   const [showCategoriaModal, setShowCategoriaModal] = useState(false);
   const [showSubcategoriaModal, setShowSubcategoriaModal] = useState(false);
@@ -81,6 +85,61 @@ export default function CreateUpdateGasto() {
       // Reset subcategoría cuando cambia la categoría
       ...(field === "categoria" && { subcategoria: undefined }),
     }));
+  };
+
+  const handleFechaChange = (text: string) => {
+    // Remover todo lo que no sean números
+    const numbersOnly = text.replace(/\D/g, "");
+
+    let formatted = numbersOnly;
+
+    // Auto-formatear mientras se escribe
+    if (numbersOnly.length >= 3) {
+      formatted = numbersOnly.slice(0, 2) + "/" + numbersOnly.slice(2);
+    }
+    if (numbersOnly.length >= 5) {
+      formatted =
+        numbersOnly.slice(0, 2) +
+        "/" +
+        numbersOnly.slice(2, 4) +
+        "/" +
+        numbersOnly.slice(4, 8);
+    }
+
+    // Limitar a 10 caracteres (DD/MM/YYYY)
+    if (formatted.length > 10) {
+      formatted = formatted.slice(0, 10);
+    }
+
+    setFechaText(formatted);
+
+    // Validar formato completo DD/MM/YYYY
+    const fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (fechaRegex.test(formatted)) {
+      // Convertir DD/MM/YYYY a Date
+      const [dia, mes, año] = formatted.split("/");
+      const fecha = new Date(parseInt(año), parseInt(mes) - 1, parseInt(dia));
+
+      // Verificar que la fecha sea válida
+      if (
+        !isNaN(fecha.getTime()) &&
+        fecha.getDate() === parseInt(dia) &&
+        fecha.getMonth() === parseInt(mes) - 1 &&
+        fecha.getFullYear() === parseInt(año)
+      ) {
+        const fechaISO = fecha.toISOString();
+        setFormData((prev) => ({
+          ...prev,
+          fechaRegistro: fechaISO,
+        }));
+      }
+    } else if (text === "") {
+      // Si está vacío, usar la fecha actual
+      setFormData((prev) => ({
+        ...prev,
+        fechaRegistro: new Date().toISOString(),
+      }));
+    }
   };
 
   const removeFile = (index: number) => {
@@ -320,6 +379,32 @@ export default function CreateUpdateGasto() {
                 placeholderTextColor="#8A9A97"
                 autoCapitalize="characters"
               />
+            </View>
+
+            {/* Fecha de Registro */}
+            <View style={stylesBaseStylesCreateGasto.inputGroup}>
+              <Text style={stylesBaseStylesCreateGasto.label}>
+                Fecha de Registro *
+              </Text>
+              <TextInput
+                style={stylesBaseStylesCreateGasto.input}
+                value={fechaText}
+                onChangeText={handleFechaChange}
+                placeholder="DD/MM/YYYY"
+                placeholderTextColor="#8A9A97"
+                keyboardType="numeric"
+                maxLength={10}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: "#666",
+                  marginTop: 4,
+                  fontStyle: "italic",
+                }}
+              >
+                Formato: Día/Mes/Año (ej: 26/08/2025)
+              </Text>
             </View>
 
             {/* Etiquetas */}

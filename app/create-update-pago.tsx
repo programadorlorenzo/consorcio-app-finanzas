@@ -54,7 +54,7 @@ export default function CreateUpdatePago() {
     gastoId: gastoId || 0,
     rendicionId: 0,
     usuarioRegistroPagoId: 0,
-    fechaRegistro: new Date().toISOString(),
+    fechaRegistro: "",
     titular_origen: "",
     cuenta_bancaria_origen: "",
     cci_origen: "",
@@ -74,6 +74,9 @@ export default function CreateUpdatePago() {
 
   // Estado separado para el importe como string para manejar decimales
   const [importeText, setImporteText] = useState<string>("");
+
+  // Estado separado para la fecha para el input
+  const [fechaText, setFechaText] = useState<string>("");
 
   // Estados para modales
   const [showTipoModal, setShowTipoModal] = useState(false);
@@ -121,8 +124,65 @@ export default function CreateUpdatePago() {
     }));
   };
 
+  const handleFechaChange = (text: string) => {
+    // Remover todo lo que no sean números
+    const numbersOnly = text.replace(/\D/g, "");
+
+    let formatted = numbersOnly;
+
+    // Auto-formatear mientras se escribe
+    if (numbersOnly.length >= 3) {
+      formatted = numbersOnly.slice(0, 2) + "/" + numbersOnly.slice(2);
+    }
+    if (numbersOnly.length >= 5) {
+      formatted =
+        numbersOnly.slice(0, 2) +
+        "/" +
+        numbersOnly.slice(2, 4) +
+        "/" +
+        numbersOnly.slice(4, 8);
+    }
+
+    // Limitar a 10 caracteres (DD/MM/YYYY)
+    if (formatted.length > 10) {
+      formatted = formatted.slice(0, 10);
+    }
+
+    setFechaText(formatted);
+
+    // Validar formato completo DD/MM/YYYY
+    const fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (fechaRegex.test(formatted)) {
+      // Convertir DD/MM/YYYY a Date
+      const [dia, mes, año] = formatted.split("/");
+      const fecha = new Date(parseInt(año), parseInt(mes) - 1, parseInt(dia));
+
+      // Verificar que la fecha sea válida
+      if (
+        !isNaN(fecha.getTime()) &&
+        fecha.getDate() === parseInt(dia) &&
+        fecha.getMonth() === parseInt(mes) - 1 &&
+        fecha.getFullYear() === parseInt(año)
+      ) {
+        const fechaISO = fecha.toISOString();
+        setFormData((prev) => ({
+          ...prev,
+          fechaRegistro: fechaISO,
+        }));
+      }
+    } else if (text === "") {
+      // Si está vacío, usar la fecha actual
+      setFormData((prev) => ({
+        ...prev,
+        fechaRegistro: new Date().toISOString(),
+      }));
+    }
+  };
+
   // Helper function para obtener el símbolo de la moneda
-  const getMonedaSymbol = (moneda: Moneda | string | null | undefined): string => {
+  const getMonedaSymbol = (
+    moneda: Moneda | string | null | undefined
+  ): string => {
     switch (moneda) {
       case Moneda.SOLES:
       case "SOLES":
@@ -139,7 +199,9 @@ export default function CreateUpdatePago() {
   };
 
   // Helper function para formatear importe de forma segura
-  const formatImporte = (importe: number | string | null | undefined): string => {
+  const formatImporte = (
+    importe: number | string | null | undefined
+  ): string => {
     if (importe === null || importe === undefined) return "0.00";
     const num = typeof importe === "string" ? parseFloat(importe) : importe;
     return isNaN(num) ? "0.00" : num.toFixed(2);
@@ -149,14 +211,20 @@ export default function CreateUpdatePago() {
   const calcularTotalPagos = (gasto: Gasto): number => {
     if (!gasto.pagos || gasto.pagos.length === 0) return 0;
     return gasto.pagos.reduce((total, pago) => {
-      const importePago = typeof pago.importe === "string" ? parseFloat(pago.importe) : (pago.importe || 0);
+      const importePago =
+        typeof pago.importe === "string"
+          ? parseFloat(pago.importe)
+          : pago.importe || 0;
       return total + (isNaN(importePago) ? 0 : importePago);
     }, 0);
   };
 
   // Función para calcular el saldo del gasto
   const calcularSaldo = (gasto: Gasto): number => {
-    const importeGasto = typeof gasto.importe === "string" ? parseFloat(gasto.importe) : (gasto.importe || 0);
+    const importeGasto =
+      typeof gasto.importe === "string"
+        ? parseFloat(gasto.importe)
+        : gasto.importe || 0;
     const totalPagos = calcularTotalPagos(gasto);
     return (isNaN(importeGasto) ? 0 : importeGasto) - totalPagos;
   };
@@ -262,7 +330,7 @@ export default function CreateUpdatePago() {
         gastoId: gastoId || 0,
         rendicionId: 0,
         usuarioRegistroPagoId: 0,
-        fechaRegistro: new Date().toISOString(),
+        fechaRegistro: "",
         titular_origen: "",
         cuenta_bancaria_origen: "",
         cci_origen: "",
@@ -317,291 +385,342 @@ export default function CreateUpdatePago() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         enabled={true}
       >
-        <ScrollView 
+        <ScrollView
           ref={scrollViewRef}
           style={stylesBaseStylesCreatePago.scrollView}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-        {/* Información del gasto */}
-        {gastoInfo && (
-          <View style={stylesBaseStylesCreatePago.gastoInfoContainer}>
-            <Text style={stylesBaseStylesCreatePago.gastoInfoTitle}>
-              📋 Gasto a pagar:
-            </Text>
-            <Text style={stylesBaseStylesCreatePago.gastoInfoDescription}>
-              {gastoInfo.descripcion}
-            </Text>
-            <View style={stylesBaseStylesCreatePago.gastoInfoDetails}>
-              <Text style={stylesBaseStylesCreatePago.gastoInfoCategory}>
-                {formatDisplayText(gastoInfo.categoria || "")}
-                {gastoInfo.subcategoria &&
-                  ` > ${formatDisplayText(gastoInfo.subcategoria)}`}
+          {/* Información del gasto */}
+          {gastoInfo && (
+            <View style={stylesBaseStylesCreatePago.gastoInfoContainer}>
+              <Text style={stylesBaseStylesCreatePago.gastoInfoTitle}>
+                📋 Gasto a pagar:
               </Text>
-              <Text style={stylesBaseStylesCreatePago.gastoInfoAmount}>
-                {getMonedaSymbol(gastoInfo.moneda)} {gastoInfo.importe}
+              <Text style={stylesBaseStylesCreatePago.gastoInfoDescription}>
+                {gastoInfo.descripcion}
               </Text>
-            </View>
-
-            {/* Información del Proveedor */}
-            {gastoInfo.proveedor && (
-              <View style={stylesBaseStylesCreatePago.proveedorInfoCompacto}>
-                <Text style={stylesBaseStylesCreatePago.proveedorInfoTextoCompacto}>
-                  🏢 {gastoInfo.proveedor}
+              <View style={stylesBaseStylesCreatePago.gastoInfoDetails}>
+                <Text style={stylesBaseStylesCreatePago.gastoInfoCategory}>
+                  {formatDisplayText(gastoInfo.categoria || "")}
+                  {gastoInfo.subcategoria &&
+                    ` > ${formatDisplayText(gastoInfo.subcategoria)}`}
+                </Text>
+                <Text style={stylesBaseStylesCreatePago.gastoInfoAmount}>
+                  {getMonedaSymbol(gastoInfo.moneda)} {gastoInfo.importe}
                 </Text>
               </View>
-            )}
-            
-            {/* Saldo del gasto */}
-            <View style={stylesBaseStylesCreatePago.gastoSaldoContainer}>
-              <Text style={stylesBaseStylesCreatePago.gastoSaldoLabel}>
-                Saldo pendiente:
-              </Text>
-              <Text style={[
-                stylesBaseStylesCreatePago.gastoSaldoText,
-                {
-                  color: calcularSaldo(gastoInfo) > 0 ? '#dc3545' : 
-                         calcularSaldo(gastoInfo) < 0 ? '#28a745' : '#6c757d'
-                }
-              ]}>
-                {getMonedaSymbol(gastoInfo.moneda)} {formatImporte(calcularSaldo(gastoInfo))}
-              </Text>
-            </View>
 
-            {/* Etiquetas del gasto */}
-            {gastoInfo.etiquetas && gastoInfo.etiquetas.length > 0 && (
-              <View style={stylesBaseStylesCreatePago.gastoEtiquetasContainer}>
-                <Text style={stylesBaseStylesCreatePago.gastoEtiquetasLabel}>
-                  Etiquetas:
+              {/* Información del Proveedor */}
+              {gastoInfo.proveedor && (
+                <View style={stylesBaseStylesCreatePago.proveedorInfoCompacto}>
+                  <Text
+                    style={
+                      stylesBaseStylesCreatePago.proveedorInfoTextoCompacto
+                    }
+                  >
+                    🏢 {gastoInfo.proveedor}
+                  </Text>
+                </View>
+              )}
+
+              {/* Saldo del gasto */}
+              <View style={stylesBaseStylesCreatePago.gastoSaldoContainer}>
+                <Text style={stylesBaseStylesCreatePago.gastoSaldoLabel}>
+                  Saldo pendiente:
                 </Text>
-                <ScrollView 
-                  horizontal 
-                  showsHorizontalScrollIndicator={false}
-                  style={stylesBaseStylesCreatePago.gastoEtiquetasScroll}
+                <Text
+                  style={[
+                    stylesBaseStylesCreatePago.gastoSaldoText,
+                    {
+                      color:
+                        calcularSaldo(gastoInfo) > 0
+                          ? "#dc3545"
+                          : calcularSaldo(gastoInfo) < 0
+                          ? "#28a745"
+                          : "#6c757d",
+                    },
+                  ]}
                 >
-                  {gastoInfo.etiquetas.map((etiquetaGasto: EtiquetaGasto, index: number) => (
-                    <View
-                      key={index}
-                      style={[
-                        stylesBaseStylesCreatePago.gastoEtiquetaBadge,
-                        {
-                          backgroundColor: '#f0f0f0',
-                          borderColor: '#ddd'
-                        }
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          stylesBaseStylesCreatePago.gastoEtiquetaText,
-                          { color: '#666' }
-                        ]}
-                      >
-                        {etiquetaGasto.etiqueta?.nombre || 'Sin nombre'}
-                      </Text>
-                    </View>
-                  ))}
-                </ScrollView>
+                  {getMonedaSymbol(gastoInfo.moneda)}{" "}
+                  {formatImporte(calcularSaldo(gastoInfo))}
+                </Text>
               </View>
-            )}
-          </View>
-        )}
 
-        {loadingGasto && (
-          <View style={stylesBaseStylesCreatePago.loadingContainer}>
-            <ActivityIndicator size="small" color={MAIN_COLOR} />
-            <Text style={stylesBaseStylesCreatePago.loadingText}>
-              Cargando información del gasto...
-            </Text>
-          </View>
-        )}
-
-        {/* Campos del formulario */}
-        <View style={stylesBaseStylesCreatePago.formContainer}>
-          {/* Archivos */}
-          <ArchivosCreateUpdatePago
-            files={files}
-            onAddFile={showFileOptions}
-            onRemoveFile={removeFile}
-          />
-
-          {/* Tipo de Pago */}
-          <CustomSelectorCreatePago
-            label="Tipo"
-            value={formData.tipo}
-            placeholder="Selecciona el tipo de pago"
-            options={Object.values(TipoPago)}
-            onSelect={(value) => handleInputChange("tipo", value)}
-            isVisible={showTipoModal}
-            onClose={() => setShowTipoModal(!showTipoModal)}
-            required
-          />
-
-          {/* Importe */}
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Importe <Text style={stylesBaseStylesCreatePago.required}>*</Text>
-            </Text>
-            <View style={stylesBaseStylesCreatePago.importeContainer}>
-              <CustomSelectorCreatePago
-                label=""
-                value={formData.moneda}
-                placeholder="Moneda"
-                options={Object.values(Moneda)}
-                onSelect={(value) => handleInputChange("moneda", value)}
-                isVisible={showMonedaModal}
-                onClose={() => setShowMonedaModal(!showMonedaModal)}
-                containerStyle={stylesBaseStylesCreatePago.monedaSelector}
-              />
-              <TextInput
-                style={stylesBaseStylesCreatePago.importeInput}
-                value={importeText}
-                onChangeText={handleImporteChange}
-                placeholder="0.00"
-                keyboardType="numeric"
-                placeholderTextColor="#9CA3AF"
-              />
+              {/* Etiquetas del gasto */}
+              {gastoInfo.etiquetas && gastoInfo.etiquetas.length > 0 && (
+                <View
+                  style={stylesBaseStylesCreatePago.gastoEtiquetasContainer}
+                >
+                  <Text style={stylesBaseStylesCreatePago.gastoEtiquetasLabel}>
+                    Etiquetas:
+                  </Text>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={stylesBaseStylesCreatePago.gastoEtiquetasScroll}
+                  >
+                    {gastoInfo.etiquetas.map(
+                      (etiquetaGasto: EtiquetaGasto, index: number) => (
+                        <View
+                          key={index}
+                          style={[
+                            stylesBaseStylesCreatePago.gastoEtiquetaBadge,
+                            {
+                              backgroundColor: "#f0f0f0",
+                              borderColor: "#ddd",
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              stylesBaseStylesCreatePago.gastoEtiquetaText,
+                              { color: "#666" },
+                            ]}
+                          >
+                            {etiquetaGasto.etiqueta?.nombre || "Sin nombre"}
+                          </Text>
+                        </View>
+                      )
+                    )}
+                  </ScrollView>
+                </View>
+              )}
             </View>
-          </View>
+          )}
 
-          {/* Origen */}
-          <CustomSwitchCreatePago
-            label="Origen"
-            leftLabel="Cuenta Empresa"
-            rightLabel="Externo"
-            value={formData.origen === OrigenPago.EXTERNO}
-            onValueChange={(isLeft) => {
-              setFormData({
-                ...formData,
-                origen: isLeft ? OrigenPago.EXTERNO : OrigenPago.CUENTA_EMPRESA,
-              });
-            }}
-          />
+          {loadingGasto && (
+            <View style={stylesBaseStylesCreatePago.loadingContainer}>
+              <ActivityIndicator size="small" color={MAIN_COLOR} />
+              <Text style={stylesBaseStylesCreatePago.loadingText}>
+                Cargando información del gasto...
+              </Text>
+            </View>
+          )}
 
-          {/* Número de Operación */}
-          <View style={stylesBaseStylesCreatePago.fieldContainer}>
-            <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-              Número de Operación
-            </Text>
-            <TextInput
-              style={stylesBaseStylesCreatePago.textInput}
-              value={formData.numeroOperacion}
-              onChangeText={(text) =>
-                handleInputChange("numeroOperacion", text)
-              }
-              placeholder="Ingrese el número de operación"
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
-
-          {/* Información de Origen */}
-          <ExpandableSection
-            title="Información de origen"
-            icon="arrow-up-circle-outline"
-          >
-            <BancoSelector
-              value={formData.banco_origen}
-              onSelect={(banco) => handleInputChange("banco_origen", banco)}
+          {/* Campos del formulario */}
+          <View style={stylesBaseStylesCreatePago.formContainer}>
+            {/* Archivos */}
+            <ArchivosCreateUpdatePago
+              files={files}
+              onAddFile={showFileOptions}
+              onRemoveFile={removeFile}
             />
 
-            <View style={stylesBaseStylesCreatePago.fieldContainer}>
-              <Text style={stylesBaseStylesCreatePago.fieldLabel}>Titular</Text>
-              <TextInput
-                style={stylesBaseStylesCreatePago.textInput}
-                value={formData.titular_origen}
-                onChangeText={(text) =>
-                  handleInputChange("titular_origen", text)
-                }
-                placeholder="Nombre / Razon social del títular"
-                placeholderTextColor="#9CA3AF"
-              />
-            </View>
-
-            <View style={stylesBaseStylesCreatePago.fieldContainer}>
-              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-                Cuenta / Celular
-              </Text>
-              <TextInput
-                style={stylesBaseStylesCreatePago.textInput}
-                value={formData.cuenta_bancaria_origen}
-                onChangeText={(text) =>
-                  handleInputChange("cuenta_bancaria_origen", text)
-                }
-                placeholder="Cuenta bancaria o celular"
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
-              />
-            </View>
-
-            <View style={stylesBaseStylesCreatePago.fieldContainer}>
-              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-                CCI (opcional)
-              </Text>
-              <TextInput
-                style={stylesBaseStylesCreatePago.textInput}
-                value={formData.cci_origen}
-                onChangeText={(text) => handleInputChange("cci_origen", text)}
-                placeholder="Si corresponde escribir el CCI"
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
-              />
-            </View>
-          </ExpandableSection>
-
-          {/* Información de Destino */}
-          <ExpandableSection
-            title="Información de destino"
-            icon="arrow-down-circle-outline"
-          >
-            <BancoSelector
-              value={formData.banco_destino}
-              onSelect={(banco) => handleInputChange("banco_destino", banco)}
+            {/* Tipo de Pago */}
+            <CustomSelectorCreatePago
+              label="Tipo"
+              value={formData.tipo}
+              placeholder="Selecciona el tipo de pago"
+              options={Object.values(TipoPago)}
+              onSelect={(value) => handleInputChange("tipo", value)}
+              isVisible={showTipoModal}
+              onClose={() => setShowTipoModal(!showTipoModal)}
+              required
             />
 
+            {/* Fecha de Registro */}
             <View style={stylesBaseStylesCreatePago.fieldContainer}>
-              <Text style={stylesBaseStylesCreatePago.fieldLabel}>Titular</Text>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                Fecha de Registro{" "}
+                <Text style={stylesBaseStylesCreatePago.required}>*</Text>
+              </Text>
               <TextInput
                 style={stylesBaseStylesCreatePago.textInput}
-                value={formData.titular_destino}
+                value={fechaText}
+                onChangeText={handleFechaChange}
+                placeholder="DD/MM/YYYY"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="numeric"
+                maxLength={10}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: "#666",
+                  marginTop: 4,
+                  fontStyle: "italic",
+                }}
+              >
+                Formato: Día/Mes/Año (ej: 26/08/2025)
+              </Text>
+            </View>
+
+            {/* Importe */}
+            <View style={stylesBaseStylesCreatePago.fieldContainer}>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                Importe{" "}
+                <Text style={stylesBaseStylesCreatePago.required}>*</Text>
+              </Text>
+              <View style={stylesBaseStylesCreatePago.importeContainer}>
+                <CustomSelectorCreatePago
+                  label=""
+                  value={formData.moneda}
+                  placeholder="Moneda"
+                  options={Object.values(Moneda)}
+                  onSelect={(value) => handleInputChange("moneda", value)}
+                  isVisible={showMonedaModal}
+                  onClose={() => setShowMonedaModal(!showMonedaModal)}
+                  containerStyle={stylesBaseStylesCreatePago.monedaSelector}
+                />
+                <TextInput
+                  style={stylesBaseStylesCreatePago.importeInput}
+                  value={importeText}
+                  onChangeText={handleImporteChange}
+                  placeholder="0.00"
+                  keyboardType="numeric"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+            </View>
+
+            {/* Origen */}
+            <CustomSwitchCreatePago
+              label="Origen"
+              leftLabel="Cuenta Empresa"
+              rightLabel="Externo"
+              value={formData.origen === OrigenPago.EXTERNO}
+              onValueChange={(isLeft) => {
+                setFormData({
+                  ...formData,
+                  origen: isLeft
+                    ? OrigenPago.EXTERNO
+                    : OrigenPago.CUENTA_EMPRESA,
+                });
+              }}
+            />
+
+            {/* Número de Operación */}
+            <View style={stylesBaseStylesCreatePago.fieldContainer}>
+              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                Número de Operación
+              </Text>
+              <TextInput
+                style={stylesBaseStylesCreatePago.textInput}
+                value={formData.numeroOperacion}
                 onChangeText={(text) =>
-                  handleInputChange("titular_destino", text)
+                  handleInputChange("numeroOperacion", text)
                 }
-                placeholder="Nombre / Razon social del títular de destino"
+                placeholder="Ingrese el número de operación"
                 placeholderTextColor="#9CA3AF"
               />
             </View>
 
-            <View style={stylesBaseStylesCreatePago.fieldContainer}>
-              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-                Cuenta / Celular
-              </Text>
-              <TextInput
-                style={stylesBaseStylesCreatePago.textInput}
-                value={formData.cuenta_bancaria_destino}
-                onChangeText={(text) =>
-                  handleInputChange("cuenta_bancaria_destino", text)
-                }
-                placeholder="Número de cuenta bancaria de destino"
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
+            {/* Información de Origen */}
+            <ExpandableSection
+              title="Información de origen"
+              icon="arrow-up-circle-outline"
+            >
+              <BancoSelector
+                value={formData.banco_origen}
+                onSelect={(banco) => handleInputChange("banco_origen", banco)}
               />
-            </View>
 
-            <View style={stylesBaseStylesCreatePago.fieldContainer}>
-              <Text style={stylesBaseStylesCreatePago.fieldLabel}>
-                CCI (opcional)
-              </Text>
-              <TextInput
-                style={stylesBaseStylesCreatePago.textInput}
-                value={formData.cci_destino}
-                onChangeText={(text) => handleInputChange("cci_destino", text)}
-                placeholder="Si corresponde escribir el CCI"
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
+              <View style={stylesBaseStylesCreatePago.fieldContainer}>
+                <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                  Titular
+                </Text>
+                <TextInput
+                  style={stylesBaseStylesCreatePago.textInput}
+                  value={formData.titular_origen}
+                  onChangeText={(text) =>
+                    handleInputChange("titular_origen", text)
+                  }
+                  placeholder="Nombre / Razon social del títular"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+
+              <View style={stylesBaseStylesCreatePago.fieldContainer}>
+                <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                  Cuenta / Celular
+                </Text>
+                <TextInput
+                  style={stylesBaseStylesCreatePago.textInput}
+                  value={formData.cuenta_bancaria_origen}
+                  onChangeText={(text) =>
+                    handleInputChange("cuenta_bancaria_origen", text)
+                  }
+                  placeholder="Cuenta bancaria o celular"
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="numeric"
+                />
+              </View>
+
+              <View style={stylesBaseStylesCreatePago.fieldContainer}>
+                <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                  CCI (opcional)
+                </Text>
+                <TextInput
+                  style={stylesBaseStylesCreatePago.textInput}
+                  value={formData.cci_origen}
+                  onChangeText={(text) => handleInputChange("cci_origen", text)}
+                  placeholder="Si corresponde escribir el CCI"
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="numeric"
+                />
+              </View>
+            </ExpandableSection>
+
+            {/* Información de Destino */}
+            <ExpandableSection
+              title="Información de destino"
+              icon="arrow-down-circle-outline"
+            >
+              <BancoSelector
+                value={formData.banco_destino}
+                onSelect={(banco) => handleInputChange("banco_destino", banco)}
               />
-            </View>
-          </ExpandableSection>
-        </View>
-      </ScrollView>
+
+              <View style={stylesBaseStylesCreatePago.fieldContainer}>
+                <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                  Titular
+                </Text>
+                <TextInput
+                  style={stylesBaseStylesCreatePago.textInput}
+                  value={formData.titular_destino}
+                  onChangeText={(text) =>
+                    handleInputChange("titular_destino", text)
+                  }
+                  placeholder="Nombre / Razon social del títular de destino"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+
+              <View style={stylesBaseStylesCreatePago.fieldContainer}>
+                <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                  Cuenta / Celular
+                </Text>
+                <TextInput
+                  style={stylesBaseStylesCreatePago.textInput}
+                  value={formData.cuenta_bancaria_destino}
+                  onChangeText={(text) =>
+                    handleInputChange("cuenta_bancaria_destino", text)
+                  }
+                  placeholder="Número de cuenta bancaria de destino"
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="numeric"
+                />
+              </View>
+
+              <View style={stylesBaseStylesCreatePago.fieldContainer}>
+                <Text style={stylesBaseStylesCreatePago.fieldLabel}>
+                  CCI (opcional)
+                </Text>
+                <TextInput
+                  style={stylesBaseStylesCreatePago.textInput}
+                  value={formData.cci_destino}
+                  onChangeText={(text) =>
+                    handleInputChange("cci_destino", text)
+                  }
+                  placeholder="Si corresponde escribir el CCI"
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="numeric"
+                />
+              </View>
+            </ExpandableSection>
+          </View>
+        </ScrollView>
 
         {/* Botón de Submit */}
         <View style={stylesBaseStylesCreatePago.bottomContainer}>
