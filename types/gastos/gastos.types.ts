@@ -11,9 +11,12 @@ export enum CategoriaGasto {
 }
 
 export enum SubCategoriaGasto {
+  DEV_MAGNO = "DEV_MAGNO",
   LOCALES = "LOCALES",
-  PRODUCCION = "PRODUCCION",
+  SISTEMA = "SISTEMA",
   MATERIA_PRIMA = "MATERIA_PRIMA",
+  PRODUCCION = "PRODUCCION",
+  MAQUINAS = "MAQUINAS",
 }
 
 export enum EstadoGasto {

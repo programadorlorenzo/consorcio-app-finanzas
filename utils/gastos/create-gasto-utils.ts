@@ -1,8 +1,8 @@
 import { MAIN_COLOR } from "@/app/constants";
 import {
-    CategoriaGasto,
-    GastoCreateDto,
-    SubCategoriaGasto,
+  CategoriaGasto,
+  GastoCreateDto,
+  SubCategoriaGasto,
 } from "@/types/gastos/gastos.types";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
@@ -108,8 +108,8 @@ export const addTemporaryFile = (
   // Generar nombre del archivo con prefijo si se proporciona
   let fileName = file.name || `imagen_${Date.now()}.jpg`;
   if (prefix && !fileName.toLowerCase().includes(prefix.toLowerCase())) {
-    const extension = fileName.split('.').pop();
-    const baseName = fileName.replace(`.${extension}`, '');
+    const extension = fileName.split(".").pop();
+    const baseName = fileName.replace(`.${extension}`, "");
     fileName = `${prefix}${baseName}.${extension}`;
   }
 
@@ -142,7 +142,9 @@ export const pickFromGallery = async (
     });
 
     if (!result.canceled && result.assets) {
-      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles, prefix));
+      result.assets.forEach((asset: any) =>
+        addTemporaryFile(asset, setFiles, prefix)
+      );
     }
   } catch (error) {
     console.error("Error accessing gallery:", error);
@@ -162,7 +164,9 @@ export const pickDocument = async (
     });
 
     if (!result.canceled && result.assets) {
-      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles, prefix));
+      result.assets.forEach((asset: any) =>
+        addTemporaryFile(asset, setFiles, prefix)
+      );
     }
   } catch (error) {
     console.error("Error picking document:", error);
@@ -189,7 +193,9 @@ export const pickFromCamera = async (
     });
 
     if (!result.canceled && result.assets) {
-      result.assets.forEach((asset: any) => addTemporaryFile(asset, setFiles, prefix));
+      result.assets.forEach((asset: any) =>
+        addTemporaryFile(asset, setFiles, prefix)
+      );
     }
   } catch (error) {
     console.error("Error accessing camera:", error);
@@ -203,9 +209,12 @@ export const CATEGORIA_SUBCATEGORIA_MAP: Record<
   SubCategoriaGasto[]
 > = {
   [CategoriaGasto.JOLG]: [
+    SubCategoriaGasto.DEV_MAGNO,
     SubCategoriaGasto.LOCALES,
-    SubCategoriaGasto.PRODUCCION,
+    SubCategoriaGasto.SISTEMA,
     SubCategoriaGasto.MATERIA_PRIMA,
+    SubCategoriaGasto.PRODUCCION,
+    SubCategoriaGasto.MAQUINAS,
   ],
   [CategoriaGasto.CORP_LORENZO]: [
     SubCategoriaGasto.LOCALES,
