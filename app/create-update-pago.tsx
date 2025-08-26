@@ -27,11 +27,12 @@ import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActionSheetIOS,
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -45,6 +46,7 @@ export default function CreateUpdatePago() {
   const params = useLocalSearchParams();
   const isEditing = !!params.pagoId;
   const gastoId = params.gastoId ? Number(params.gastoId) : undefined;
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const [formData, setFormData] = useState<PagoCreateDto>({
     tipo: undefined,
@@ -310,7 +312,18 @@ export default function CreateUpdatePago() {
         <View style={stylesBaseStylesCreatePago.headerSpacer} />
       </View>
 
-      <ScrollView style={stylesBaseStylesCreatePago.scrollView}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+      >
+        <ScrollView 
+          ref={scrollViewRef}
+          style={stylesBaseStylesCreatePago.scrollView}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ paddingBottom: 100 }}
+          automaticallyAdjustKeyboardInsets={Platform.OS === "ios"}
+        >
         {/* Información del gasto */}
         {gastoInfo && (
           <View style={stylesBaseStylesCreatePago.gastoInfoContainer}>
@@ -591,25 +604,26 @@ export default function CreateUpdatePago() {
         </View>
       </ScrollView>
 
-      {/* Botón de Submit */}
-      <View style={stylesBaseStylesCreatePago.bottomContainer}>
-        <TouchableOpacity
-          style={[
-            stylesBaseStylesCreatePago.submitButton,
-            loading && stylesBaseStylesCreatePago.submitButtonDisabled,
-          ]}
-          onPress={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="white" size="small" />
-          ) : (
-            <Text style={stylesBaseStylesCreatePago.submitButtonText}>
-              {isEditing ? "Actualizar Pago" : "Registrar Pago"}
-            </Text>
-          )}
-        </TouchableOpacity>
-      </View>
+        {/* Botón de Submit */}
+        <View style={stylesBaseStylesCreatePago.bottomContainer}>
+          <TouchableOpacity
+            style={[
+              stylesBaseStylesCreatePago.submitButton,
+              loading && stylesBaseStylesCreatePago.submitButtonDisabled,
+            ]}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="white" size="small" />
+            ) : (
+              <Text style={stylesBaseStylesCreatePago.submitButtonText}>
+                {isEditing ? "Actualizar Pago" : "Registrar Pago"}
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
 
       <ModalOpcionesArchivoCreateUpdatePago
         visible={showFileModal}

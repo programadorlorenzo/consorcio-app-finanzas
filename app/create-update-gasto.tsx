@@ -23,11 +23,12 @@ import { formatDisplayText } from "@/utils/gastos/custom_selector_create_update_
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   ActionSheetIOS,
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -41,6 +42,7 @@ import { MAIN_COLOR } from "./constants";
 export default function CreateUpdateGasto() {
   const params = useLocalSearchParams();
   const isEditing = !!params.id;
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const [formData, setFormData] = useState<GastoCreateDto>({
     // Campos requeridos
@@ -254,10 +256,19 @@ export default function CreateUpdateGasto() {
         <View style={stylesBaseStylesCreateGasto.placeholder} />
       </View>
 
-      <ScrollView
-        style={stylesBaseStylesCreateGasto.content}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
       >
+        <ScrollView
+          ref={scrollViewRef}
+          style={stylesBaseStylesCreateGasto.content}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ paddingBottom: 100 }}
+          automaticallyAdjustKeyboardInsets={Platform.OS === "ios"}
+        >
         <View style={stylesBaseStylesCreateGasto.form}>
           {/* Categoría */}
           <View style={stylesBaseStylesCreateGasto.inputGroup}>
@@ -478,27 +489,28 @@ export default function CreateUpdateGasto() {
             />
           </View>
         </View>
-      </ScrollView>
+        </ScrollView>
 
-      {/* Botón Submit fijo en la parte inferior */}
-      <View style={stylesBaseStylesCreateGasto.bottomContainer}>
-        <TouchableOpacity
-          style={[
-            stylesBaseStylesCreateGasto.submitButton,
-            loading && stylesBaseStylesCreateGasto.submitButtonDisabled,
-          ]}
-          onPress={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={stylesBaseStylesCreateGasto.buttonText}>
-              {isEditing ? "Actualizar Gasto" : "Crear Gasto"}
-            </Text>
-          )}
-        </TouchableOpacity>
-      </View>
+        {/* Botón Submit fijo en la parte inferior */}
+        <View style={stylesBaseStylesCreateGasto.bottomContainer}>
+          <TouchableOpacity
+            style={[
+              stylesBaseStylesCreateGasto.submitButton,
+              loading && stylesBaseStylesCreateGasto.submitButtonDisabled,
+            ]}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={stylesBaseStylesCreateGasto.buttonText}>
+                {isEditing ? "Actualizar Gasto" : "Crear Gasto"}
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
 
       {/* Modal para opciones de archivo (Android) */}
       <ModalOpcionesArchivoCreateUpdateGasto
