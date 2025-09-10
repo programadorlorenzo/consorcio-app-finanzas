@@ -229,6 +229,7 @@ export const CATEGORIA_SUBCATEGORIA_MAP: Record<
 
 // Función auxiliar para obtener el ícono según el tipo de archivo
 export const getFileIcon = (type: string): keyof typeof Ionicons.glyphMap => {
+  if (!type) return "document-outline";
   if (type.includes("pdf")) return "document-text-outline";
   if (type.includes("word") || type.includes("doc")) return "document-outline";
   if (type.includes("excel") || type.includes("sheet")) return "grid-outline";

@@ -14,6 +14,8 @@ export const crearRendicion = async (payload: RendicionCreate, responsableId: nu
       ...(payload.cuentabancaria && { cuentabancaria: payload.cuentabancaria }),
       ...(payload.cci && { cci: payload.cci }),
       ...(payload.titular && { titular: payload.titular }),
+      // Rutas de archivos si existen
+      ...(payload.rutasArchivos && payload.rutasArchivos.length > 0 && { rutasArchivos: payload.rutasArchivos }),
     };
 
     console.log("🚀 Creando rendición:", backendPayload);

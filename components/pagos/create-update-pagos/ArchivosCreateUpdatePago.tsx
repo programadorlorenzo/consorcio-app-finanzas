@@ -1,34 +1,36 @@
 import { MAIN_COLOR } from "@/app/constants";
 import { stylesArchivosCreatePago } from "@/styles/pagos/archivos-create-pago.styles";
 import {
-    FileItem,
-    formatFileSize,
-    isImage,
+  FileItem,
+  formatFileSize,
+  isImage,
 } from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
-    Alert,
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 interface ArchivosCreateUpdatePagoProps {
   files: FileItem[];
   onAddFile: () => void;
   onRemoveFile: (index: number) => void;
+  disabled?: boolean;
 }
 
 const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
   files,
   onAddFile,
   onRemoveFile,
+  disabled = false,
 }) => {
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
@@ -61,13 +63,24 @@ const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
       <View style={stylesArchivosCreatePago.container}>
         {/* Botón para agregar archivos */}
         <TouchableOpacity
-          style={stylesArchivosCreatePago.addButton}
-          onPress={onAddFile}
-          activeOpacity={0.7}
+          style={[
+            stylesArchivosCreatePago.addButton,
+            disabled && stylesArchivosCreatePago.addButtonDisabled
+          ]}
+          onPress={disabled ? undefined : onAddFile}
+          activeOpacity={disabled ? 1 : 0.7}
+          disabled={disabled}
         >
-          <Ionicons name="add-circle-outline" size={24} color={MAIN_COLOR} />
-          <Text style={stylesArchivosCreatePago.addButtonText}>
-            Agregar voucher u otros archivos
+          <Ionicons 
+            name="add-circle-outline" 
+            size={24} 
+            color={disabled ? "#ccc" : MAIN_COLOR} 
+          />
+          <Text style={[
+            stylesArchivosCreatePago.addButtonText,
+            disabled && stylesArchivosCreatePago.addButtonTextDisabled
+          ]}>
+            {disabled ? "Seleccionando archivo..." : "Agregar voucher u otros archivos"}
           </Text>
         </TouchableOpacity>
 
@@ -102,7 +115,7 @@ const ArchivosCreateUpdatePago: React.FC<ArchivosCreateUpdatePagoProps> = ({
                   ) : (
                     <View style={stylesArchivosCreatePago.fileIconContainer}>
                       <Ionicons
-                        name={getFileIcon(file.type)}
+                        name={getFileIcon(file.type || '')}
                         size={32}
                         color={MAIN_COLOR}
                       />

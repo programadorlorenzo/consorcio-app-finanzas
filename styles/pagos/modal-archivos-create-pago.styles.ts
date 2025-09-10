@@ -43,6 +43,10 @@ export const stylesModalArchivosCreatePago = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 12,
   },
+  optionDisabled: {
+    backgroundColor: "#F3F4F6",
+    opacity: 0.6,
+  },
   optionIcon: {
     width: 48,
     height: 48,
@@ -51,6 +55,9 @@ export const stylesModalArchivosCreatePago = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 16,
+  },
+  optionIconDisabled: {
+    backgroundColor: "#E5E7EB",
   },
   optionContent: {
     flex: 1,
@@ -61,8 +68,14 @@ export const stylesModalArchivosCreatePago = StyleSheet.create({
     color: "#111827",
     marginBottom: 2,
   },
+  optionTitleDisabled: {
+    color: "#9CA3AF",
+  },
   optionDescription: {
     fontSize: 14,
     color: "#6B7280",
+  },
+  optionDescriptionDisabled: {
+    color: "#D1D5DB",
   },
 });

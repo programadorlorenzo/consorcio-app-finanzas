@@ -55,7 +55,7 @@ export default function CreateDetalleRendicionScreen() {
   
   const [formData, setFormData] = useState<DetalleRendicionForm>({
     descripcion: '',
-    fecha: '',
+    fecha: new Date().toISOString(), // Inicializar con la fecha actual en formato ISO
     importe: '',
     banco: '',
     cuentabancaria: '',
@@ -82,6 +82,7 @@ export default function CreateDetalleRendicionScreen() {
   // Estados para archivos
   const [files, setFiles] = useState<FileItem[]>([]);
   const [showFileModal, setShowFileModal] = useState(false);
+  const [pickingFile, setPickingFile] = useState(false);
 
   // Estados para modales
   const [showBancoModal, setShowBancoModal] = useState(false);
@@ -212,15 +213,33 @@ export default function CreateDetalleRendicionScreen() {
   };
 
   const handleAddFileFromCamera = async () => {
-    await pickFromCamera(setFiles);
+    if (pickingFile) return; // Prevenir múltiples operaciones
+    setPickingFile(true);
+    try {
+      await pickFromCamera(setFiles);
+    } finally {
+      setPickingFile(false);
+    }
   };
 
   const handleAddFileFromGallery = async () => {
-    await pickFromGallery(setFiles);
+    if (pickingFile) return; // Prevenir múltiples operaciones
+    setPickingFile(true);
+    try {
+      await pickFromGallery(setFiles);
+    } finally {
+      setPickingFile(false);
+    }
   };
 
   const handleAddFileFromDocuments = async () => {
-    await pickDocument(setFiles);
+    if (pickingFile) return; // Prevenir múltiples operaciones
+    setPickingFile(true);
+    try {
+      await pickDocument(setFiles);
+    } finally {
+      setPickingFile(false);
+    }
   };
 
   const removeFile = (index: number) => {
@@ -703,6 +722,7 @@ export default function CreateDetalleRendicionScreen() {
         onCamera={handleAddFileFromCamera}
         onGallery={handleAddFileFromGallery}
         onDocument={handleAddFileFromDocuments}
+        disabled={pickingFile}
       />
     </View>
   );

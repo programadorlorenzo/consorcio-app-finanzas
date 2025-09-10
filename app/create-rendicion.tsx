@@ -1,18 +1,19 @@
 import { uploadMultipleFiles } from "@/api/files/files-api";
 import { crearRendicion } from "@/api/rendiciones/rendiciones-api";
-import ListArchivosCreateGasto from "@/components/gastos/create-update-pagos/ArchivosCreateUpdateGasto";
-import ModalOpcionesArchivo from "@/components/gastos/create-update-pagos/ModalOpcionesArchivoCreateUpdateGasto";
+import ArchivosCreateUpdatePago from "@/components/pagos/create-update-pagos/ArchivosCreateUpdatePago";
+import ModalOpcionesArchivoCreateUpdatePago from "@/components/pagos/create-update-pagos/ModalOpcionesArchivoCreateUpdatePago";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { stylesBaseStylesCreateGasto } from "@/styles/gastos/base-create-update-gasto.styles";
 import {
     RendicionCreate,
 } from "@/types/rendiciones/rendiciones.types";
-import { FileItem } from "@/utils/gastos/create-gasto-utils";
+import { FileItem, pickDocument, pickFromCamera, pickFromGallery } from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
+    ActionSheetIOS,
     ActivityIndicator,
     Alert,
     KeyboardAvoidingView,
@@ -52,11 +53,20 @@ export default function CreateRendicion() {
   // Estado separado para el saldo como string para manejar decimales
   const [saldoText, setSaldoText] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [pickingFile, setPickingFile] = useState(false);
   const [showBancoModal, setShowBancoModal] = useState(false);
+  
+  // Estado para controlar la visibilidad de datos bancarios
+  const [showDatosBancarios, setShowDatosBancarios] = useState(false);
 
   // Estados para archivos
   const [files, setFiles] = useState<FileItem[]>([]);
   const [showFileModal, setShowFileModal] = useState(false);
+
+  // Función para verificar si hay datos bancarios ingresados
+  const tieneDatosBancarios = () => {
+    return !!(formData.banco || formData.cuentabancaria || formData.cci || formData.titular);
+  };
 
   const handleSaldoChange = (text: string) => {
     // Permitir números y un punto decimal
@@ -101,13 +111,65 @@ export default function CreateRendicion() {
     return true;
   };
 
-  // Funciones para manejar archivos
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
+  // Funciones para manejo de archivos
+  const addFile = () => {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ['Cancelar', 'Cámara', 'Galería', 'Documento'],
+          cancelButtonIndex: 0,
+        },
+        async (buttonIndex) => {
+          switch (buttonIndex) {
+            case 1:
+              await handleAddFileFromCamera();
+              break;
+            case 2:
+              await handleAddFileFromGallery();
+              break;
+            case 3:
+              await handleAddFileFromDocuments();
+              break;
+          }
+        }
+      );
+    } else {
+      setShowFileModal(true);
+    }
   };
 
-  const handleAddFile = () => {
-    setShowFileModal(true);
+  const handleAddFileFromCamera = async () => {
+    if (pickingFile) return; // Prevenir múltiples operaciones
+    setPickingFile(true);
+    try {
+      await pickFromCamera(setFiles);
+    } finally {
+      setPickingFile(false);
+    }
+  };
+
+  const handleAddFileFromGallery = async () => {
+    if (pickingFile) return; // Prevenir múltiples operaciones
+    setPickingFile(true);
+    try {
+      await pickFromGallery(setFiles);
+    } finally {
+      setPickingFile(false);
+    }
+  };
+
+  const handleAddFileFromDocuments = async () => {
+    if (pickingFile) return; // Prevenir múltiples operaciones
+    setPickingFile(true);
+    try {
+      await pickDocument(setFiles);
+    } finally {
+      setPickingFile(false);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   const uploadFiles = async (): Promise<string[]> => {
@@ -144,8 +206,13 @@ export default function CreateRendicion() {
       const uploadedFilePaths = await uploadFiles();
       console.log("📁 Archivos subidos:", uploadedFilePaths);
 
-      // 2. Crear la rendición
-      await crearRendicion(formData, user!.id);
+      // 2. Crear la rendición incluyendo las rutas de archivos
+      const rendicionData = {
+        ...formData,
+        ...(uploadedFilePaths.length > 0 && { rutasArchivos: uploadedFilePaths }),
+      };
+      
+      await crearRendicion(rendicionData, user!.id);
 
       Alert.alert("Éxito", "Rendición creada exitosamente", [
         {
@@ -264,66 +331,87 @@ export default function CreateRendicion() {
 
             {/* Datos bancarios */}
             <View style={styles.section}>
-              <Text style={stylesBaseStylesCreateGasto.sectionTitle}>
-                Datos Bancarios
-              </Text>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Banco / Billetera Digital</Text>
-                <TouchableOpacity
-                  style={styles.selectorButton}
-                  onPress={() => setShowBancoModal(true)}
-                >
-                  <Text
-                    style={[
-                      styles.selectorText,
-                      !formData.banco && styles.placeholderText,
-                    ]}
-                  >
-                    {formData.banco || "Seleccionar banco o billetera"}
+              <TouchableOpacity
+                style={styles.collapsibleHeader}
+                onPress={() => setShowDatosBancarios(!showDatosBancarios)}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={stylesBaseStylesCreateGasto.sectionTitle}>
+                    Datos Bancarios (Opcional)
                   </Text>
-                  <Ionicons name="chevron-down" size={20} color="#6B7280" />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>
-                  Número de Cuenta / Celular
-                </Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={formData.cuentabancaria || ""}
-                  onChangeText={(text) =>
-                    handleInputChange("cuentabancaria", text)
-                  }
-                  placeholder="Número de cuenta o celular"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="numeric"
+                  {!showDatosBancarios && tieneDatosBancarios() && (
+                    <View style={styles.datosCompletosIndicator}>
+                      <Ionicons name="checkmark-circle" size={16} color={MAIN_COLOR} />
+                    </View>
+                  )}
+                </View>
+                <Ionicons
+                  name={showDatosBancarios ? "chevron-up" : "chevron-down"}
+                  size={20}
+                  color="#6B7280"
                 />
-              </View>
+              </TouchableOpacity>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>CCI</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={formData.cci || ""}
-                  onChangeText={(text) => handleInputChange("cci", text)}
-                  placeholder="Código de Cuenta Interbancario"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="numeric"
-                />
-              </View>
+              {showDatosBancarios && (
+                <>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Banco / Billetera Digital</Text>
+                    <TouchableOpacity
+                      style={styles.selectorButton}
+                      onPress={() => setShowBancoModal(true)}
+                    >
+                      <Text
+                        style={[
+                          styles.selectorText,
+                          !formData.banco && styles.placeholderText,
+                        ]}
+                      >
+                        {formData.banco || "Seleccionar banco o billetera"}
+                      </Text>
+                      <Ionicons name="chevron-down" size={20} color="#6B7280" />
+                    </TouchableOpacity>
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Titular</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={formData.titular || ""}
-                  onChangeText={(text) => handleInputChange("titular", text)}
-                  placeholder="Nombre del titular"
-                  placeholderTextColor="#9CA3AF"
-                />
-              </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>
+                      Número de Cuenta / Celular
+                    </Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={formData.cuentabancaria || ""}
+                      onChangeText={(text) =>
+                        handleInputChange("cuentabancaria", text)
+                      }
+                      placeholder="Número de cuenta o celular"
+                      placeholderTextColor="#9CA3AF"
+                      keyboardType="numeric"
+                    />
+                  </View>
+
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>CCI</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={formData.cci || ""}
+                      onChangeText={(text) => handleInputChange("cci", text)}
+                      placeholder="Código de Cuenta Interbancario"
+                      placeholderTextColor="#9CA3AF"
+                      keyboardType="numeric"
+                    />
+                  </View>
+
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Titular</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={formData.titular || ""}
+                      onChangeText={(text) => handleInputChange("titular", text)}
+                      placeholder="Nombre del titular"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </View>
+                </>
+              )}
             </View>
 
             {/* Archivos */}
@@ -331,23 +419,12 @@ export default function CreateRendicion() {
               <Text style={stylesBaseStylesCreateGasto.sectionTitle}>
                 Archivos de Soporte
               </Text>
-
-              <TouchableOpacity
-                style={styles.addFileButton}
-                onPress={handleAddFile}
-              >
-                <Ionicons name="attach" size={20} color={MAIN_COLOR} />
-                <Text style={styles.addFileButtonText}>
-                  Agregar archivos (opcional)
-                </Text>
-              </TouchableOpacity>
-
-              {files.length > 0 && (
-                <ListArchivosCreateGasto
-                  files={files}
-                  removeFile={removeFile}
-                />
-              )}
+              <ArchivosCreateUpdatePago
+                files={files}
+                onAddFile={addFile}
+                onRemoveFile={removeFile}
+                disabled={pickingFile}
+              />
             </View>
           </ScrollView>
 
@@ -424,10 +501,13 @@ export default function CreateRendicion() {
       </Modal>
 
       {/* Modal de archivos */}
-      <ModalOpcionesArchivo
-        showFileModal={showFileModal}
-        setShowFileModal={setShowFileModal}
-        setFiles={setFiles}
+      <ModalOpcionesArchivoCreateUpdatePago
+        visible={showFileModal}
+        onClose={() => setShowFileModal(false)}
+        onCamera={handleAddFileFromCamera}
+        onGallery={handleAddFileFromGallery}
+        onDocument={handleAddFileFromDocuments}
+        disabled={pickingFile}
       />
     </View>
   );
@@ -521,6 +601,19 @@ const styles = StyleSheet.create({
   inputGroup: {
     marginBottom: 16,
   },
+  collapsibleHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  datosCompletosIndicator: {
+    marginLeft: 8,
+    backgroundColor: "#EBF8FF",
+    borderRadius: 12,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
   inputLabel: {
     fontSize: 14,
     fontWeight: "600",
@@ -603,27 +696,6 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-    marginLeft: 8,
-  },
-
-  // Botón agregar archivos
-  addFileButton: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: MAIN_COLOR,
-    borderStyle: "dashed",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 16,
-  },
-  addFileButtonText: {
-    color: MAIN_COLOR,
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,

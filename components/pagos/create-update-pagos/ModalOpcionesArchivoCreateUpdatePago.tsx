@@ -15,6 +15,7 @@ interface ModalOpcionesArchivoCreateUpdatePagoProps {
   onCamera: () => void;
   onGallery: () => void;
   onDocument: () => void;
+  disabled?: boolean;
 }
 
 const ModalOpcionesArchivoCreateUpdatePago: React.FC<ModalOpcionesArchivoCreateUpdatePagoProps> = ({
@@ -23,8 +24,10 @@ const ModalOpcionesArchivoCreateUpdatePago: React.FC<ModalOpcionesArchivoCreateU
   onCamera,
   onGallery,
   onDocument,
+  disabled = false,
 }) => {
   const handleOptionPress = (action: () => void) => {
+    if (disabled) return; // No hacer nada si está deshabilitado
     action();
     onClose();
   };
@@ -52,60 +55,123 @@ const ModalOpcionesArchivoCreateUpdatePago: React.FC<ModalOpcionesArchivoCreateU
 
           <View style={stylesModalArchivosCreatePago.optionsContainer}>
             <TouchableOpacity
-              style={stylesModalArchivosCreatePago.option}
+              style={[
+                stylesModalArchivosCreatePago.option,
+                disabled && stylesModalArchivosCreatePago.optionDisabled
+              ]}
               onPress={() => handleOptionPress(onCamera)}
-              activeOpacity={0.7}
+              activeOpacity={disabled ? 1 : 0.7}
+              disabled={disabled}
             >
-              <View style={stylesModalArchivosCreatePago.optionIcon}>
-                <Ionicons name="camera" size={28} color={MAIN_COLOR} />
+              <View style={[
+                stylesModalArchivosCreatePago.optionIcon,
+                disabled && stylesModalArchivosCreatePago.optionIconDisabled
+              ]}>
+                <Ionicons 
+                  name="camera" 
+                  size={28} 
+                  color={disabled ? "#9CA3AF" : MAIN_COLOR} 
+                />
               </View>
               <View style={stylesModalArchivosCreatePago.optionContent}>
-                <Text style={stylesModalArchivosCreatePago.optionTitle}>
+                <Text style={[
+                  stylesModalArchivosCreatePago.optionTitle,
+                  disabled && stylesModalArchivosCreatePago.optionTitleDisabled
+                ]}>
                   Cámara
                 </Text>
-                <Text style={stylesModalArchivosCreatePago.optionDescription}>
-                  Tomar foto del voucher o documento
+                <Text style={[
+                  stylesModalArchivosCreatePago.optionDescription,
+                  disabled && stylesModalArchivosCreatePago.optionDescriptionDisabled
+                ]}>
+                  {disabled ? "Procesando archivo..." : "Tomar foto del voucher o documento"}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+              <Ionicons 
+                name="chevron-forward" 
+                size={20} 
+                color={disabled ? "#D1D5DB" : "#9CA3AF"} 
+              />
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={stylesModalArchivosCreatePago.option}
+              style={[
+                stylesModalArchivosCreatePago.option,
+                disabled && stylesModalArchivosCreatePago.optionDisabled
+              ]}
               onPress={() => handleOptionPress(onGallery)}
-              activeOpacity={0.7}
+              activeOpacity={disabled ? 1 : 0.7}
+              disabled={disabled}
             >
-              <View style={stylesModalArchivosCreatePago.optionIcon}>
-                <Ionicons name="images" size={28} color={MAIN_COLOR} />
+              <View style={[
+                stylesModalArchivosCreatePago.optionIcon,
+                disabled && stylesModalArchivosCreatePago.optionIconDisabled
+              ]}>
+                <Ionicons 
+                  name="images" 
+                  size={28} 
+                  color={disabled ? "#9CA3AF" : MAIN_COLOR} 
+                />
               </View>
               <View style={stylesModalArchivosCreatePago.optionContent}>
-                <Text style={stylesModalArchivosCreatePago.optionTitle}>
+                <Text style={[
+                  stylesModalArchivosCreatePago.optionTitle,
+                  disabled && stylesModalArchivosCreatePago.optionTitleDisabled
+                ]}>
                   Galería
                 </Text>
-                <Text style={stylesModalArchivosCreatePago.optionDescription}>
-                  Seleccionar desde la galería
+                <Text style={[
+                  stylesModalArchivosCreatePago.optionDescription,
+                  disabled && stylesModalArchivosCreatePago.optionDescriptionDisabled
+                ]}>
+                  {disabled ? "Procesando archivo..." : "Seleccionar desde la galería"}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+              <Ionicons 
+                name="chevron-forward" 
+                size={20} 
+                color={disabled ? "#D1D5DB" : "#9CA3AF"} 
+              />
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={stylesModalArchivosCreatePago.option}
+              style={[
+                stylesModalArchivosCreatePago.option,
+                disabled && stylesModalArchivosCreatePago.optionDisabled
+              ]}
               onPress={() => handleOptionPress(onDocument)}
-              activeOpacity={0.7}
+              activeOpacity={disabled ? 1 : 0.7}
+              disabled={disabled}
             >
-              <View style={stylesModalArchivosCreatePago.optionIcon}>
-                <Ionicons name="document" size={28} color={MAIN_COLOR} />
+              <View style={[
+                stylesModalArchivosCreatePago.optionIcon,
+                disabled && stylesModalArchivosCreatePago.optionIconDisabled
+              ]}>
+                <Ionicons 
+                  name="document" 
+                  size={28} 
+                  color={disabled ? "#9CA3AF" : MAIN_COLOR} 
+                />
               </View>
               <View style={stylesModalArchivosCreatePago.optionContent}>
-                <Text style={stylesModalArchivosCreatePago.optionTitle}>
+                <Text style={[
+                  stylesModalArchivosCreatePago.optionTitle,
+                  disabled && stylesModalArchivosCreatePago.optionTitleDisabled
+                ]}>
                   Documentos
                 </Text>
-                <Text style={stylesModalArchivosCreatePago.optionDescription}>
-                  Seleccionar archivo PDF u otros
+                <Text style={[
+                  stylesModalArchivosCreatePago.optionDescription,
+                  disabled && stylesModalArchivosCreatePago.optionDescriptionDisabled
+                ]}>
+                  {disabled ? "Procesando archivo..." : "Seleccionar archivo PDF u otros"}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+              <Ionicons 
+                name="chevron-forward" 
+                size={20} 
+                color={disabled ? "#D1D5DB" : "#9CA3AF"} 
+              />
             </TouchableOpacity>
           </View>
         </View>

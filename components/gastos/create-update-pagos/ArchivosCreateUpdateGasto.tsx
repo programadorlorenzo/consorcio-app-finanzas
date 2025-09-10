@@ -131,7 +131,7 @@ const ListArchivosCreateGasto = ({
                 ) : (
                   <View style={stylesBaseStylesCreateGasto.fileIconGrid}>
                     <Ionicons
-                      name={getFileIcon(item.type)}
+                      name={getFileIcon(item.type || '')}
                       size={28}
                       color={MAIN_COLOR}
                     />

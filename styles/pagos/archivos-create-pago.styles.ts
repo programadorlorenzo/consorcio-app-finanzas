@@ -25,11 +25,18 @@ export const stylesArchivosCreatePago = StyleSheet.create({
     backgroundColor: `${MAIN_COLOR}05`,
     marginBottom: 16,
   },
+  addButtonDisabled: {
+    borderColor: "#ccc",
+    backgroundColor: "#f5f5f5",
+  },
   addButtonText: {
     fontSize: 16,
     color: MAIN_COLOR,
     fontWeight: "600",
     marginLeft: 8,
+  },
+  addButtonTextDisabled: {
+    color: "#999",
   },
   filesContainer: {
     marginBottom: 16,

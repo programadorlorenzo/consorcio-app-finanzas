@@ -1,4 +1,5 @@
 import { obtenerRendicionActiva } from "@/api/rendiciones/rendiciones-api";
+import { API_URL_BASE } from "@/app/backend";
 import { MAIN_COLOR } from "@/app/constants";
 import { ThemedView } from "@/components/ThemedView";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -9,13 +10,19 @@ import {
   RendicionStatusType,
   getRendicionEstado,
 } from "@/types/rendiciones/rendiciones.types";
+import {
+  downloadFile,
+  truncateFileName,
+} from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Modal,
   SafeAreaView,
   ScrollView,
   Text,
@@ -31,10 +38,49 @@ export default function RendicionScreen() {
   const [loading, setLoading] = useState(true);
   const [showBankingDetails, setShowBankingDetails] = useState(false);
 
+  // Estados para el modal de imágenes
+  const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+  const [selectedImageUri, setSelectedImageUri] = useState<string>("");
+
+  // Función para abrir el modal de imagen
+  const openImageModal = (uri: string) => {
+    setSelectedImageUri(uri);
+    setIsImageModalVisible(true);
+  };
+
+  // Función para verificar si un archivo es imagen
+  const isImageFile = (filename: string): boolean => {
+    const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"];
+    return imageExtensions.some((ext) => filename.toLowerCase().includes(ext));
+  };
+
+  // Función para obtener el icono del archivo
+  const getFileIcon = (filename: string): any => {
+    const extension = filename.toLowerCase().split(".").pop();
+    switch (extension) {
+      case "pdf":
+        return "document-text";
+      case "doc":
+      case "docx":
+        return "document-outline";
+      case "xls":
+      case "xlsx":
+        return "grid-outline";
+      case "ppt":
+      case "pptx":
+        return "easel-outline";
+      case "zip":
+      case "rar":
+        return "archive-outline";
+      default:
+        return "document-outline";
+    }
+  };
+
   // Helper para detectar si es administrador
   const esAdministrador = useCallback((): boolean => {
     const rolNombre = user?.rol?.nombre?.toLowerCase() || "";
-    
+
     return (
       rolNombre.includes("admin") ||
       rolNombre.includes("administrador") ||
@@ -81,7 +127,8 @@ export default function RendicionScreen() {
             <Ionicons name="lock-closed-outline" size={80} color="#ccc" />
             <Text style={styles.noRendidorTitle}>Acceso Restringido</Text>
             <Text style={styles.noRendidorText}>
-              No tienes permisos de rendidor ni eres administrador. Contacta al administrador para obtener los permisos necesarios.
+              No tienes permisos de rendidor ni eres administrador. Contacta al
+              administrador para obtener los permisos necesarios.
             </Text>
           </View>
         </SafeAreaView>
@@ -111,41 +158,43 @@ export default function RendicionScreen() {
 
   const menuOptions = [
     // Opciones para rendidores (solo si es rendidor o admin que también es rendidor)
-    ...(user?.rendidor === 1 ? [
-      {
-        id: 1,
-        title: "Mi Rendición",
-        description: rendicionActiva
-          ? `Estado: ${getRendicionEstado(rendicionActiva)}`
-          : "No tienes rendición activa",
-        icon: "document-text-outline" as keyof typeof Ionicons.glyphMap,
-        onPress: () => {
-          if (rendicionActiva) {
-            router.push("/mi-rendicion");
-          } else {
-            Alert.alert(
-              "Sin rendición",
-              "No tienes una rendición activa. Crea una nueva rendición primero."
-            );
-          }
-        },
-        statusType: "default" as RendicionStatusType,
-        disabled: !rendicionActiva,
-      },
-      ...(puedeCrearNuevaRendicion
-        ? [
-            {
-              id: 4,
-              title: "Nueva Rendición",
-              description: "Crear una nueva rendición",
-              icon: "add-circle-outline" as keyof typeof Ionicons.glyphMap,
-              onPress: () => router.push("/create-rendicion" as any),
-              statusType: "accent" as RendicionStatusType,
-              disabled: false,
+    ...(user?.rendidor === 1
+      ? [
+          {
+            id: 1,
+            title: "Mi Rendición",
+            description: rendicionActiva
+              ? `Estado: ${getRendicionEstado(rendicionActiva)}`
+              : "No tienes rendición activa",
+            icon: "document-text-outline" as keyof typeof Ionicons.glyphMap,
+            onPress: () => {
+              if (rendicionActiva) {
+                router.push("/mi-rendicion");
+              } else {
+                Alert.alert(
+                  "Sin rendición",
+                  "No tienes una rendición activa. Crea una nueva rendición primero."
+                );
+              }
             },
-          ]
-        : []),
-    ] : []),
+            statusType: "default" as RendicionStatusType,
+            disabled: !rendicionActiva,
+          },
+          ...(puedeCrearNuevaRendicion
+            ? [
+                {
+                  id: 4,
+                  title: "Nueva Rendición",
+                  description: "Crear una nueva rendición",
+                  icon: "add-circle-outline" as keyof typeof Ionicons.glyphMap,
+                  onPress: () => router.push("/create-rendicion" as any),
+                  statusType: "accent" as RendicionStatusType,
+                  disabled: false,
+                },
+              ]
+            : []),
+        ]
+      : []),
     // Opción para administradores
     ...(esAdministrador()
       ? [
@@ -230,9 +279,77 @@ export default function RendicionScreen() {
                 </Text>
               </View>
 
+              {/* Archivos de la rendición */}
+              {rendicionActiva.archivos &&
+                rendicionActiva.archivos.length > 0 && (
+                  <View style={styles.archivosRendicionSection}>
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      style={styles.archivosScroll}
+                    >
+                      {rendicionActiva.archivos.map((archivo, index) => (
+                        <View key={index} style={styles.archivoItem}>
+                          {isImageFile(archivo.filename || "") ? (
+                            <TouchableOpacity
+                              style={styles.imageContainer}
+                              onPress={() =>
+                                openImageModal(
+                                  `${API_URL_BASE}/${archivo.filename}`
+                                )
+                              }
+                              activeOpacity={0.8}
+                            >
+                              <Image
+                                source={{
+                                  uri: `${API_URL_BASE}/${archivo.filename}`,
+                                }}
+                                style={styles.archivoImage}
+                                contentFit="cover"
+                                placeholder="📷"
+                                transition={150}
+                                cachePolicy="memory-disk"
+                              />
+                              <View style={styles.imageOverlay}>
+                                <Ionicons
+                                  name="expand"
+                                  size={14}
+                                  color="white"
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
+                            <TouchableOpacity
+                              style={styles.documentContainer}
+                              onPress={() =>
+                                downloadFile(
+                                  `${API_URL_BASE}/${archivo.filename}`,
+                                  archivo.filename || "archivo"
+                                )
+                              }
+                              activeOpacity={0.8}
+                            >
+                              <Ionicons
+                                name={getFileIcon(archivo.filename || "")}
+                                size={28}
+                                color={MAIN_COLOR}
+                              />
+                              <Text
+                                style={styles.documentText}
+                                numberOfLines={1}
+                              >
+                                {truncateFileName(archivo.filename || "")}
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                      ))}
+                    </ScrollView>
+                  </View>
+                )}
+
               {/* Datos bancarios desplegables */}
-              {(rendicionActiva.banco ||
-                rendicionActiva.cuentabancaria) && (
+              {(rendicionActiva.banco || rendicionActiva.cuentabancaria) && (
                 <View style={styles.bankingSection}>
                   <TouchableOpacity
                     style={styles.bankingSectionHeader}
@@ -310,6 +427,32 @@ export default function RendicionScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
+
+      {/* Modal para visualizar imágenes */}
+      <Modal
+        visible={isImageModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsImageModalVisible(false)}
+      >
+        <View style={styles.imageModalContainer}>
+          <TouchableOpacity
+            style={styles.imageModalCloseButton}
+            onPress={() => setIsImageModalVisible(false)}
+          >
+            <Ionicons name="close" size={24} color="white" />
+          </TouchableOpacity>
+
+          <View style={styles.imageModalContent}>
+            <Image
+              source={{ uri: selectedImageUri }}
+              style={styles.imageModalImage}
+              contentFit="contain"
+              placeholder="📷"
+            />
+          </View>
+        </View>
+      </Modal>
     </ThemedView>
   );
 }
@@ -449,8 +592,7 @@ const styles = {
   creationDateSection: {
     backgroundColor: "#F8F9FA",
     paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
+    paddingVertical: 5,
     borderBottomColor: "#E5E7EB",
   },
   creationDateText: {
@@ -461,8 +603,8 @@ const styles = {
 
   // Secciones
   bankingSection: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: 10,
+    paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: "#E5E7EB",
   },
@@ -509,5 +651,97 @@ const styles = {
     fontWeight: "600" as const,
     flex: 1,
     textAlign: "right" as const,
+  },
+
+  // Estilos para la sección de archivos de rendición
+  archivosRendicionSection: {
+    backgroundColor: "#F8F9FA",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB",
+  },
+  archivosRendicionTitle: {
+    fontSize: 16,
+    fontWeight: "600" as const,
+    color: "#374151",
+    marginBottom: 12,
+  },
+  archivosScroll: {
+    flexDirection: "row" as const,
+  },
+  archivoItem: {
+    marginRight: 12,
+    alignItems: "center" as const,
+  },
+  imageContainer: {
+    position: "relative" as const,
+    borderRadius: 8,
+    overflow: "hidden" as const,
+  },
+  archivoImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+  },
+  imageOverlay: {
+    position: "absolute" as const,
+    top: 4,
+    right: 4,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 12,
+    width: 20,
+    height: 20,
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+  },
+  documentContainer: {
+    backgroundColor: "#F9FAFB",
+    borderRadius: 8,
+    padding: 8,
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
+    width: 60,
+    height: 60,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+  },
+  documentText: {
+    fontSize: 10,
+    color: "#6B7280",
+    textAlign: "center" as const,
+    marginTop: 2,
+    fontWeight: "500" as const,
+  },
+
+  // Estilos para el modal de imágenes
+  imageModalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+  },
+  imageModalCloseButton: {
+    position: "absolute" as const,
+    top: 50,
+    right: 20,
+    zIndex: 2,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+  },
+  imageModalContent: {
+    flex: 1,
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    padding: 20,
+  },
+  imageModalImage: {
+    width: "100%" as const,
+    height: "100%" as const,
+    maxWidth: 400,
+    maxHeight: 600,
+    borderRadius: 8,
   },
 };

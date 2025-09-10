@@ -71,6 +71,7 @@ export interface RendicionCreate {
   cuentabancaria?: string;
   cci?: string;
   titular?: string;
+  rutasArchivos?: string[];
 }
 
 export interface DetalleRendicionCreate {
