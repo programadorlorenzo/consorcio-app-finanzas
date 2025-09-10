@@ -77,7 +77,7 @@ export default function RendicionesPorRevisarScreen() {
   const handleRechazar = async (rendicionId: number) => {
     Alert.alert(
       "Rechazar Rendición",
-      "¿Estás seguro que deseas rechazar esta rendición? El usuario tendrá que volver a crearla.",
+      "¿Estás seguro que deseas rechazar esta rendición? Se reactivará para que el usuario pueda corregirla y reenviarla.",
       [
         {
           text: "Cancelar",
@@ -92,7 +92,7 @@ export default function RendicionesPorRevisarScreen() {
               await rechazarRendicion(rendicionId);
               Alert.alert(
                 "Rendición Rechazada", 
-                "La rendición ha sido rechazada. El usuario deberá crear una nueva.",
+                "La rendición ha sido rechazada y reactivada. El usuario puede corregirla y reenviarla.",
                 [{ text: "OK", onPress: () => cargarRendiciones() }]
               );
             } catch (error) {

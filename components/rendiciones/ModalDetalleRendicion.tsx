@@ -1,14 +1,9 @@
 import { MAIN_COLOR } from "@/app/constants";
-import {
-    Rendicion,
-    getRendicionEstado,
-} from "@/types/rendiciones/rendiciones.types";
+import { Rendicion } from "@/types/rendiciones/rendiciones.types";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
-    Alert,
     Animated,
-    Clipboard,
     Dimensions,
     Modal,
     PanResponder,
@@ -42,8 +37,6 @@ export default function ModalDetalleRendicion({
   isAdmin = false,
 }: ModalDetalleRendicionProps) {
   const translateY = React.useRef(new Animated.Value(MODAL_HEIGHT)).current;
-  const [datosBancariosVisible, setDatosBancariosVisible] =
-    React.useState(false);
 
   React.useEffect(() => {
     if (visible) {
@@ -91,8 +84,6 @@ export default function ModalDetalleRendicion({
 
   if (!rendicion) return null;
 
-  const estado = getRendicionEstado(rendicion);
-
   const formatFechaEnvio = (fechaString?: string): string => {
     if (!fechaString) return "Sin fecha";
     try {
@@ -107,20 +98,6 @@ export default function ModalDetalleRendicion({
     } catch {
       return "Fecha inválida";
     }
-  };
-
-  const copiarDatosBancarios = () => {
-    let datos = "";
-    if (rendicion?.banco) datos += `Banco: ${rendicion.banco}\n`;
-    if (rendicion?.cuentabancaria)
-      datos += `Cuenta: ${rendicion.cuentabancaria}\n`;
-    if (rendicion?.cci) datos += `CCI: ${rendicion.cci}\n`;
-    if (rendicion?.titular) datos += `Titular: ${rendicion.titular}\n`;
-    if (rendicion?.formaPago)
-      datos += `Forma de Pago: ${rendicion.formaPago.toUpperCase()}`;
-
-    Clipboard.setString(datos);
-    Alert.alert("Copiado", "Datos bancarios copiados al portapapeles");
   };
 
   const formatCurrency = (value: number | string): string => {
@@ -218,12 +195,7 @@ export default function ModalDetalleRendicion({
           >
             {/* Lista de Detalles */}
             {rendicion.detalles && rendicion.detalles.length > 0 && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
-                  Detalles ({rendicion.detalles.length})
-                </Text>
-                <ListaDetalles detalles={rendicion.detalles} />
-              </View>
+              <ListaDetalles detalles={rendicion.detalles} />
             )}
           </ScrollView>
         </Animated.View>
@@ -312,7 +284,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
   },
   section: {
     marginTop: 20,

@@ -119,11 +119,6 @@ export default function DetalleCard({ detalle, index }: DetalleCardProps) {
           <Text style={styles.detalleImporte}>
             S/ {formatCurrency(detalle.importeTotal)}
           </Text>
-          {detalle.cantidad && detalle.cantidad !== 1 && (
-            <Text style={styles.detalleUnidades}>
-              {detalle.cantidad} {detalle.cantidad === 1 ? 'unidad' : 'unidades'}
-            </Text>
-          )}
         </View>
       </View>
 
@@ -358,10 +353,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: MAIN_COLOR,
     marginBottom: 2,
-  },
-  detalleUnidades: {
-    fontSize: 12,
-    color: '#6B7280',
   },
   detalleBankInfo: {
     backgroundColor: '#F0FDF4',

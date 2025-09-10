@@ -9,7 +9,6 @@ export const crearRendicion = async (payload: RendicionCreate, responsableId: nu
     const backendPayload = {
       responsableId,
       total_iniciado: payload.total_iniciado,
-      formaPago: payload.formaPago,
       // Datos bancarios opcionales
       ...(payload.banco && { banco: payload.banco }),
       ...(payload.cuentabancaria && { cuentabancaria: payload.cuentabancaria }),
@@ -253,11 +252,9 @@ export const aprobarRendicion = async (rendicionId: number): Promise<Rendicion> 
 
 export const rechazarRendicion = async (rendicionId: number): Promise<Rendicion> => {
   try {
-    console.log(`🚀 Rechazando rendición ${rendicionId}`);
-    const response = await apiClient.patch<Rendicion>(`/rendiciones/${rendicionId}/estado`, {
-      estado: 'denegada'
-    });
-    console.log("✅ Rendición rechazada exitosamente");
+    console.log(`🚀 Rechazando y reactivando rendición ${rendicionId}`);
+    const response = await apiClient.patch<Rendicion>(`/rendiciones/${rendicionId}/rechazar`);
+    console.log("✅ Rendición rechazada y reactivada exitosamente");
     return response.data;
   } catch (error) {
     console.error("❌ Error al rechazar rendición:", error);

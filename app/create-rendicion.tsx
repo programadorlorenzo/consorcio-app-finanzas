@@ -5,7 +5,6 @@ import ModalOpcionesArchivo from "@/components/gastos/create-update-pagos/ModalO
 import { useAuth } from "@/components/providers/AuthProvider";
 import { stylesBaseStylesCreateGasto } from "@/styles/gastos/base-create-update-gasto.styles";
 import {
-    FormaPago,
     RendicionCreate,
 } from "@/types/rendiciones/rendiciones.types";
 import { FileItem } from "@/utils/gastos/create-gasto-utils";
@@ -44,7 +43,6 @@ export default function CreateRendicion() {
 
   const [formData, setFormData] = useState<RendicionCreate>({
     total_iniciado: 0,
-    formaPago: FormaPago.TRANSFERENCIA,
     banco: "",
     cuentabancaria: "",
     cci: "",
@@ -156,7 +154,6 @@ export default function CreateRendicion() {
             // Limpiar formulario y archivos
             setFormData({
               total_iniciado: 0,
-              formaPago: FormaPago.YAPE,
               banco: "",
               cuentabancaria: "",
               cci: "",

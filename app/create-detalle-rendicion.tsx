@@ -15,6 +15,7 @@ import {
     ActivityIndicator,
     Alert,
     KeyboardAvoidingView,
+    Modal,
     Platform,
     ScrollView,
     StyleSheet,
@@ -36,15 +37,15 @@ interface DetalleRendicionForm {
 }
 
 const BANCOS_OPTIONS = [
-  'Banco de Crédito',
-  'Interbank', 
+  'BCP',
+  'INTERBANK', 
   'BBVA',
-  'Scotiabank',
-  'Banco de la Nación',
-  'Yape',
-  'Plin',
-  'Efectivo',
-  'Otro'
+  'SCOTIABANK',
+  'BANCO DE LA NACIÓN',
+  'YAPE',
+  'PLIN',
+  'EFECTIVO',
+  'OTRO'
 ];
 
 export default function CreateDetalleRendicionScreen() {
@@ -72,11 +73,27 @@ export default function CreateDetalleRendicionScreen() {
     return `${dd}/${mm}/${yyyy}`;
   });
 
+  // Estado para la fecha seleccionada (objeto Date) - inicializado con la fecha actual
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    const today = new Date();
+    return today;
+  });
+
   // Estados para archivos
   const [files, setFiles] = useState<FileItem[]>([]);
   const [showFileModal, setShowFileModal] = useState(false);
 
+  // Estados para modales
   const [showBancoModal, setShowBancoModal] = useState(false);
+  const [showDateModal, setShowDateModal] = useState(false);
+  
+  // Estado para colapsar datos bancarios
+  const [showBankingData, setShowBankingData] = useState(false);
+
+  // Refs para los ScrollViews del selector de fecha
+  const dayScrollRef = React.useRef<ScrollView>(null);
+  const monthScrollRef = React.useRef<ScrollView>(null);
+  const yearScrollRef = React.useRef<ScrollView>(null);
 
   const checkRendicionActiva = useCallback(async () => {
     try {
@@ -116,64 +133,55 @@ export default function CreateDetalleRendicionScreen() {
     }));
   };
 
-  // Manejo de fecha con formato DD/MM/YYYY
-  const handleFechaChange = (text: string) => {
-    // Limpiar texto - solo números
-    const numbersOnly = text.replace(/\D/g, "");
+  // Funciones para manejo de fecha
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    const formattedDate = `${dd}/${mm}/${yyyy}`;
+    setFechaText(formattedDate);
+    
+    // Actualizar el formData con la fecha ISO
+    const fechaISO = date.toISOString();
+    setFormData((prev) => ({
+      ...prev,
+      fecha: fechaISO,
+    }));
+    setShowDateModal(false);
+  };
 
-    let formatted = numbersOnly;
+  // Función para hacer scroll automático a la fecha seleccionada
+  const scrollToSelectedDate = () => {
+    setTimeout(() => {
+      // Altura aproximada de cada opción (paddingVertical: 12 * 2 + altura del texto)
+      const itemHeight = 44;
+      
+      // Calcular posiciones para hacer scroll
+      const dayPosition = (selectedDate.getDate() - 1) * itemHeight;
+      const monthPosition = selectedDate.getMonth() * itemHeight;
+      const currentYear = new Date().getFullYear();
+      const yearPosition = Math.max(0, (selectedDate.getFullYear() - (currentYear - 5)) * itemHeight);
 
-    // Agregar barras automáticamente
-    if (numbersOnly.length >= 3) {
-      formatted =
-        numbersOnly.slice(0, 2) +
-        "/" +
-        numbersOnly.slice(2, 4) +
-        "/" +
-        numbersOnly.slice(4, 8);
-    } else if (numbersOnly.length >= 1) {
-      formatted =
-        numbersOnly.slice(0, 2) +
-        "/" +
-        numbersOnly.slice(2, 4) +
-        "/" +
-        numbersOnly.slice(4, 8);
-    }
+      // Hacer scroll a las posiciones calculadas
+      dayScrollRef.current?.scrollTo({ y: dayPosition, animated: true });
+      monthScrollRef.current?.scrollTo({ y: monthPosition, animated: true });
+      yearScrollRef.current?.scrollTo({ y: yearPosition, animated: true });
+    }, 100); // Pequeño delay para asegurar que el modal esté completamente renderizado
+  };
 
-    // Limitar a 10 caracteres (DD/MM/YYYY)
-    if (formatted.length > 10) {
-      formatted = formatted.slice(0, 10);
-    }
-
-    setFechaText(formatted);
-
-    // Validar formato completo DD/MM/YYYY
-    const fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-    if (fechaRegex.test(formatted)) {
-      // Convertir DD/MM/YYYY a Date
-      const [dia, mes, año] = formatted.split("/");
-      const fecha = new Date(parseInt(año), parseInt(mes) - 1, parseInt(dia));
-
-      // Verificar que la fecha sea válida
-      if (
-        !isNaN(fecha.getTime()) &&
-        fecha.getDate() === parseInt(dia) &&
-        fecha.getMonth() === parseInt(mes) - 1 &&
-        fecha.getFullYear() === parseInt(año)
-      ) {
-        const fechaISO = fecha.toISOString();
-        setFormData((prev) => ({
-          ...prev,
-          fecha: fechaISO,
-        }));
+  const openDatePicker = () => {
+    // Antes de abrir el modal, sincronizar selectedDate con la fecha actual del input
+    const [dia, mes, año] = fechaText.split('/');
+    if (dia && mes && año) {
+      const currentDate = new Date(parseInt(año), parseInt(mes) - 1, parseInt(dia));
+      if (!isNaN(currentDate.getTime())) {
+        setSelectedDate(currentDate);
       }
-    } else if (text === "") {
-      // Si está vacío, usar la fecha actual
-      setFormData((prev) => ({
-        ...prev,
-        fecha: new Date().toISOString(),
-      }));
     }
+    setShowDateModal(true);
+    // Hacer scroll automático después de abrir el modal
+    scrollToSelectedDate();
   };
 
   // Funciones para manejo de archivos
@@ -392,15 +400,13 @@ export default function CreateDetalleRendicionScreen() {
             {/* Fecha */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Fecha *</Text>
-              <TextInput
-                style={styles.textInput}
-                value={fechaText}
-                onChangeText={handleFechaChange}
-                placeholder="DD/MM/YYYY"
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
-                maxLength={10}
-              />
+              <TouchableOpacity
+                style={styles.dateSelector}
+                onPress={openDatePicker}
+              >
+                <Text style={styles.dateText}>{fechaText}</Text>
+                <Ionicons name="calendar-outline" size={20} color={MAIN_COLOR} />
+              </TouchableOpacity>
             </View>
 
             {/* Importe */}
@@ -421,55 +427,69 @@ export default function CreateDetalleRendicionScreen() {
 
             {/* Datos bancarios */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Datos de Destino del Pago</Text>
+              <TouchableOpacity
+                style={styles.sectionHeader}
+                onPress={() => setShowBankingData(!showBankingData)}
+              >
+                <Text style={styles.sectionTitle}>Datos de Destino del Pago</Text>
+                <Ionicons 
+                  name={showBankingData ? "chevron-up" : "chevron-down"} 
+                  size={20} 
+                  color={MAIN_COLOR} 
+                />
+              </TouchableOpacity>
               
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Banco / Billetera Digital</Text>
-                <TouchableOpacity
-                  style={styles.selectorButton}
-                  onPress={() => setShowBancoModal(true)}
-                >
-                  <Text style={[styles.selectorText, !formData.banco && styles.placeholderText]}>
-                    {formData.banco || "Seleccionar banco o billetera"}
-                  </Text>
-                  <Ionicons name="chevron-down" size={20} color="#6B7280" />
-                </TouchableOpacity>
-              </View>
+              {showBankingData && (
+                <>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Banco / Billetera Digital</Text>
+                    <TouchableOpacity
+                      style={styles.selectorButton}
+                      onPress={() => setShowBancoModal(true)}
+                    >
+                      <Text style={[styles.selectorText, !formData.banco && styles.placeholderText]}>
+                        {formData.banco || "Seleccionar banco o billetera"}
+                      </Text>
+                      <Ionicons name="chevron-down" size={20} color="#6B7280" />
+                    </TouchableOpacity>
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Número de Cuenta / Celular</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={formData.cuentabancaria}
-                  onChangeText={(text) => handleInputChange('cuentabancaria', text)}
-                  placeholder="Número de cuenta o celular"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="numeric"
-                />
-              </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Número de Cuenta / Celular</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={formData.cuentabancaria}
+                      onChangeText={(text) => handleInputChange('cuentabancaria', text)}
+                      placeholder="Número de cuenta o celular"
+                      placeholderTextColor="#9CA3AF"
+                      keyboardType="numeric"
+                    />
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>CCI</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={formData.cci}
-                  onChangeText={(text) => handleInputChange('cci', text)}
-                  placeholder="Código de Cuenta Interbancario"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="numeric"
-                />
-              </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>CCI</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={formData.cci}
+                      onChangeText={(text) => handleInputChange('cci', text)}
+                      placeholder="Código de Cuenta Interbancario"
+                      placeholderTextColor="#9CA3AF"
+                      keyboardType="numeric"
+                    />
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Titular</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={formData.titular}
-                  onChangeText={(text) => handleInputChange('titular', text)}
-                  placeholder="Nombre del titular"
-                  placeholderTextColor="#9CA3AF"
-                />
-              </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Titular</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={formData.titular}
+                      onChangeText={(text) => handleInputChange('titular', text)}
+                      placeholder="Nombre del titular"
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </View>
+                </>
+              )}
             </View>
 
             {/* Observaciones */}
@@ -520,6 +540,121 @@ export default function CreateDetalleRendicionScreen() {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
+
+      {/* Modal de fecha */}
+      <Modal
+        visible={showDateModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowDateModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.dateModalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Seleccionar Fecha</Text>
+              <TouchableOpacity onPress={() => setShowDateModal(false)}>
+                <Ionicons name="close" size={24} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.datePickerContainer}>
+              {/* Selector simple de fecha por día, mes y año */}
+              <View style={styles.dateRow}>
+                <Text style={styles.dateLabel}>Día:</Text>
+                <ScrollView 
+                  ref={dayScrollRef}
+                  style={styles.dateScroll} 
+                  showsVerticalScrollIndicator={false}
+                >
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                    <TouchableOpacity
+                      key={day}
+                      style={[
+                        styles.dateOption,
+                        selectedDate.getDate() === day && styles.dateOptionSelected
+                      ]}
+                      onPress={() => {
+                        const newDate = new Date(selectedDate);
+                        newDate.setDate(day);
+                        handleDateSelect(newDate);
+                      }}
+                    >
+                      <Text style={[
+                        styles.dateOptionText,
+                        selectedDate.getDate() === day && styles.dateOptionTextSelected
+                      ]}>
+                        {day.toString().padStart(2, '0')}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+              
+              <View style={styles.dateRow}>
+                <Text style={styles.dateLabel}>Mes:</Text>
+                <ScrollView 
+                  ref={monthScrollRef}
+                  style={styles.dateScroll} 
+                  showsVerticalScrollIndicator={false}
+                >
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                    <TouchableOpacity
+                      key={month}
+                      style={[
+                        styles.dateOption,
+                        selectedDate.getMonth() + 1 === month && styles.dateOptionSelected
+                      ]}
+                      onPress={() => {
+                        const newDate = new Date(selectedDate);
+                        newDate.setMonth(month - 1);
+                        handleDateSelect(newDate);
+                      }}
+                    >
+                      <Text style={[
+                        styles.dateOptionText,
+                        selectedDate.getMonth() + 1 === month && styles.dateOptionTextSelected
+                      ]}>
+                        {month.toString().padStart(2, '0')}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+              
+              <View style={styles.dateRow}>
+                <Text style={styles.dateLabel}>Año:</Text>
+                <ScrollView 
+                  ref={yearScrollRef}
+                  style={styles.dateScroll} 
+                  showsVerticalScrollIndicator={false}
+                >
+                  {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i).map((year) => (
+                    <TouchableOpacity
+                      key={year}
+                      style={[
+                        styles.dateOption,
+                        selectedDate.getFullYear() === year && styles.dateOptionSelected
+                      ]}
+                      onPress={() => {
+                        const newDate = new Date(selectedDate);
+                        newDate.setFullYear(year);
+                        handleDateSelect(newDate);
+                      }}
+                    >
+                      <Text style={[
+                        styles.dateOptionText,
+                        selectedDate.getFullYear() === year && styles.dateOptionTextSelected
+                      ]}>
+                        {year}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Modal de bancos */}
       {showBancoModal && (
@@ -798,5 +933,78 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 4,
     fontStyle: 'italic',
+  },
+
+  // Estilos para selector de fecha
+  dateSelector: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#374151',
+  },
+
+  // Estilos para sección colapsable
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+
+  // Estilos para modal de fecha
+  dateModalContent: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '70%',
+    paddingBottom: 20,
+  },
+  datePickerContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
+  dateRow: {
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  dateLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  dateScroll: {
+    maxHeight: 150,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 8,
+  },
+  dateOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  dateOptionSelected: {
+    backgroundColor: MAIN_COLOR,
+  },
+  dateOptionText: {
+    fontSize: 16,
+    color: '#374151',
+    textAlign: 'center',
+  },
+  dateOptionTextSelected: {
+    color: 'white',
+    fontWeight: '600',
   },
 });

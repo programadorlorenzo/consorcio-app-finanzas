@@ -232,8 +232,7 @@ export default function RendicionScreen() {
 
               {/* Datos bancarios desplegables */}
               {(rendicionActiva.banco ||
-                rendicionActiva.cuentabancaria ||
-                rendicionActiva.formaPago) && (
+                rendicionActiva.cuentabancaria) && (
                 <View style={styles.bankingSection}>
                   <TouchableOpacity
                     style={styles.bankingSectionHeader}
@@ -288,14 +287,6 @@ export default function RendicionScreen() {
                           </Text>
                         </View>
                       )}
-                      <View
-                        style={[styles.bankingRow, { borderBottomWidth: 0 }]}
-                      >
-                        <Text style={styles.bankingLabel}>Forma de Pago:</Text>
-                        <Text style={styles.bankingValue}>
-                          {rendicionActiva.formaPago.toUpperCase()}
-                        </Text>
-                      </View>
                     </View>
                   )}
                 </View>

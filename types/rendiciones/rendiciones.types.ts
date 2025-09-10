@@ -7,12 +7,6 @@ export interface Usuario {
   rendidor: number;
 }
 
-export enum FormaPago {
-  YAPE = 'yape',
-  PLIN = 'plin',
-  TRANSFERENCIA = 'transferencia',
-}
-
 export interface Rendicion {
   id: number;
   responsableId: number;
@@ -27,7 +21,6 @@ export interface Rendicion {
   total_iniciado: number | string; // Puede venir como string desde el backend
   total_rendido: number | string;  // Puede venir como string desde el backend
   total_saldo: number | string;    // Puede venir como string desde el backend
-  formaPago: FormaPago;
   createdAt: string;
   updatedAt: string;
   detalles?: DetalleRendicion[];
@@ -38,11 +31,10 @@ export interface DetalleRendicion {
   id: number;
   rendicionId: number;
   responsableId?: number;
-  responsable?: Usuario;
+  descripcion?: string;
   fecha: string;
-  descripcion: string;
   importeUnitario: number | string;
-  cantidad: number | string;
+  cantidad?: number | string;
   importeTotal: number | string;
   cuentabancaria?: string;
   cci?: string;
@@ -79,12 +71,10 @@ export interface RendicionCreate {
   cuentabancaria?: string;
   cci?: string;
   titular?: string;
-  formaPago: FormaPago;
 }
 
 export interface DetalleRendicionCreate {
   rendicionId: number;
-  responsableId?: number;
   fecha: string;
   descripcion: string;
   importeUnitario: number;
@@ -94,6 +84,7 @@ export interface DetalleRendicionCreate {
   cci?: string;
   banco?: string;
   titular?: string;
+  responsableId?: number;
   observaciones?: string;
   rutasArchivos?: string[];
 }
@@ -104,7 +95,6 @@ export interface RendicionUpdate {
   cci?: string;
   titular?: string;
   total_iniciado?: number;
-  formaPago?: FormaPago;
 }
 
 export type RendicionStatusType = 'default' | 'pending' | 'approved' | 'rejected' | 'accent' | 'admin';
