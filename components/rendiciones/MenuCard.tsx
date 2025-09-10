@@ -12,6 +12,7 @@ const STATUS_COLORS = {
   pending: '#F59E0B', // Amarillo/Naranja para pendiente
   approved: '#10B981', // Verde para aprobado
   rejected: '#EF4444', // Rojo para rechazado
+  admin: '#8B5CF6', // Púrpura para administrador
 };
 
 const MenuCardRendiciones = ({

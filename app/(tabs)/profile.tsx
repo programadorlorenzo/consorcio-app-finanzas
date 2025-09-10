@@ -54,9 +54,14 @@ export default function ProfileScreen() {
             <Ionicons name="person-circle" size={120} color="white" />
           </View>
 
-          {user?.username && (
-            <View style={styles.usernameContainer}>
-              <Text style={styles.username}>@{user.username}</Text>
+          {user?.nombre && (
+            <Text style={styles.userName}>{user.nombre}</Text>
+          )}
+
+          {user?.rol?.nombre && (
+            <View style={styles.roleContainer}>
+              <Ionicons name="shield-checkmark-outline" size={16} color="rgba(255, 255, 255, 0.9)" />
+              <Text style={styles.roleText}>{user.rol.nombre}</Text>
             </View>
           )}
 
@@ -76,6 +81,32 @@ export default function ProfileScreen() {
         {/* Información adicional */}
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>Información de la Cuenta</Text>
+
+          {user?.rol?.descripcion && (
+            <View style={styles.infoRow}>
+              <Ionicons
+                name="information-circle-outline"
+                size={20}
+                color="rgba(255, 255, 255, 0.8)"
+              />
+              <Text style={styles.infoText}>
+                Rol: {user.rol.descripcion}
+              </Text>
+            </View>
+          )}
+
+          {user?.rendidor !== undefined && (
+            <View style={styles.infoRow}>
+              <Ionicons
+                name={user.rendidor === 1 ? "wallet-outline" : "wallet"}
+                size={20}
+                color="rgba(255, 255, 255, 0.8)"
+              />
+              <Text style={styles.infoText}>
+                Rendidor: {user.rendidor === 1 ? "Habilitado" : "No habilitado"}
+              </Text>
+            </View>
+          )}
 
           {user?.lastPasswordChange && (
             <View style={styles.infoRow}>
@@ -154,28 +185,23 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
-  userEmail: {
-    fontSize: 16,
-    color: "rgba(255, 255, 255, 0.8)",
-    textAlign: "center",
-    marginBottom: 10,
-    textShadowColor: "rgba(0, 0, 0, 0.2)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  usernameContainer: {
+  roleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.15)",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
     marginBottom: 15,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.2)",
+    gap: 6,
   },
-  username: {
-    fontSize: 14,
+  roleText: {
+    fontSize: 13,
     color: "rgba(255, 255, 255, 0.9)",
-    fontWeight: "600",
+    fontWeight: "500",
+    textTransform: "capitalize",
   },
   statusContainer: {
     flexDirection: "row",

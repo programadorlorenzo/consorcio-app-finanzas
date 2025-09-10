@@ -107,7 +107,7 @@ export interface RendicionUpdate {
   formaPago?: FormaPago;
 }
 
-export type RendicionStatusType = 'default' | 'pending' | 'approved' | 'rejected' | 'accent';
+export type RendicionStatusType = 'default' | 'pending' | 'approved' | 'rejected' | 'accent' | 'admin';
 
 // Estado de la rendición basado en las fechas
 export type RendicionEstado = 'EN PROCESO' | 'ENVIADA' | 'APROBADA' | 'DENEGADA';

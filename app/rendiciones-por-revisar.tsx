@@ -12,12 +12,15 @@ import { Rendicion } from '@/types/rendiciones/rendiciones.types';
 // Components
 import EstadoVacio from '@/components/rendiciones/EstadoVacio';
 import LoadingRendicion from '@/components/rendiciones/LoadingRendicion';
+import ModalDetalleRendicion from '@/components/rendiciones/ModalDetalleRendicion';
 import RendicionHeader from '@/components/rendiciones/RendicionHeader';
 import RendicionPorRevisarCard from '../components/rendiciones/RendicionPorRevisarCard';
 
 export default function RendicionesPorRevisarScreen() {
   const [rendiciones, setRendiciones] = useState<Rendicion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [rendicionSeleccionada, setRendicionSeleccionada] = useState<Rendicion | null>(null);
 
   const cargarRendiciones = useCallback(async () => {
     try {
@@ -104,6 +107,34 @@ export default function RendicionesPorRevisarScreen() {
     );
   };
 
+  // Función para abrir el modal con una rendición específica
+  const handleVerDetalle = (rendicion: Rendicion) => {
+    setRendicionSeleccionada(rendicion);
+    setModalVisible(true);
+  };
+
+  // Función para cerrar el modal
+  const handleCerrarModal = () => {
+    setModalVisible(false);
+    setRendicionSeleccionada(null);
+  };
+
+  // Función para aprobar desde el modal
+  const handleAprobarDesdeModal = async () => {
+    if (rendicionSeleccionada) {
+      await handleAprobar(rendicionSeleccionada.id);
+      handleCerrarModal();
+    }
+  };
+
+  // Función para rechazar desde el modal
+  const handleRechazarDesdeModal = async () => {
+    if (rendicionSeleccionada) {
+      await handleRechazar(rendicionSeleccionada.id);
+      handleCerrarModal();
+    }
+  };
+
   // Estado de carga
   if (loading) {
     return (
@@ -148,10 +179,21 @@ export default function RendicionesPorRevisarScreen() {
               rendicion={rendicion}
               onAprobar={() => handleAprobar(rendicion.id)}
               onRechazar={() => handleRechazar(rendicion.id)}
+              onVerDetalle={() => handleVerDetalle(rendicion)}
             />
           ))}
         </View>
       </ScrollView>
+
+      {/* Modal de Detalle */}
+      <ModalDetalleRendicion
+        visible={modalVisible}
+        rendicion={rendicionSeleccionada}
+        onClose={handleCerrarModal}
+        onAprobar={handleAprobarDesdeModal}
+        onRechazar={handleRechazarDesdeModal}
+        isAdmin={true}
+      />
     </View>
   );
 }

@@ -32,13 +32,16 @@ export default function RendicionScreen() {
   const [showBankingDetails, setShowBankingDetails] = useState(false);
 
   // Helper para detectar si es administrador
-  const esAdministrador = (): boolean => {
+  const esAdministrador = useCallback((): boolean => {
+    const rolNombre = user?.rol?.nombre?.toLowerCase() || "";
+    
     return (
-      user?.rol?.nombre?.toLowerCase().includes("admin") ||
-      user?.rol?.nombre?.toLowerCase().includes("administrador") ||
+      rolNombre.includes("admin") ||
+      rolNombre.includes("administrador") ||
+      rolNombre === "admin" ||
       false
     );
-  };
+  }, [user]);
 
   // Helper function para convertir valores a número y formatear
   const formatCurrency = (value: number | string): string => {
@@ -60,16 +63,16 @@ export default function RendicionScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      if (user && user.rendidor === 1) {
+      if (user && (user.rendidor === 1 || esAdministrador())) {
         checkRendicionActiva();
       } else {
         setLoading(false);
       }
-    }, [user, checkRendicionActiva])
+    }, [user, checkRendicionActiva, esAdministrador])
   );
 
-  // Si el usuario no es rendidor, mostrar mensaje
-  if (user && user.rendidor !== 1) {
+  // Si el usuario no es rendidor ni administrador, mostrar mensaje
+  if (user && user.rendidor !== 1 && !esAdministrador()) {
     return (
       <ThemedView style={stylesMenuCardRendiciones.container}>
         <StatusBar style="dark" />
@@ -78,8 +81,7 @@ export default function RendicionScreen() {
             <Ionicons name="lock-closed-outline" size={80} color="#ccc" />
             <Text style={styles.noRendidorTitle}>Acceso Restringido</Text>
             <Text style={styles.noRendidorText}>
-              No tienes habilitado rendición. Contacta al administrador para
-              obtener permisos de rendidor.
+              No tienes permisos de rendidor ni eres administrador. Contacta al administrador para obtener los permisos necesarios.
             </Text>
           </View>
         </SafeAreaView>
@@ -108,49 +110,52 @@ export default function RendicionScreen() {
         getRendicionEstado(rendicionActiva) === "DENEGADA"));
 
   const menuOptions = [
-    {
-      id: 1,
-      title: "Mi Rendición",
-      description: rendicionActiva
-        ? `Estado: ${getRendicionEstado(rendicionActiva)}`
-        : "No tienes rendición activa",
-      icon: "document-text-outline" as keyof typeof Ionicons.glyphMap,
-      onPress: () => {
-        if (rendicionActiva) {
-          router.push("/mi-rendicion");
-        } else {
-          Alert.alert(
-            "Sin rendición",
-            "No tienes una rendición activa. Crea una nueva rendición primero."
-          );
-        }
+    // Opciones para rendidores (solo si es rendidor o admin que también es rendidor)
+    ...(user?.rendidor === 1 ? [
+      {
+        id: 1,
+        title: "Mi Rendición",
+        description: rendicionActiva
+          ? `Estado: ${getRendicionEstado(rendicionActiva)}`
+          : "No tienes rendición activa",
+        icon: "document-text-outline" as keyof typeof Ionicons.glyphMap,
+        onPress: () => {
+          if (rendicionActiva) {
+            router.push("/mi-rendicion");
+          } else {
+            Alert.alert(
+              "Sin rendición",
+              "No tienes una rendición activa. Crea una nueva rendición primero."
+            );
+          }
+        },
+        statusType: "default" as RendicionStatusType,
+        disabled: !rendicionActiva,
       },
-      statusType: "default" as RendicionStatusType,
-      disabled: !rendicionActiva,
-    },
-    ...(puedeCrearNuevaRendicion
-      ? [
-          {
-            id: 4,
-            title: "Nueva Rendición",
-            description: "Crear una nueva rendición",
-            icon: "add-circle-outline" as keyof typeof Ionicons.glyphMap,
-            onPress: () => router.push("/create-rendicion" as any),
-            statusType: "accent" as RendicionStatusType,
-            disabled: false,
-          },
-        ]
-      : []),
+      ...(puedeCrearNuevaRendicion
+        ? [
+            {
+              id: 4,
+              title: "Nueva Rendición",
+              description: "Crear una nueva rendición",
+              icon: "add-circle-outline" as keyof typeof Ionicons.glyphMap,
+              onPress: () => router.push("/create-rendicion" as any),
+              statusType: "accent" as RendicionStatusType,
+              disabled: false,
+            },
+          ]
+        : []),
+    ] : []),
     // Opción para administradores
     ...(esAdministrador()
       ? [
           {
             id: 5,
-            title: "Rendiciones por Revisar",
-            description: "Aprobar o rechazar rendiciones",
-            icon: "checkmark-done-circle-outline" as keyof typeof Ionicons.glyphMap,
+            title: "Panel de Administración",
+            description: "Revisar y aprobar rendiciones pendientes",
+            icon: "shield-checkmark-outline" as keyof typeof Ionicons.glyphMap,
             onPress: () => router.push("/rendiciones-por-revisar" as any),
-            statusType: "warning" as RendicionStatusType,
+            statusType: "admin" as RendicionStatusType,
             disabled: false,
           },
         ]
@@ -165,7 +170,7 @@ export default function RendicionScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20, paddingTop: 20 }}
         >
-          {rendicionActiva && (
+          {rendicionActiva && user?.rendidor === 1 && (
             <View style={styles.rendicionActivaContainer}>
               <View style={styles.rendicionActivaHeader}>
                 <View style={styles.headerLeft}>

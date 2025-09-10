@@ -8,12 +8,14 @@ interface RendicionPorRevisarCardProps {
   rendicion: Rendicion;
   onAprobar: () => void;
   onRechazar: () => void;
+  onVerDetalle?: () => void;
 }
 
 export default function RendicionPorRevisarCard({ 
   rendicion, 
   onAprobar, 
-  onRechazar 
+  onRechazar,
+  onVerDetalle
 }: RendicionPorRevisarCardProps) {
   const estado = getRendicionEstado(rendicion);
   const tieneDetalles = rendicion.detalles && rendicion.detalles.length > 0;
@@ -107,11 +109,14 @@ export default function RendicionPorRevisarCard({
         <TouchableOpacity 
           style={styles.verDetallesButton}
           onPress={() => {
-            // Temporalmente deshabilitado hasta implementar el endpoint específico
-            Alert.alert(
-              "Información",
-              "La vista detallada está disponible desde los botones de Aprobar/Rechazar"
-            );
+            if (onVerDetalle) {
+              onVerDetalle();
+            } else {
+              Alert.alert(
+                "Información",
+                "La vista detallada no está disponible"
+              );
+            }
           }}
         >
           <Ionicons name="eye-outline" size={20} color={MAIN_COLOR} />

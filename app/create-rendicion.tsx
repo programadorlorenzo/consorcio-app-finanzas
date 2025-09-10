@@ -4,7 +4,10 @@ import ListArchivosCreateGasto from "@/components/gastos/create-update-pagos/Arc
 import ModalOpcionesArchivo from "@/components/gastos/create-update-pagos/ModalOpcionesArchivoCreateUpdateGasto";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { stylesBaseStylesCreateGasto } from "@/styles/gastos/base-create-update-gasto.styles";
-import { FormaPago, RendicionCreate } from "@/types/rendiciones/rendiciones.types";
+import {
+    FormaPago,
+    RendicionCreate,
+} from "@/types/rendiciones/rendiciones.types";
 import { FileItem } from "@/utils/gastos/create-gasto-utils";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -28,20 +31,20 @@ import { MAIN_COLOR } from "./constants";
 
 // Opciones de banco/billetera digital
 const BANCOS_OPTIONS = [
-  'BCP',
-  'INTERBANK', 
-  'BBVA',
-  'SCOTIABANK',
-  'YAPE',
-  'PLIN'
+  "BCP",
+  "INTERBANK",
+  "BBVA",
+  "SCOTIABANK",
+  "YAPE",
+  "PLIN",
 ];
 
 export default function CreateRendicion() {
   const { user } = useAuth();
-  
+
   const [formData, setFormData] = useState<RendicionCreate>({
     total_iniciado: 0,
-    formaPago: FormaPago.YAPE,
+    formaPago: FormaPago.TRANSFERENCIA,
     banco: "",
     cuentabancaria: "",
     cci: "",
@@ -52,7 +55,7 @@ export default function CreateRendicion() {
   const [saldoText, setSaldoText] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [showBancoModal, setShowBancoModal] = useState(false);
-  
+
   // Estados para archivos
   const [files, setFiles] = useState<FileItem[]>([]);
   const [showFileModal, setShowFileModal] = useState(false);
@@ -60,28 +63,28 @@ export default function CreateRendicion() {
   const handleSaldoChange = (text: string) => {
     // Permitir números y un punto decimal
     const cleanText = text.replace(/[^0-9.]/g, "");
-    
+
     // Asegurar que solo haya un punto decimal
     const parts = cleanText.split(".");
     let finalText = parts[0];
     if (parts.length > 1) {
       finalText += "." + parts[1];
     }
-    
+
     setSaldoText(finalText);
-    
+
     // Actualizar el valor numérico en formData
     const numericValue = parseFloat(finalText) || 0;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      total_iniciado: numericValue
+      total_iniciado: numericValue,
     }));
   };
 
   const handleInputChange = (field: keyof RendicionCreate, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -102,7 +105,7 @@ export default function CreateRendicion() {
 
   // Funciones para manejar archivos
   const removeFile = (index: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));
+    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleAddFile = () => {
@@ -111,21 +114,21 @@ export default function CreateRendicion() {
 
   const uploadFiles = async (): Promise<string[]> => {
     if (files.length === 0) return [];
-    
+
     try {
       console.log("🚀 Subiendo archivos:", files.length);
-      
+
       // Preparar archivos para upload
-      const filesToUpload = files.map(file => ({
+      const filesToUpload = files.map((file) => ({
         uri: file.uri,
         fileName: file.name,
         type: file.type,
       }));
-      
+
       // Subir archivos usando la API
       const uploadedFilePaths = await uploadMultipleFiles(filesToUpload);
       console.log("✅ Archivos subidos exitosamente:", uploadedFilePaths);
-      
+
       return uploadedFilePaths;
     } catch (error) {
       console.error("❌ Error subiendo archivos:", error);
@@ -138,37 +141,33 @@ export default function CreateRendicion() {
 
     try {
       setLoading(true);
-      
+
       // 1. Subir archivos primero (si hay alguno)
       const uploadedFilePaths = await uploadFiles();
       console.log("📁 Archivos subidos:", uploadedFilePaths);
-      
+
       // 2. Crear la rendición
       await crearRendicion(formData, user!.id);
-      
-      Alert.alert(
-        "Éxito",
-        "Rendición creada exitosamente",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              // Limpiar formulario y archivos
-              setFormData({
-                total_iniciado: 0,
-                formaPago: FormaPago.YAPE,
-                banco: "",
-                cuentabancaria: "",
-                cci: "",
-                titular: "",
-              });
-              setSaldoText("");
-              setFiles([]);
-              router.back();
-            },
+
+      Alert.alert("Éxito", "Rendición creada exitosamente", [
+        {
+          text: "OK",
+          onPress: () => {
+            // Limpiar formulario y archivos
+            setFormData({
+              total_iniciado: 0,
+              formaPago: FormaPago.YAPE,
+              banco: "",
+              cuentabancaria: "",
+              cci: "",
+              titular: "",
+            });
+            setSaldoText("");
+            setFiles([]);
+            router.back();
           },
-        ]
-      );
+        },
+      ]);
     } catch (error) {
       console.error("Error al crear rendición:", error);
       Alert.alert(
@@ -253,14 +252,14 @@ export default function CreateRendicion() {
             <View style={styles.section}>
               <View style={styles.responsableCard}>
                 <View style={styles.infoRow}>
-                  <Ionicons 
-                    name="information-circle-outline" 
-                    size={20} 
-                    color={MAIN_COLOR} 
+                  <Ionicons
+                    name="information-circle-outline"
+                    size={20}
+                    color={MAIN_COLOR}
                   />
                   <Text style={styles.infoDescription}>
-                    Una vez creada la rendición, podrás agregar gastos y gestionar 
-                    los documentos necesarios para la aprobación.
+                    Una vez creada la rendición, podrás agregar gastos y
+                    gestionar los documentos necesarios para la aprobación.
                   </Text>
                 </View>
               </View>
@@ -271,14 +270,19 @@ export default function CreateRendicion() {
               <Text style={stylesBaseStylesCreateGasto.sectionTitle}>
                 Datos Bancarios
               </Text>
-              
+
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Banco / Billetera Digital</Text>
                 <TouchableOpacity
                   style={styles.selectorButton}
                   onPress={() => setShowBancoModal(true)}
                 >
-                  <Text style={[styles.selectorText, !formData.banco && styles.placeholderText]}>
+                  <Text
+                    style={[
+                      styles.selectorText,
+                      !formData.banco && styles.placeholderText,
+                    ]}
+                  >
                     {formData.banco || "Seleccionar banco o billetera"}
                   </Text>
                   <Ionicons name="chevron-down" size={20} color="#6B7280" />
@@ -286,11 +290,15 @@ export default function CreateRendicion() {
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Número de Cuenta / Celular</Text>
+                <Text style={styles.inputLabel}>
+                  Número de Cuenta / Celular
+                </Text>
                 <TextInput
                   style={styles.textInput}
                   value={formData.cuentabancaria || ""}
-                  onChangeText={(text) => handleInputChange('cuentabancaria', text)}
+                  onChangeText={(text) =>
+                    handleInputChange("cuentabancaria", text)
+                  }
                   placeholder="Número de cuenta o celular"
                   placeholderTextColor="#9CA3AF"
                   keyboardType="numeric"
@@ -302,7 +310,7 @@ export default function CreateRendicion() {
                 <TextInput
                   style={styles.textInput}
                   value={formData.cci || ""}
-                  onChangeText={(text) => handleInputChange('cci', text)}
+                  onChangeText={(text) => handleInputChange("cci", text)}
                   placeholder="Código de Cuenta Interbancario"
                   placeholderTextColor="#9CA3AF"
                   keyboardType="numeric"
@@ -314,7 +322,7 @@ export default function CreateRendicion() {
                 <TextInput
                   style={styles.textInput}
                   value={formData.titular || ""}
-                  onChangeText={(text) => handleInputChange('titular', text)}
+                  onChangeText={(text) => handleInputChange("titular", text)}
                   placeholder="Nombre del titular"
                   placeholderTextColor="#9CA3AF"
                 />
@@ -326,7 +334,7 @@ export default function CreateRendicion() {
               <Text style={stylesBaseStylesCreateGasto.sectionTitle}>
                 Archivos de Soporte
               </Text>
-              
+
               <TouchableOpacity
                 style={styles.addFileButton}
                 onPress={handleAddFile}
@@ -336,9 +344,12 @@ export default function CreateRendicion() {
                   Agregar archivos (opcional)
                 </Text>
               </TouchableOpacity>
-              
+
               {files.length > 0 && (
-                <ListArchivosCreateGasto files={files} removeFile={removeFile} />
+                <ListArchivosCreateGasto
+                  files={files}
+                  removeFile={removeFile}
+                />
               )}
             </View>
           </ScrollView>
@@ -359,9 +370,7 @@ export default function CreateRendicion() {
               ) : (
                 <>
                   <Ionicons name="add-circle" size={20} color="#fff" />
-                  <Text style={styles.submitButtonText}>
-                    Crear Rendición
-                  </Text>
+                  <Text style={styles.submitButtonText}>Crear Rendición</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -384,24 +393,27 @@ export default function CreateRendicion() {
                 <Ionicons name="close" size={24} color="#6B7280" />
               </TouchableOpacity>
             </View>
-            
+
             <ScrollView style={modalStyles.optionsContainer}>
               {BANCOS_OPTIONS.map((banco, index) => (
                 <TouchableOpacity
                   key={index}
                   style={[
                     modalStyles.option,
-                    formData.banco === banco && modalStyles.selectedOption
+                    formData.banco === banco && modalStyles.selectedOption,
                   ]}
                   onPress={() => {
-                    handleInputChange('banco', banco);
+                    handleInputChange("banco", banco);
                     setShowBancoModal(false);
                   }}
                 >
-                  <Text style={[
-                    modalStyles.optionText,
-                    formData.banco === banco && modalStyles.selectedOptionText
-                  ]}>
+                  <Text
+                    style={[
+                      modalStyles.optionText,
+                      formData.banco === banco &&
+                        modalStyles.selectedOptionText,
+                    ]}
+                  >
                     {banco}
                   </Text>
                   {formData.banco === banco && (
@@ -429,13 +441,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
-  
+
   // Responsable Card con badge
   responsableCard: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 12,
     padding: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -445,8 +457,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   responsableInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   responsableText: {
     marginLeft: 12,
@@ -454,8 +466,8 @@ const styles = StyleSheet.create({
   },
   responsableNombre: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#374151',
+    fontWeight: "600",
+    color: "#374151",
     marginBottom: 6,
   },
   badge: {
@@ -463,12 +475,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   badgeText: {
-    color: 'white',
+    color: "white",
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: "700",
     letterSpacing: 0.5,
   },
 
@@ -477,15 +489,15 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   moneyInputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: "#E5E7EB",
     paddingHorizontal: 20,
     paddingVertical: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -496,15 +508,15 @@ const styles = StyleSheet.create({
   },
   currencyLabel: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: "700",
     color: MAIN_COLOR,
     marginRight: 12,
   },
   moneyInput: {
     flex: 1,
     fontSize: 24,
-    fontWeight: '600',
-    color: '#374151',
+    fontWeight: "600",
+    color: "#374151",
     padding: 0,
   },
 
@@ -514,20 +526,20 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
+    fontWeight: "600",
+    color: "#374151",
     marginBottom: 8,
   },
   textInput: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: "#E5E7EB",
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#374151',
-    shadowColor: '#000',
+    color: "#374151",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 1,
@@ -539,16 +551,16 @@ const styles = StyleSheet.create({
 
   // Selector de banco
   selectorButton: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: "#E5E7EB",
     paddingHorizontal: 16,
     paddingVertical: 14,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 1,
@@ -559,28 +571,28 @@ const styles = StyleSheet.create({
   },
   selectorText: {
     fontSize: 16,
-    color: '#374151',
+    color: "#374151",
   },
   placeholderText: {
-    color: '#9CA3AF',
+    color: "#9CA3AF",
   },
 
   helpText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginTop: 8,
-    fontStyle: 'italic',
-    textAlign: 'left',
+    fontStyle: "italic",
+    textAlign: "left",
   },
-  
+
   infoRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     gap: 12,
   },
   infoDescription: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     lineHeight: 20,
     flex: 1,
   },
@@ -588,35 +600,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
     paddingTop: 16,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: "#E5E7EB",
   },
   submitButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 8,
   },
 
   // Botón agregar archivos
   addFileButton: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 12,
     borderWidth: 2,
     borderColor: MAIN_COLOR,
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
     paddingVertical: 16,
     paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 16,
   },
   addFileButtonText: {
     color: MAIN_COLOR,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 8,
   },
 });
@@ -624,49 +636,49 @@ const styles = StyleSheet.create({
 const modalStyles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
   },
   container: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    maxHeight: '70%',
+    maxHeight: "70%",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#374151',
+    fontWeight: "600",
+    color: "#374151",
   },
   optionsContainer: {
     maxHeight: 400,
   },
   option: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    borderBottomColor: "#F3F4F6",
   },
   selectedOption: {
-    backgroundColor: '#F0F9FF',
+    backgroundColor: "#F0F9FF",
   },
   optionText: {
     fontSize: 16,
-    color: '#374151',
+    color: "#374151",
   },
   selectedOptionText: {
     color: MAIN_COLOR,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
