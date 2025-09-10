@@ -76,17 +76,17 @@ export const loginStyles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 25, // Ajustado para evitar cortes
+    fontSize: 28, // Reducido un poco
     fontWeight: "700",
     marginBottom: 20,
     color: "#1D3935", // Color corporativo
   },
   inputContainer: {
-    marginBottom: 16, // Reducido para compactar el formulario
+    marginBottom: 18, // Aumentado para dar más espacio
   },
   inputLabel: {
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: 16, // Reducido un poco
+    marginBottom: 10,
     color: "#555",
     fontWeight: "500",
   },
@@ -97,15 +97,16 @@ export const loginStyles = StyleSheet.create({
     borderColor: "#E0E0E0",
     borderRadius: 12,
     backgroundColor: "#FAFAFA",
+    minHeight: 52, // Reducido un poco
   },
   inputIcon: {
     paddingLeft: 16,
   },
   input: {
     flex: 1,
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    fontSize: 15,
+    paddingVertical: 16, // Reducido un poco
+    paddingHorizontal: 14,
+    fontSize: 16, // Reducido un poco
     color: "#333",
   },
   passwordToggle: {
@@ -120,13 +121,13 @@ export const loginStyles = StyleSheet.create({
     paddingVertical: 4,
   },
   forgotPasswordText: {
-    fontSize: 13,
+    fontSize: 14, // Reducido un poco
     color: MAIN_COLOR, // Color corporativo
     fontWeight: "600",
   },
   loginButton: {
     backgroundColor: MAIN_COLOR, // Color corporativo
-    paddingVertical: 16,
+    paddingVertical: 18, // Reducido un poco
     borderRadius: 12,
     alignItems: "center",
     marginTop: 0, // Eliminado para subir el botón
@@ -141,7 +142,7 @@ export const loginStyles = StyleSheet.create({
   },
   loginButtonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 18, // Reducido un poco
     fontWeight: "600",
   },
   footer: {
@@ -149,11 +150,11 @@ export const loginStyles = StyleSheet.create({
     marginTop: 25, // Reducido para compactar
   },
   footerText: {
-    fontSize: 12,
+    fontSize: 14, // Aumentado para mejor legibilidad
     color: "#888",
   },
   footerVersion: {
-    fontSize: 10,
+    fontSize: 12, // Aumentado ligeramente
     color: "#AAA",
     marginTop: 4,
   },

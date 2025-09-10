@@ -10,13 +10,16 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
@@ -72,12 +75,19 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={loginStyles.container}>
-      <StatusBar style="light" />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={loginStyles.keyboardView}
+        behavior={Platform.OS === "ios" ? "padding" : "position"}
+        style={loginStyles.container}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -200}
       >
+        <StatusBar style="light" />
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
         {/* Wave pattern background - top section */}
         <View style={loginStyles.topSection}>
           <LoginWavePattern />
@@ -119,7 +129,7 @@ export default function LoginScreen() {
               <View style={loginStyles.inputWrapper}>
                 <Ionicons
                   name="person-outline"
-                  size={20}
+                  size={22}
                   color="#888"
                   style={loginStyles.inputIcon}
                 />
@@ -142,7 +152,7 @@ export default function LoginScreen() {
               <View style={loginStyles.inputWrapper}>
                 <Ionicons
                   name="lock-closed-outline"
-                  size={20}
+                  size={22}
                   color="#888"
                   style={loginStyles.inputIcon}
                 />
@@ -161,7 +171,7 @@ export default function LoginScreen() {
                 >
                   <Ionicons
                     name={showPassword ? "eye-off-outline" : "eye-outline"}
-                    size={20}
+                    size={22}
                     color="#888"
                   />
                 </TouchableOpacity>
@@ -205,7 +215,8 @@ export default function LoginScreen() {
             </View>
           </Animated.View>
         </View>
-      </KeyboardAvoidingView>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }

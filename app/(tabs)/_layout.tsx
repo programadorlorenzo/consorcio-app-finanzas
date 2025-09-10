@@ -26,9 +26,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="settings"
+        name="rendicion"
         options={{
-          title: "Config.",
+          title: "Rendición",
         }}
       />
       <Tabs.Screen

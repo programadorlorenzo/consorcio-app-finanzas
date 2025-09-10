@@ -40,6 +40,7 @@ export type User = {
   lastPasswordChange: string;
   passwordExpiryDays: number;
   passwordVencido: boolean;
+  rendidor: number;
 };
 
 type AuthContextType = {
