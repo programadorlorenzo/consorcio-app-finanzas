@@ -224,6 +224,30 @@ export const obtenerRendicionesPorRevisar = async (): Promise<Rendicion[]> => {
   }
 };
 
+export const obtenerRendicionesAprobadas = async (): Promise<Rendicion[]> => {
+  try {
+    console.log("🚀 Obteniendo rendiciones aprobadas");
+    const response = await apiClient.get<Rendicion[]>("/rendiciones/aprobadas");
+    console.log(`✅ Se obtuvieron ${response.data.length} rendiciones aprobadas`);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error al obtener rendiciones aprobadas:", error);
+
+    if (isAxiosError(error)) {
+      if (error.response) {
+        console.error(`Status: ${error.response.status}`, error.response.data);
+        if (error.response.status === 401) {
+          console.error("❌ Error de autenticación. Token inválido o expirado.");
+        }
+      } else if (error.request) {
+        console.error("❌ No se recibió respuesta del servidor");
+      }
+    }
+
+    throw error;
+  }
+};
+
 export const aprobarRendicion = async (rendicionId: number): Promise<Rendicion> => {
   try {
     console.log(`🚀 Aprobando rendición ${rendicionId}`);

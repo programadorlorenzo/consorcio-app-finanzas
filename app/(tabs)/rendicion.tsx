@@ -195,11 +195,21 @@ export default function RendicionScreen() {
             : []),
         ]
       : []),
+    // Opción para ver rendiciones aprobadas (visible para todos los usuarios con permisos)
+    {
+      id: 5,
+      title: "Rendiciones Aprobadas",
+      description: "Ver mis rendiciones aprobadas",
+      icon: "checkmark-done-circle-outline" as keyof typeof Ionicons.glyphMap,
+      onPress: () => router.push("/rendiciones-aprobadas" as any),
+      statusType: "approved" as RendicionStatusType,
+      disabled: false,
+    },
     // Opción para administradores
     ...(esAdministrador()
       ? [
           {
-            id: 5,
+            id: 6,
             title: "Panel de Administración",
             description: "Revisar y aprobar rendiciones pendientes",
             icon: "shield-checkmark-outline" as keyof typeof Ionicons.glyphMap,
