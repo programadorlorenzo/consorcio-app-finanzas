@@ -7,8 +7,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
-import * as WebBrowser from "expo-web-browser";
-import { Alert, Platform } from "react-native";
+import { Alert, Linking, Platform } from "react-native";
 
 export interface FileItem {
   uri: string;
@@ -246,13 +245,8 @@ export const downloadFile = async (url: string, filename: string) => {
       // En web, simplemente abrir en nueva pestaña
       window.open(url, "_blank");
     } else {
-      // En móvil, usar WebBrowser para abrir el archivo
-      await WebBrowser.openBrowserAsync(url, {
-        showTitle: true,
-        toolbarColor: MAIN_COLOR,
-        controlsColor: "#ffffff",
-        enableBarCollapsing: false,
-      });
+      // En móvil, usar Linking para abrir el archivo
+      await Linking.openURL(url);
     }
   } catch (error) {
     console.error("Error al descargar archivo:", error);
